@@ -15,11 +15,12 @@ public class NixBot {
 
         LogSystem.log(LogType.INFO, "Bot started. Initializing ..");
         try{
-            CommonUtils.Bot = new DiscordApiBuilder().setToken("MTA1ODAyMzc0MTA3NjAxNzIyMg.GxVGRB.ec4vp_XrZRVxcFwvQdiKtOpW0OMCQaAUsQA3uY").setAllIntents().login().join();
-            CommonUtils.Bot.addServerMemberBanListener(new nServerMemberBanListener());
-            CommonUtils.Bot.addServerMemberJoinListener(new nServerMemberJoinListener());
-            CommonUtils.Bot.addServerMemberLeaveListener(new nServerMemberLeaveListener());
-            CommonUtils.Bot.addServerMemberUnbanListener(new nServerMemberUnbanListener());
+            CommonUtils.version = "1.0";
+            CommonUtils.bot = new DiscordApiBuilder().setToken("MTA1ODAyMzc0MTA3NjAxNzIyMg.GtNiZE.YbTL7Nn3LQEIW1spqg2BvedptvjDydsFZ5E2Y4").setAllIntents().login().join();
+            CommonUtils.bot.addServerMemberBanListener(new nServerMemberBanListener());
+            CommonUtils.bot.addServerMemberJoinListener(new nServerMemberJoinListener());
+            CommonUtils.bot.addServerMemberLeaveListener(new nServerMemberLeaveListener());
+            CommonUtils.bot.addServerMemberUnbanListener(new nServerMemberUnbanListener());
             LogSystem.log(LogType.INFO, "Bot successfully initialized and loaded");
         }
         catch (Exception ex){
