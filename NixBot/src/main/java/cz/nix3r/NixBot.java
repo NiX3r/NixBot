@@ -8,6 +8,8 @@ import cz.nix3r.listeners.nServerMemberUnbanListener;
 import cz.nix3r.utils.CommonUtils;
 import cz.nix3r.utils.LogSystem;
 import org.javacord.api.DiscordApiBuilder;
+import org.javacord.api.entity.activity.ActivityType;
+import org.javacord.api.entity.server.Server;
 
 public class NixBot {
 
@@ -21,6 +23,7 @@ public class NixBot {
             CommonUtils.bot.addServerMemberJoinListener(new nServerMemberJoinListener());
             CommonUtils.bot.addServerMemberLeaveListener(new nServerMemberLeaveListener());
             CommonUtils.bot.addServerMemberUnbanListener(new nServerMemberUnbanListener());
+            CommonUtils.bot.updateActivity(ActivityType.PLAYING, "with " + ((Server)CommonUtils.bot.getServers().toArray()[0]).getMembers().size() + " users");
             LogSystem.log(LogType.INFO, "Bot successfully initialized and loaded");
         }
         catch (Exception ex){
