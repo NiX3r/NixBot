@@ -1,7 +1,9 @@
 package cz.nix3r.listeners;
 
+import cz.nix3r.enums.LogType;
 import cz.nix3r.utils.CommonUtils;
 import cz.nix3r.utils.DiscordUtils;
+import cz.nix3r.utils.LogSystem;
 import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.server.member.ServerMemberBanEvent;
@@ -17,6 +19,7 @@ public class nServerMemberBanListener implements ServerMemberBanListener {
             channel.sendMessage(DiscordUtils.createBanEmbed(serverMemberBanEvent.getUser().getName(), serverMemberBanEvent.getUser().getAvatar(), serverMemberBanEvent.getServer())).join();
         });
         CommonUtils.bot.updateActivity(ActivityType.PLAYING, "with " + serverMemberBanEvent.getServer().getMembers().size() + " users");
+        LogSystem.log(LogType.INFO, "Member " + serverMemberBanEvent.getUser().getName() + " banned from the server. Bot activity updated");
 
     }
 }

@@ -1,7 +1,9 @@
 package cz.nix3r.listeners;
 
+import cz.nix3r.enums.LogType;
 import cz.nix3r.utils.CommonUtils;
 import cz.nix3r.utils.DiscordUtils;
+import cz.nix3r.utils.LogSystem;
 import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
@@ -20,6 +22,7 @@ public class nServerMemberJoinListener implements ServerMemberJoinListener {
             channel.sendMessage(DiscordUtils.createJoinEmbed(serverMemberJoinEvent.getUser().getName(), serverMemberJoinEvent.getUser().getAvatar(), serverMemberJoinEvent.getServer())).join();
         });
         CommonUtils.bot.updateActivity(ActivityType.PLAYING, "with " + serverMemberJoinEvent.getServer().getMembers().size() + " users");
+        LogSystem.log(LogType.INFO, "Member " + serverMemberJoinEvent.getUser().getName() + " joined on the server. Bot activity updated");
 
     }
 
