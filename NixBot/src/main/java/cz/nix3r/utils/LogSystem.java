@@ -3,14 +3,12 @@ package cz.nix3r.utils;
 import cz.nix3r.enums.LogType;
 
 import java.io.BufferedWriter;
-import java.io.Console;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
-import java.util.List;
 
 public class LogSystem {
 

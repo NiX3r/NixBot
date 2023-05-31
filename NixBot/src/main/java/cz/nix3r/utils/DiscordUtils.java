@@ -6,13 +6,16 @@ import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
 
 import java.awt.*;
+import java.util.Random;
 
 public class DiscordUtils {
+
+    private static Random random = new Random();
 
     public static EmbedBuilder createJoinEmbed(String nick, Icon userAvatar, Server server){
         return new EmbedBuilder()
                 .setTitle(nick)
-                .setDescription("has just landed here! Please warm welcome for him/her!")
+                .setDescription(CommonUtils.WELCOME_MESSAGES[random.nextInt(10)])
                 .setColor(Color.decode("#00d60e"))
                 .addField("Member count", server.getMembers().size() + " total")
                 .setFooter("Version: " + CommonUtils.version)
@@ -32,7 +35,7 @@ public class DiscordUtils {
     public static EmbedBuilder createLeaveEmbed(String nick, Icon userAvatar, Server server){
         return new EmbedBuilder()
                 .setTitle(nick)
-                .setDescription("left our server! See ya again .. hopefully ..")
+                .setDescription(CommonUtils.LEAVE_MESSAGES[random.nextInt(10)])
                 .setColor(Color.decode("#d66b00"))
                 .addField("Member count", server.getMembers().size() + " total")
                 .setFooter("Version: " + CommonUtils.version)
