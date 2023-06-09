@@ -15,7 +15,8 @@ public class NixBot {
 
         LogSystem.log(LogType.INFO, "Bot started. Initializing ..");
         try{
-            CommonUtils.version = "1.2";
+            CommonUtils.time_since_start = System.currentTimeMillis();
+            CommonUtils.version = "1.3";
             CommonUtils.bot = new DiscordApiBuilder().setToken("MTA1ODAyMzc0MTA3NjAxNzIyMg.GtNiZE.YbTL7Nn3LQEIW1spqg2BvedptvjDydsFZ5E2Y4").setAllIntents().login().join();
             CommandUtils.createCommands();
             CommonUtils.bot.addServerMemberBanListener(new nServerMemberBanListener());

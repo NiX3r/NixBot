@@ -9,6 +9,7 @@ public class CommonUtils {
 
     public static DiscordApi bot;
     public static String version;
+    public static long time_since_start;
 
     public static final String WELCOME_CHANNEL_ID = "611985124057284621";
     public static final String NIXBOT_CHANNEL_ID = "1058017127988211822";

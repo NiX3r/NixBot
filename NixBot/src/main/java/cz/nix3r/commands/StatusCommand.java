@@ -9,32 +9,37 @@ import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
-import java.lang.management.MemoryUsage;
+import java.util.concurrent.TimeUnit;
 
 public class StatusCommand {
+
+    private static int totalUsagePoint = 0;
+    private static final String[] COLOR_PALLETE = new String[]{ "#00FF00", "#33FF00", "#66FF00", "#99FF00", "#CCFF00",
+            "#FFFF00", "#FFCC00", "#FF9900", "#FF6600", "#FF3300" };
 
     public static void run(SlashCommandInteraction interaction) {
 
         long start = System.currentTimeMillis();
         String[] ram = getRamUsage();
+        String[] cpuProcess = getCpuUsage();
         BufferedImage screenshot = takeScreenshot();
 
         LogSystem.log(LogType.INFO, "Status command catch by '" + interaction.getUser().getName() + "'");
         interaction.createImmediateResponder().setContent("Generating status ..").respond().join();
 
         EmbedBuilder builder = new EmbedBuilder()
-                .setColor(Color.green)
+                .setColor(Color.decode(COLOR_PALLETE[totalUsagePoint - 1]))
                 .setTitle("NixBot status")
-                .addField("Memory (" + ram[2] + "/" + ram[0] + ")", ram[3])
-                .addField("Since last start", LogSystem.error_counter + " errors")
-                .addField("Generating status", System.currentTimeMillis() - start + " ms")
+                .addField("Total Memory (" + ram[2] + "/" + ram[0] + ")", ram[3])
+                .addField("Bot CPU usage (" + cpuProcess[0] + "% / 10.0%)", cpuProcess[1])
+                .addField("Total usage (1-10 | low-high)", totalUsagePoint + " points")
+                .addField("Time since start", formatTime(System.currentTimeMillis() - CommonUtils.time_since_start), true)
+                .addField("Since start", LogSystem.error_counter + " errors", true)
+                .addField("Generating timestamp", System.currentTimeMillis() - start + " ms", false)
                 .setImage(screenshot)
                 .setThumbnail(((Server)CommonUtils.bot.getServers().toArray()[0]).getIcon().get())
                 .setFooter("Version: " + CommonUtils.version);
@@ -46,6 +51,23 @@ public class StatusCommand {
         message.send(interaction.getChannel().get()).join();
         LogSystem.log(LogType.INFO, "End of command status by '" + interaction.getUser().getName() + "'");
 
+    }
+
+    private static String[] getCpuUsage(){
+        OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
+
+        // Get the CPU usage as a percentage
+        double cpuUsage = osBean.getProcessCpuLoad() * 100;
+        int used = (int) cpuUsage;
+        if(used > 10) used = 10;
+        totalUsagePoint = (int)((totalUsagePoint + used) / 2);
+        String progressBar = "";
+        for(int i = 0; i < used; i++) progressBar += used > 4 ? ":red_square: " : ":orange_square: ";
+        for(int i = 0; i < (10 - used); i++) progressBar += ":green_square: ";
+        return new String[]{
+                String.format("%.2f", cpuUsage),
+                progressBar
+        };
     }
 
     private static String[] getRamUsage(){
@@ -63,8 +85,9 @@ public class StatusCommand {
 
         String progressBar = "";
         int used = (int)(usedPhysicalMemory / (totalPhysicalMemory / 10));
+        totalUsagePoint = used;
 
-        for(int i = 0; i < used; i++) progressBar += ":red_square: ";
+        for(int i = 0; i < used; i++) progressBar += used > 4 ? ":red_square: " : ":orange_square: ";
         for(int i = 0; i < (10 - used); i++) progressBar += ":green_square: ";
 
         // Convert the memory values to human-readable format (e.g., KB, MB, GB)
@@ -83,6 +106,13 @@ public class StatusCommand {
 
         return response;
 
+    }
+
+    private static String formatTime(long time){
+        long hours = TimeUnit.MILLISECONDS.toHours(time);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(time) % 60;
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(time) % 60;
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
     private static String formatMemory(long bytes) {
