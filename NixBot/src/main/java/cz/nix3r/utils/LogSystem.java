@@ -12,7 +12,8 @@ import java.util.ArrayList;
 
 public class LogSystem {
 
-    private static final int LOG_TO_SAVE  = 5;
+    private static final int LOG_TO_SAVE  = 1;
+    public static int error_counter = 0;
 
     private static ArrayList<String> logs = new ArrayList<String>();
 
@@ -21,6 +22,9 @@ public class LogSystem {
         String line = "[" + LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.MEDIUM)).replace(",", "").replace("/", ".") + "] " + type.toString() + " >> " + message;
         System.out.println(line);
         logs.add(line);
+
+        if(type == LogType.FATAL_ERROR || type == LogType.ERROR)
+            error_counter++;
 
         if(logs.size() == LOG_TO_SAVE)
             save();
