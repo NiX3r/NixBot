@@ -109,10 +109,11 @@ public class StatusCommand {
     }
 
     private static String formatTime(long time){
-        long hours = TimeUnit.MILLISECONDS.toHours(time);
+        long days = TimeUnit.MILLISECONDS.toDays(time);
+        long hours = TimeUnit.MILLISECONDS.toHours(time) % 24;
         long minutes = TimeUnit.MILLISECONDS.toMinutes(time) % 60;
         long seconds = TimeUnit.MILLISECONDS.toSeconds(time) % 60;
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        return String.format("%02d:%02d:%02d:%02d", days, hours, minutes, seconds);
     }
 
     private static String formatMemory(long bytes) {
