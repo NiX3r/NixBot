@@ -14,6 +14,7 @@ import org.javacord.api.entity.server.invite.RichInvite;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class CommonUtils {
 
@@ -113,7 +114,7 @@ public class CommonUtils {
         LogSystem.log(LogType.INFO, "Update activity");
         bot.updateActivity(ActivityType.PLAYING, "with " + ((Server)bot.getServers().toArray()[0]).getMembers().size() + " users");
 
-        LogSystem.log(LogType.INFO, "Bot successfully initialized and loaded");
+        LogSystem.log(LogType.INFO, "Bot successfully initialized and loaded. It took " + (System.currentTimeMillis() - time_since_start) + "ms");
     }
 
 }
