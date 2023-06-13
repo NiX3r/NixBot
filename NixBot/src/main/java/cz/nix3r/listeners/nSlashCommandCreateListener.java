@@ -1,6 +1,9 @@
 package cz.nix3r.listeners;
 
 import cz.nix3r.commands.StatusCommand;
+import cz.nix3r.utils.CommonUtils;
+import org.javacord.api.entity.message.MessageFlag;
+import org.javacord.api.entity.server.Server;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.listener.interaction.SlashCommandCreateListener;
@@ -19,4 +22,20 @@ public class nSlashCommandCreateListener implements SlashCommandCreateListener {
         }
 
     }
+
+    private boolean checkIsCmdChannel(SlashCommandInteraction interaction){
+
+        if(interaction.getChannel().isPresent()){
+            if(interaction.getChannel().get().getIdAsString().equals(CommonUtils.CMD_CHANNEL_ID))
+                return true;
+        }
+
+        ((Server)CommonUtils.bot.getServers().toArray()[0]).getTextChannelById(CommonUtils.CMD_CHANNEL_ID).ifPresent(serverTextChannel -> {
+            interaction.createImmediateResponder().setContent("Please type your command in " + serverTextChannel.getMentionTag()).setFlags(MessageFlag.EPHEMERAL).respond().join();
+        });
+
+        return false;
+
+    }
+
 }

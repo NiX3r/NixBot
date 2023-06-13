@@ -1,6 +1,16 @@
 package cz.nix3r.utils;
 
+import cz.nix3r.enums.LogType;
+import cz.nix3r.instances.InviteInstance;
+import cz.nix3r.listeners.*;
+import cz.nix3r.managers.InviteManager;
+import cz.nix3r.managers.TemporaryChannelManager;
 import org.javacord.api.DiscordApi;
+import org.javacord.api.DiscordApiBuilder;
+import org.javacord.api.entity.activity.ActivityType;
+import org.javacord.api.entity.channel.RegularServerChannel;
+import org.javacord.api.entity.server.Server;
+import org.javacord.api.entity.server.invite.RichInvite;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +21,14 @@ public class CommonUtils {
     public static String version;
     public static long time_since_start;
 
+    public static TemporaryChannelManager tempChannelManager;
+    public static InviteManager inviteManager;
+
     public static final String WELCOME_CHANNEL_ID = "611985124057284621";
     public static final String NIXBOT_CHANNEL_ID = "1058017127988211822";
+    public static final String CMD_CHANNEL_ID = "1118284494198288445";
+    public static final String CREATE_CHANNEL_CHANNEL_ID = "1118311195867369513";
+    public static final String CREATE_CHANNEL_CATEGORY_ID = "1118291032065441882";
     public static final List<String> DEFAULT_ROLES_ID = new ArrayList<String>() {{add("1058009225491656724");}};
 
     public static final String[] WELCOME_MESSAGES = {
@@ -40,5 +56,64 @@ public class CommonUtils {
             "So long, and thanks for all the fish! Don't forget to bring the towel!",
             "Adios, amigo! Remember, life is better when you're laughing!"
     };
+
+    public static void setupBot(){
+
+        LogSystem.log(LogType.INFO, "Setup default instances");
+        time_since_start = System.currentTimeMillis();
+        version = "2.0";
+
+        LogSystem.log(LogType.INFO, "Setup managers");
+        tempChannelManager = new TemporaryChannelManager();
+        inviteManager = new InviteManager();
+
+        LogSystem.log(LogType.INFO, "Initialize and connect bot");
+        bot = new DiscordApiBuilder().setToken("MTA1ODAyMzc0MTA3NjAxNzIyMg.GtNiZE.YbTL7Nn3LQEIW1spqg2BvedptvjDydsFZ5E2Y4").setAllIntents().login().join();
+
+        LogSystem.log(LogType.INFO, "Refresh commands");
+        CommandUtils.deleteCommands();
+        CommandUtils.createCommands();
+
+        LogSystem.log(LogType.INFO, "Register listeners");
+        bot.addServerMemberBanListener(new nServerMemberBanListener());
+        bot.addServerMemberJoinListener(new nServerMemberJoinListener());
+        bot.addServerMemberLeaveListener(new nServerMemberLeaveListener());
+        bot.addServerMemberUnbanListener(new nServerMemberUnbanListener());
+        bot.addSlashCommandCreateListener(new nSlashCommandCreateListener());
+        bot.addServerVoiceChannelMemberJoinListener(new nServerVoiceChannelMemberJoinListener());
+        bot.addServerVoiceChannelMemberLeaveListener(new nServerVoiceChannelMemberLeaveListener());
+
+        LogSystem.log(LogType.INFO, "Delete unwanted channels in temporary category");
+        Server nixCrew = ((Server)bot.getServers().toArray()[0]);
+        nixCrew.getChannelCategoryById(CREATE_CHANNEL_CATEGORY_ID).ifPresent(category -> {
+            for(RegularServerChannel channel : category.getChannels()){
+                if(!channel.getIdAsString().equals(CREATE_CHANNEL_CHANNEL_ID)){
+                    if(channel.asServerVoiceChannel().isPresent() && channel.asServerVoiceChannel().get().getConnectedUserIds().size() > 0){
+                        continue;
+                    }
+                    channel.delete().join();
+                    LogSystem.log(LogType.INFO, "Deleted unwanted channel '" + channel.getName() + "' in temporary category");
+                }
+            }
+        });
+
+        LogSystem.log(LogType.INFO, "Load all invites in invite manager");
+        for(RichInvite invite : nixCrew.getInvites().join()){
+            long userId = 0;
+
+            if(invite.getInviter().isPresent()){
+                userId = invite.getInviter().get().getId();
+            }
+
+            InviteInstance inv = new InviteInstance(invite.getCode(), userId, invite.getUses());
+            inviteManager.addInvite(inv);
+            LogSystem.log(LogType.INFO, "Added invite (code='" + inv.getCode() + "', inviter='" + inv.getCode() + "') into invite manager");
+        }
+
+        LogSystem.log(LogType.INFO, "Update activity");
+        bot.updateActivity(ActivityType.PLAYING, "with " + ((Server)bot.getServers().toArray()[0]).getMembers().size() + " users");
+
+        LogSystem.log(LogType.INFO, "Bot successfully initialized and loaded");
+    }
 
 }

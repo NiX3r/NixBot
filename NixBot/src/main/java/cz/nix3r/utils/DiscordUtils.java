@@ -4,6 +4,7 @@ import cz.nix3r.enums.LogType;
 import org.javacord.api.entity.Icon;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
+import org.javacord.api.entity.user.User;
 
 import java.awt.*;
 import java.util.Random;
@@ -12,12 +13,14 @@ public class DiscordUtils {
 
     private static Random random = new Random();
 
-    public static EmbedBuilder createJoinEmbed(String nick, Icon userAvatar, Server server){
+    public static EmbedBuilder createJoinEmbed(String nick, long inviterId, Icon userAvatar, Server server){
+        Server nixCrew = (Server)CommonUtils.bot.getServers().toArray()[0];
         return new EmbedBuilder()
                 .setTitle(nick)
                 .setDescription(CommonUtils.WELCOME_MESSAGES[random.nextInt(10)])
                 .setColor(Color.decode("#00d60e"))
-                .addField("Member count", server.getMembers().size() + " total")
+                .addField("Thanks for invite", inviterId == 0 ? "unknown" : nixCrew.getMemberById(inviterId).get().getMentionTag(), true)
+                .addField("Member count", server.getMembers().size() + " total", true)
                 .setFooter("Version: " + CommonUtils.version)
                 .setThumbnail(userAvatar);
     }
