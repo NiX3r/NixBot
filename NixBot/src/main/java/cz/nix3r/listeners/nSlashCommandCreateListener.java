@@ -1,5 +1,8 @@
 package cz.nix3r.listeners;
 
+import cz.nix3r.commands.PlayCommand;
+import cz.nix3r.commands.QueueCommand;
+import cz.nix3r.commands.SkipCommand;
 import cz.nix3r.commands.StatusCommand;
 import cz.nix3r.utils.CommonUtils;
 import org.javacord.api.entity.message.MessageFlag;
@@ -18,6 +21,22 @@ public class nSlashCommandCreateListener implements SlashCommandCreateListener {
 
             case "status":
                 StatusCommand.run(interaction);
+                break;
+
+            case "play":
+                if(checkIsCmdChannel(interaction))
+                    PlayCommand.run(interaction);
+                break;
+
+            case "queue":
+                if (checkIsCmdChannel(interaction))
+                    QueueCommand.run(interaction);
+                break;
+
+            case "skip":
+                if(checkIsCmdChannel(interaction))
+                    SkipCommand.run(interaction);
+                break;
 
         }
 

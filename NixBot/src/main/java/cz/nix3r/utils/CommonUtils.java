@@ -1,9 +1,14 @@
 package cz.nix3r.utils;
 
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import cz.nix3r.enums.LogType;
 import cz.nix3r.instances.InviteInstance;
 import cz.nix3r.listeners.*;
 import cz.nix3r.managers.InviteManager;
+import cz.nix3r.managers.MusicManager;
 import cz.nix3r.managers.TemporaryChannelManager;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
@@ -24,6 +29,7 @@ public class CommonUtils {
 
     public static TemporaryChannelManager tempChannelManager;
     public static InviteManager inviteManager;
+    public static MusicManager musicManager;
 
     public static final String WELCOME_CHANNEL_ID = "611985124057284621";
     public static final String NIXBOT_CHANNEL_ID = "1058017127988211822";
@@ -62,18 +68,22 @@ public class CommonUtils {
 
         LogSystem.log(LogType.INFO, "Setup default instances");
         time_since_start = System.currentTimeMillis();
-        version = "2.0";
-
-        LogSystem.log(LogType.INFO, "Setup managers");
-        tempChannelManager = new TemporaryChannelManager();
-        inviteManager = new InviteManager();
+        version = "2.1";
 
         LogSystem.log(LogType.INFO, "Initialize and connect bot");
         bot = new DiscordApiBuilder().setToken("MTA1ODAyMzc0MTA3NjAxNzIyMg.GtNiZE.YbTL7Nn3LQEIW1spqg2BvedptvjDydsFZ5E2Y4").setAllIntents().login().join();
 
+        LogSystem.log(LogType.INFO, "Setup managers");
+        tempChannelManager = new TemporaryChannelManager();
+        inviteManager = new InviteManager();
+        AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
+        playerManager.registerSourceManager(new YoutubeAudioSourceManager());
+        AudioPlayer player = playerManager.createPlayer();
+        musicManager = new MusicManager();
+
         LogSystem.log(LogType.INFO, "Refresh commands");
-        CommandUtils.deleteCommands();
-        CommandUtils.createCommands();
+        //CommandUtils.deleteCommands();
+        //CommandUtils.createCommands();
 
         LogSystem.log(LogType.INFO, "Register listeners");
         bot.addServerMemberBanListener(new nServerMemberBanListener());

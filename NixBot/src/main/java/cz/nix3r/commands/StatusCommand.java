@@ -32,7 +32,7 @@ public class StatusCommand {
         interaction.createImmediateResponder().setContent("Generating status ..").respond().join();
 
         EmbedBuilder builder = new EmbedBuilder()
-                .setColor(Color.decode(COLOR_PALLETE[totalUsagePoint - 1]))
+                .setColor(Color.decode(COLOR_PALLETE[totalUsagePoint]))
                 .setTitle("NixBot status")
                 .addField("Total Memory (" + ram[2] + "/" + ram[0] + ")", ram[3])
                 .addField("Bot CPU usage (" + cpuProcess[0] + "% / 10.0%)", cpuProcess[1])

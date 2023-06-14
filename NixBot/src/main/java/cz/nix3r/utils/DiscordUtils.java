@@ -1,17 +1,40 @@
 package cz.nix3r.utils;
 
 import cz.nix3r.enums.LogType;
+import cz.nix3r.instances.SongInstance;
 import org.javacord.api.entity.Icon;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 
 import java.awt.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class DiscordUtils {
 
     private static Random random = new Random();
+
+    public static EmbedBuilder createNextSongEmbed(SongInstance song){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
+        Date date = new Date(song.getAddedTime());
+        String url = song.getTrack().getInfo().uri;
+        String temp = url.substring(url.indexOf("watch?v=") + 8);
+        if(temp.contains("&list"))
+            temp = temp.substring(0, temp.indexOf("&list"));
+        String picture = ("https://img.youtube.com/vi/%ID%/maxresdefault.jpg").replace("%ID%", temp);
+        return new EmbedBuilder()
+                .setTitle("Start playing new song")
+                .setUrl(url)
+                .setImage(picture)
+                .addField("Name", song.getTrack().getInfo().title, true)
+                .addField("Length", formatTimeToMinutes(song.getTrack().getDuration()))
+                .addField("Added by", song.getPlayerName())
+                .addField("Time added", simpleDateFormat.format(date))
+                .setColor(Color.decode("#2100FF"));
+    }
 
     public static EmbedBuilder createJoinEmbed(String nick, long inviterId, Icon userAvatar, Server server){
         Server nixCrew = (Server)CommonUtils.bot.getServers().toArray()[0];
@@ -69,6 +92,12 @@ public class DiscordUtils {
                         .setFooter(owner)
         ).join();
 
+    }
+
+    public static String formatTimeToMinutes(long time){
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(time);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(time) % 60;
+        return String.format("%02d:%02d", minutes, seconds);
     }
 
 }

@@ -1,6 +1,7 @@
 package cz.nix3r.listeners;
 
 import cz.nix3r.utils.CommonUtils;
+import cz.nix3r.utils.DiscordUtils;
 import org.javacord.api.entity.channel.ServerVoiceChannel;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
@@ -16,6 +17,13 @@ public class nServerVoiceChannelMemberLeaveListener implements ServerVoiceChanne
                 closeTempChannel(serverVoiceChannelMemberLeaveEvent.getUser(), serverVoiceChannelMemberLeaveEvent.getServer(), serverVoiceChannelMemberLeaveEvent.getChannel());
             }
         });
+
+        if(serverVoiceChannelMemberLeaveEvent.getUser().getIdAsString().equals(CommonUtils.bot.getYourself().getIdAsString())){
+            if(CommonUtils.musicManager.isPlaying()){
+                serverVoiceChannelMemberLeaveEvent.getChannel().connect().join();
+                CommonUtils.musicManager.playNext();
+            }
+        }
 
     }
 
