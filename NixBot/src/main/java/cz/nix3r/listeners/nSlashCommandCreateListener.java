@@ -1,7 +1,9 @@
 package cz.nix3r.listeners;
 
 import cz.nix3r.commands.*;
+import cz.nix3r.enums.LogType;
 import cz.nix3r.utils.CommonUtils;
+import cz.nix3r.utils.LogSystem;
 import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
@@ -13,6 +15,8 @@ public class nSlashCommandCreateListener implements SlashCommandCreateListener {
     public void onSlashCommandCreate(SlashCommandCreateEvent slashCommandCreateEvent) {
 
         SlashCommandInteraction interaction = slashCommandCreateEvent.getSlashCommandInteraction();
+
+        LogSystem.log(LogType.INFO, "Command '" + interaction.getCommandName() + "' by '" + interaction.getUser().getName() + "' catched");
 
         switch (interaction.getCommandName()){
 
@@ -48,6 +52,16 @@ public class nSlashCommandCreateListener implements SlashCommandCreateListener {
             case "volume":
                 if (checkIsCmdChannel(interaction))
                     VolumeCommand.run(interaction);
+                break;
+
+            case "dice":
+                if(checkIsCmdChannel(interaction))
+                    DiceCommand.run(interaction);
+                break;
+
+            case "anonymous":
+                if(checkIsCmdChannel(interaction))
+                    AnonymousCommand.run(interaction);
                 break;
 
         }

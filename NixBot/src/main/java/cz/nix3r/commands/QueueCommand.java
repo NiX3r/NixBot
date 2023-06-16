@@ -1,8 +1,10 @@
 package cz.nix3r.commands;
 
+import cz.nix3r.enums.LogType;
 import cz.nix3r.instances.SongInstance;
 import cz.nix3r.utils.CommonUtils;
 import cz.nix3r.utils.DiscordUtils;
+import cz.nix3r.utils.LogSystem;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
@@ -26,6 +28,7 @@ public class QueueCommand {
     private static void clearQueue(SlashCommandInteraction interaction){
         CommonUtils.musicManager.clearQueue();
         interaction.createImmediateResponder().setContent("Queue cleared.").respond();
+        LogSystem.log(LogType.INFO, "End of command queue clear by '" + interaction.getUser().getName() + "'");
     }
 
     private static void viewQueue(SlashCommandInteraction interaction){
@@ -54,6 +57,7 @@ public class QueueCommand {
                 .setColor(Color.decode("#2100FF"));
 
         interaction.createImmediateResponder().addEmbed(builder).respond();
+        LogSystem.log(LogType.INFO, "End of command queue view by '" + interaction.getUser().getName() + "'");
     }
 
 }

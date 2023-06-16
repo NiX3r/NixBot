@@ -36,6 +36,7 @@ public class CommonUtils {
     public static final String CMD_CHANNEL_ID = "1118284494198288445";
     public static final String CREATE_CHANNEL_CHANNEL_ID = "1118311195867369513";
     public static final String CREATE_CHANNEL_CATEGORY_ID = "1118291032065441882";
+    public static final String UNKNOWN_CHANNEL_ID = "1119262818101903410";
     public static final List<String> DEFAULT_ROLES_ID = new ArrayList<String>() {{add("1058009225491656724");}};
 
     public static final String[] WELCOME_MESSAGES = {
@@ -64,11 +65,24 @@ public class CommonUtils {
             "Adios, amigo! Remember, life is better when you're laughing!"
     };
 
+    public static final String[] ROLLED_DICE = {
+            "You rolled the dice and it landed on `%i%`! Looks like luck is on your side today.",
+            "Oh, snap! The dice rolled a `%i%`. Prepare for some epic gaming moments!",
+            "Congratulations! You rolled a whopping `%i%`. You're on a winning streak!",
+            "You got a `%i%`! Quick, make a wish! Maybe the dice will grant it.",
+            "Whoa! The dice revealed `%i%`. That's the magic number! Enjoy your victory.",
+            "Guess what? The dice rolled `%i%`. It seems like fortune favors the bold!",
+            "You rolled a `%i%` and unlocked the door to success. Keep going!",
+            "Incredible! The dice shows `%i%`. Prepare for some wild adventures!",
+            "Aha! The dice landed on `%i%`. It's your lucky charm today!",
+            "You rolled the dice and got `%i%`. Time to celebrate, my friend!"
+    };
+
     public static void setupBot(){
 
         LogSystem.log(LogType.INFO, "Setup default instances");
         time_since_start = System.currentTimeMillis();
-        version = "2.2";
+        version = "2.3";
 
         LogSystem.log(LogType.INFO, "Initialize and connect bot");
         bot = new DiscordApiBuilder().setToken("MTA1ODAyMzc0MTA3NjAxNzIyMg.GtNiZE.YbTL7Nn3LQEIW1spqg2BvedptvjDydsFZ5E2Y4").setAllIntents().login().join();

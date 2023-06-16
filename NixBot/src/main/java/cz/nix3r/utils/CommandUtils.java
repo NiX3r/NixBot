@@ -31,15 +31,25 @@ public class CommandUtils {
         LogSystem.log(LogType.INFO, "Created queue commands");
 
         SlashCommand.with("pause", "command to pause current song").createGlobal(CommonUtils.bot).join();
-        LogSystem.log(LogType.INFO, "Created pause commands");
+        LogSystem.log(LogType.INFO, "Created pause command");
 
         SlashCommand.with("unpause", "command to unpause current song").createGlobal(CommonUtils.bot).join();
-        LogSystem.log(LogType.INFO, "Created unpause commands");
+        LogSystem.log(LogType.INFO, "Created unpause command");
 
         SlashCommand.with("volume", "command to set bot volume", Arrays.asList(
                 SlashCommandOption.create(SlashCommandOptionType.LONG, "volume", "volume percentage", true)
         )).createGlobal(CommonUtils.bot).join();
-        LogSystem.log(LogType.INFO, "Created volume commands");
+        LogSystem.log(LogType.INFO, "Created volume command");
+
+        SlashCommand.with("dice", "command to get random number thrown from dice", Arrays.asList(
+                SlashCommandOption.create(SlashCommandOptionType.LONG, "size", "size of dice", false)
+        )).createGlobal(CommonUtils.bot).join();
+        LogSystem.log(LogType.INFO, "Created dice command");
+
+        SlashCommand.with("anonymous", "command to send anonymous message to anonymous channel", Arrays.asList(
+                SlashCommandOption.create(SlashCommandOptionType.STRING, "message", "message to be sent", true)
+        )).createGlobal(CommonUtils.bot).join();
+        LogSystem.log(LogType.INFO, "Created anonymous command");
 
     }
 
