@@ -30,6 +30,17 @@ public class CommandUtils {
         )).createGlobal(CommonUtils.bot).join();
         LogSystem.log(LogType.INFO, "Created queue commands");
 
+        SlashCommand.with("pause", "command to pause current song").createGlobal(CommonUtils.bot).join();
+        LogSystem.log(LogType.INFO, "Created pause commands");
+
+        SlashCommand.with("unpause", "command to unpause current song").createGlobal(CommonUtils.bot).join();
+        LogSystem.log(LogType.INFO, "Created unpause commands");
+
+        SlashCommand.with("volume", "command to set bot volume", Arrays.asList(
+                SlashCommandOption.create(SlashCommandOptionType.LONG, "volume", "volume percentage", true)
+        )).createGlobal(CommonUtils.bot).join();
+        LogSystem.log(LogType.INFO, "Created volume commands");
+
     }
 
     public static void deleteCommands(){

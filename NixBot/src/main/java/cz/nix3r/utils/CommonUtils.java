@@ -68,7 +68,7 @@ public class CommonUtils {
 
         LogSystem.log(LogType.INFO, "Setup default instances");
         time_since_start = System.currentTimeMillis();
-        version = "2.1";
+        version = "2.2";
 
         LogSystem.log(LogType.INFO, "Initialize and connect bot");
         bot = new DiscordApiBuilder().setToken("MTA1ODAyMzc0MTA3NjAxNzIyMg.GtNiZE.YbTL7Nn3LQEIW1spqg2BvedptvjDydsFZ5E2Y4").setAllIntents().login().join();
@@ -76,12 +76,9 @@ public class CommonUtils {
         LogSystem.log(LogType.INFO, "Setup managers");
         tempChannelManager = new TemporaryChannelManager();
         inviteManager = new InviteManager();
-        AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
-        playerManager.registerSourceManager(new YoutubeAudioSourceManager());
-        AudioPlayer player = playerManager.createPlayer();
         musicManager = new MusicManager();
 
-        LogSystem.log(LogType.INFO, "Refresh commands");
+        //LogSystem.log(LogType.INFO, "Refresh commands");
         //CommandUtils.deleteCommands();
         //CommandUtils.createCommands();
 

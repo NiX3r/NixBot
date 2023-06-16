@@ -3,6 +3,7 @@ package cz.nix3r.utils;
 import cz.nix3r.enums.LogType;
 import cz.nix3r.instances.SongInstance;
 import org.javacord.api.entity.Icon;
+import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
@@ -16,6 +17,10 @@ import java.util.concurrent.TimeUnit;
 public class DiscordUtils {
 
     private static Random random = new Random();
+
+    public static void updateBotActivity(String activity){
+        CommonUtils.bot.updateActivity(ActivityType.PLAYING, activity);
+    }
 
     public static EmbedBuilder createNextSongEmbed(SongInstance song){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");

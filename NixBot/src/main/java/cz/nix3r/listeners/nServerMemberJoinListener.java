@@ -28,7 +28,7 @@ public class nServerMemberJoinListener implements ServerMemberJoinListener {
         });
 
         // Update users counter
-        CommonUtils.bot.updateActivity(ActivityType.PLAYING, "with " + serverMemberJoinEvent.getServer().getMembers().size() + " users");
+        DiscordUtils.updateBotActivity("with " + serverMemberJoinEvent.getServer().getMembers().size() + " users");
         LogSystem.log(LogType.INFO, "Member " + serverMemberJoinEvent.getUser().getName() + " joined on the server. Bot activity updated");
 
     }

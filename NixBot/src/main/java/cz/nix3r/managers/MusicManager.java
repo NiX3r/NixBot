@@ -49,6 +49,7 @@ public class MusicManager {
                 player.stopTrack();
                 CommonUtils.bot.getYourself().getConnectedVoiceChannel(((Server) CommonUtils.bot.getServers().toArray()[0])).get().disconnect().join();
                 channel.sendMessage("Out of songs. Please provide me some more :muscle:").join();
+                DiscordUtils.updateBotActivity("with " + ((Server)CommonUtils.bot.getServers().toArray()[0]).getMembers().size() + " users");
             });
             return;
         }
@@ -57,6 +58,7 @@ public class MusicManager {
         ((Server)CommonUtils.bot.getServers().toArray()[0]).getTextChannelById(CommonUtils.CMD_CHANNEL_ID).ifPresent(channel -> {
             channel.sendMessage(DiscordUtils.createNextSongEmbed(audioList.get(0)));
         });
+        DiscordUtils.updateBotActivity("\uD83C\uDFB5 " + audioList.get(0).getTrack().getInfo().title);
         audioList.remove(0);
     }
 
@@ -71,6 +73,18 @@ public class MusicManager {
                 (player.isPaused() ?
                         false :
                         true);
+    }
+
+    public boolean isPaused(){
+        return player.isPaused();
+    }
+
+    public void setPause(boolean pause){
+        player.setPaused(pause);
+    }
+
+    public void setVolume(int volume){
+        player.setVolume(volume);
     }
 
     public void playMusic(SlashCommandInteraction interaction, String url){

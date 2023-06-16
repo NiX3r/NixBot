@@ -1,6 +1,7 @@
 package cz.nix3r.commands;
 
 import cz.nix3r.utils.CommonUtils;
+import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
 public class PlayCommand {
@@ -9,7 +10,12 @@ public class PlayCommand {
         interaction.getArguments().get(0).getStringValue().ifPresent(url -> {
 
             interaction.getServer().ifPresent(server -> {
-                CommonUtils.musicManager.playMusic(interaction, url);
+
+                if(!interaction.getUser().getConnectedVoiceChannel(server).isPresent())
+                    interaction.createImmediateResponder().setContent("To execute this command you have to be in voice channel in which bot could join.").setFlags(MessageFlag.EPHEMERAL).respond();
+                else
+                    CommonUtils.musicManager.playMusic(interaction, url);
+
             });
 
         });

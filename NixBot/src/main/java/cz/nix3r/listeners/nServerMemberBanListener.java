@@ -18,7 +18,7 @@ public class nServerMemberBanListener implements ServerMemberBanListener {
         serverMemberBanEvent.getServer().getTextChannelById(CommonUtils.WELCOME_CHANNEL_ID).ifPresent(channel -> {
             channel.sendMessage(DiscordUtils.createBanEmbed(serverMemberBanEvent.getUser().getName(), serverMemberBanEvent.getUser().getAvatar(), serverMemberBanEvent.getServer())).join();
         });
-        CommonUtils.bot.updateActivity(ActivityType.PLAYING, "with " + serverMemberBanEvent.getServer().getMembers().size() + " users");
+        DiscordUtils.updateBotActivity("with " + serverMemberBanEvent.getServer().getMembers().size() + " users");
         LogSystem.log(LogType.INFO, "Member " + serverMemberBanEvent.getUser().getName() + " banned from the server. Bot activity updated");
 
     }
