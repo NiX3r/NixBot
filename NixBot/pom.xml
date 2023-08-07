@@ -6,7 +6,7 @@
 
     <groupId>cz.nix3r</groupId>
     <artifactId>NixBot</artifactId>
-    <version>1.0</version>
+    <version>2.4</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
