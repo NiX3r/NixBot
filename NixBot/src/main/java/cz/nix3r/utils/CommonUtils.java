@@ -9,7 +9,9 @@ import cz.nix3r.instances.InviteInstance;
 import cz.nix3r.listeners.*;
 import cz.nix3r.managers.InviteManager;
 import cz.nix3r.managers.MusicManager;
+import cz.nix3r.managers.StreamingPlatformReminderManager;
 import cz.nix3r.managers.TemporaryChannelManager;
+import cz.nix3r.timers.DailyTimer;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.activity.ActivityType;
@@ -19,6 +21,7 @@ import org.javacord.api.entity.server.invite.RichInvite;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 public class CommonUtils {
@@ -30,6 +33,8 @@ public class CommonUtils {
     public static TemporaryChannelManager tempChannelManager;
     public static InviteManager inviteManager;
     public static MusicManager musicManager;
+    public static StreamingPlatformReminderManager platformManager;
+    public static Timer dailyTimer;
 
     public static final String WELCOME_CHANNEL_ID = "611985124057284621";
     public static final String NIXBOT_CHANNEL_ID = "1058017127988211822";
@@ -82,7 +87,7 @@ public class CommonUtils {
 
         LogSystem.log(LogType.INFO, "Setup default instances");
         time_since_start = System.currentTimeMillis();
-        version = "2.3";
+        version = "2.4";
 
         LogSystem.log(LogType.INFO, "Initialize and connect bot");
         bot = new DiscordApiBuilder().setToken("MTA1ODAyMzc0MTA3NjAxNzIyMg.GtNiZE.YbTL7Nn3LQEIW1spqg2BvedptvjDydsFZ5E2Y4").setAllIntents().login().join();
@@ -91,6 +96,10 @@ public class CommonUtils {
         tempChannelManager = new TemporaryChannelManager();
         inviteManager = new InviteManager();
         musicManager = new MusicManager();
+        platformManager = new StreamingPlatformReminderManager();
+
+        LogSystem.log(LogType.INFO, "Load platforms data into cache");
+        platformManager.loadPlatforms();
 
         //LogSystem.log(LogType.INFO, "Refresh commands");
         //CommandUtils.deleteCommands();
@@ -134,6 +143,10 @@ public class CommonUtils {
 
         LogSystem.log(LogType.INFO, "Update activity");
         bot.updateActivity(ActivityType.PLAYING, "with " + ((Server)bot.getServers().toArray()[0]).getMembers().size() + " users");
+
+        LogSystem.log(LogType.INFO, "Create and start timers");
+        dailyTimer = new Timer();
+        dailyTimer.schedule(new DailyTimer(), 0, TimeUnit.DAYS.toMillis(1));
 
         LogSystem.log(LogType.INFO, "Bot successfully initialized and loaded. It took " + (System.currentTimeMillis() - time_since_start) + "ms");
     }
