@@ -6,7 +6,6 @@ import cz.nix3r.listeners.*;
 import cz.nix3r.managers.InviteManager;
 import cz.nix3r.managers.MusicManager;
 import cz.nix3r.managers.TemporaryChannelManager;
-import cz.nix3r.timers.DailyTimer;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.activity.ActivityType;
@@ -17,7 +16,6 @@ import org.javacord.api.entity.server.invite.RichInvite;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
-import java.util.concurrent.TimeUnit;
 
 public class CommonUtils {
 
@@ -135,10 +133,6 @@ public class CommonUtils {
 
         LogSystem.log(LogType.INFO, "Update activity");
         bot.updateActivity(ActivityType.PLAYING, "with " + ((Server)bot.getServers().toArray()[0]).getMembers().size() + " users");
-
-        LogSystem.log(LogType.INFO, "Create and start timers");
-        dailyTimer = new Timer();
-        dailyTimer.schedule(new DailyTimer(), 0, TimeUnit.DAYS.toMillis(1));
 
         LogSystem.log(LogType.INFO, "Bot successfully initialized and loaded. It took " + (System.currentTimeMillis() - time_since_start) + "ms");
     }
