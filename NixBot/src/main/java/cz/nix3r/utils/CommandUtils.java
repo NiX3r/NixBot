@@ -3,6 +3,7 @@ package cz.nix3r.utils;
 import cz.nix3r.enums.LogType;
 import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.interaction.SlashCommand;
+import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.SlashCommandOption;
 import org.javacord.api.interaction.SlashCommandOptionType;
 
@@ -51,6 +52,27 @@ public class CommandUtils {
         )).createGlobal(CommonUtils.bot).join();
         LogSystem.log(LogType.INFO, "Created anonymous command");
 
+        SlashCommand.with("ticket", "command for ticket system", Arrays.asList(
+                SlashCommandOption.createWithOptions(SlashCommandOptionType.SUB_COMMAND, "message", "sub-command for send default message of ticket system"),
+                SlashCommandOption.createWithOptions(SlashCommandOptionType.SUB_COMMAND, "close", "sub-command for close the current ticket"),
+                SlashCommandOption.createWithOptions(SlashCommandOptionType.SUB_COMMAND, "resolve", "sub-command for close and mark as resolved the current ticket"),
+                SlashCommandOption.createWithOptions(SlashCommandOptionType.SUB_COMMAND, "add", "sub-command for add member to ticket", Arrays.asList(
+                        SlashCommandOption.create(SlashCommandOptionType.STRING, "user-nick", "user nick who has to been add")
+                )),
+                SlashCommandOption.createWithOptions(SlashCommandOptionType.SUB_COMMAND, "remove", "sub-command for remove member from ticket", Arrays.asList(
+                        SlashCommandOption.create(SlashCommandOptionType.STRING, "user-nick", "user nick who has to been remove")
+                ))
+        )).createGlobal(CommonUtils.bot).join();
+        LogSystem.log(LogType.INFO, "Created ticket commands");
+
+    }
+
+    public static boolean hasSenderAdminPermission(SlashCommandInteraction interaction){
+        if(interaction.getServer().isPresent()){
+            return interaction.getServer().get().hasPermission(interaction.getUser(), PermissionType.ADMINISTRATOR);
+        }
+        else
+            return true;
     }
 
     public static void deleteCommands(){

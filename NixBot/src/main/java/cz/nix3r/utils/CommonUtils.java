@@ -2,18 +2,23 @@ package cz.nix3r.utils;
 
 import cz.nix3r.enums.LogType;
 import cz.nix3r.instances.InviteInstance;
+import cz.nix3r.instances.Ticket;
 import cz.nix3r.listeners.*;
 import cz.nix3r.managers.InviteManager;
 import cz.nix3r.managers.MusicManager;
 import cz.nix3r.managers.TemporaryChannelManager;
+import cz.nix3r.managers.TicketManager;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.channel.RegularServerChannel;
+import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.server.invite.RichInvite;
+import org.javacord.api.entity.user.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 
@@ -26,7 +31,7 @@ public class CommonUtils {
     public static TemporaryChannelManager tempChannelManager;
     public static InviteManager inviteManager;
     public static MusicManager musicManager;
-    public static Timer dailyTimer;
+    public static TicketManager ticketManager;
 
     public static final String WELCOME_CHANNEL_ID = "611985124057284621";
     public static final String NIXBOT_CHANNEL_ID = "1058017127988211822";
@@ -34,6 +39,8 @@ public class CommonUtils {
     public static final String CREATE_CHANNEL_CHANNEL_ID = "1118311195867369513";
     public static final String CREATE_CHANNEL_CATEGORY_ID = "1118291032065441882";
     public static final String UNKNOWN_CHANNEL_ID = "1119262818101903410";
+    public static final String SUBMIT_CHANNEL_ID = "1216822816062701618";
+    public static final String SUBMIT_CATEGORY_ID = "1216859370269311026";
     public static final List<String> DEFAULT_ROLES_ID = new ArrayList<String>() {{add("1058009225491656724");}};
 
     public static final String[] WELCOME_MESSAGES = {
@@ -88,6 +95,9 @@ public class CommonUtils {
         tempChannelManager = new TemporaryChannelManager();
         inviteManager = new InviteManager();
         musicManager = new MusicManager();
+        if(FileUtils.loadActiveTickets() != null){
+            CommonUtils.ticketManager = new TicketManager(0, new HashMap<Long, Ticket>());
+        }
 
         LogSystem.log(LogType.INFO, "Load platforms data into cache");
 
@@ -103,6 +113,8 @@ public class CommonUtils {
         bot.addSlashCommandCreateListener(new nSlashCommandCreateListener());
         bot.addServerVoiceChannelMemberJoinListener(new nServerVoiceChannelMemberJoinListener());
         bot.addServerVoiceChannelMemberLeaveListener(new nServerVoiceChannelMemberLeaveListener());
+        bot.addMessageComponentCreateListener(new nMessageComponentCreateListener());
+        bot.addMessageCreateListener(new nMessageCreateListener());
 
         LogSystem.log(LogType.INFO, "Delete unwanted channels in temporary category");
         Server nixCrew = ((Server)bot.getServers().toArray()[0]);
@@ -135,6 +147,13 @@ public class CommonUtils {
         bot.updateActivity(ActivityType.PLAYING, "with " + ((Server)bot.getServers().toArray()[0]).getMembers().size() + " users");
 
         LogSystem.log(LogType.INFO, "Bot successfully initialized and loaded. It took " + (System.currentTimeMillis() - time_since_start) + "ms");
+    }
+
+    public static boolean isUserAdmin(Server server, User user){
+        if(server.getMemberById(user.getId()).isPresent()){
+            return server.hasPermission(user, PermissionType.ADMINISTRATOR);
+        }
+        return false;
     }
 
 }
