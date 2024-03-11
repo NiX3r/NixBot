@@ -1,15 +1,10 @@
 package cz.nix3r.utils;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import cz.nix3r.enums.LogType;
 import cz.nix3r.instances.InviteInstance;
 import cz.nix3r.listeners.*;
 import cz.nix3r.managers.InviteManager;
 import cz.nix3r.managers.MusicManager;
-import cz.nix3r.managers.StreamingPlatformReminderManager;
 import cz.nix3r.managers.TemporaryChannelManager;
 import cz.nix3r.timers.DailyTimer;
 import org.javacord.api.DiscordApi;
@@ -33,7 +28,6 @@ public class CommonUtils {
     public static TemporaryChannelManager tempChannelManager;
     public static InviteManager inviteManager;
     public static MusicManager musicManager;
-    public static StreamingPlatformReminderManager platformManager;
     public static Timer dailyTimer;
 
     public static final String WELCOME_CHANNEL_ID = "611985124057284621";
@@ -96,10 +90,8 @@ public class CommonUtils {
         tempChannelManager = new TemporaryChannelManager();
         inviteManager = new InviteManager();
         musicManager = new MusicManager();
-        platformManager = new StreamingPlatformReminderManager();
 
         LogSystem.log(LogType.INFO, "Load platforms data into cache");
-        platformManager.loadPlatforms();
 
         //LogSystem.log(LogType.INFO, "Refresh commands");
         //CommandUtils.deleteCommands();
