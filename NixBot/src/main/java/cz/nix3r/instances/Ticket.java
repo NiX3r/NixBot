@@ -1,9 +1,11 @@
 package cz.nix3r.instances;
 
+import cz.nix3r.enums.LogType;
 import cz.nix3r.enums.TicketStatus;
 import cz.nix3r.utils.CommandUtils;
 import cz.nix3r.utils.CommonUtils;
 import cz.nix3r.utils.FileUtils;
+import cz.nix3r.utils.LogSystem;
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
@@ -101,12 +103,16 @@ public class Ticket {
 
     public static int closeTicket(Server server, TextChannel channel, User user, boolean isResolved){
 
+        LogSystem.log(LogType.INFO, "Trying to close a ticket");
         Ticket ticket = CommonUtils.ticketManager.getActiveTickets().get(channel.getId());
 
-        if(ticket == null)
+        if(ticket == null){
+            LogSystem.log(LogType.WARNING, "Ticket not found. Can't find ticket by channel id");
             return -1;
+        }
 
-        if(!CommonUtils.isUserAdmin(server, user) || ticket.getAuthor().getId() != user.getId()){
+        if(!CommonUtils.isUserAdmin(server, user) && ticket.getAuthor().getId() != user.getId()){
+            LogSystem.log(LogType.WARNING, "User has no permission to close ticket");
             return -2;
         }
 
@@ -124,6 +130,7 @@ public class Ticket {
             serverUser.sendMessage("Konverzace s podporou byla uzavřena.").join();
         });
 
+        LogSystem.log(LogType.INFO, "Ticket closed");
         return 1;
 
     }

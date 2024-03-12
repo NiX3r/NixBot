@@ -31,22 +31,21 @@ public class MusicManager {
     private List<SongInstance> audioList;
 
     public MusicManager(){
-
         playerManager = new DefaultAudioPlayerManager();
         playerManager.registerSourceManager(new YoutubeAudioSourceManager());
         player = playerManager.createPlayer();
         audioSource = new LavaplayerAudioSource(CommonUtils.bot, player);
         audioList = new ArrayList<>();
-
         player.addListener(new nTrackEndEvent());
-
     }
 
     public void playNext(){
         if(audioList.size() == 0){
             ((Server)CommonUtils.bot.getServers().toArray()[0]).getTextChannelById(CommonUtils.CMD_CHANNEL_ID).ifPresent(channel -> {
                 player.stopTrack();
-                CommonUtils.bot.getYourself().getConnectedVoiceChannel(((Server) CommonUtils.bot.getServers().toArray()[0])).get().disconnect().join();
+                CommonUtils.bot.getYourself().getConnectedVoiceChannels().forEach(server -> {
+                    server.disconnect();
+                });
                 channel.sendMessage("Out of songs. Please provide me some more :muscle:").join();
                 DiscordUtils.updateBotActivity("with " + ((Server)CommonUtils.bot.getServers().toArray()[0]).getMembers().size() + " users");
             });

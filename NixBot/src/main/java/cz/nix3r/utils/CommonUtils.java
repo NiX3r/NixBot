@@ -8,6 +8,7 @@ import cz.nix3r.managers.InviteManager;
 import cz.nix3r.managers.MusicManager;
 import cz.nix3r.managers.TemporaryChannelManager;
 import cz.nix3r.managers.TicketManager;
+import cz.nix3r.threads.ShutdownThread;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.activity.ActivityType;
@@ -99,9 +100,12 @@ public class CommonUtils {
             CommonUtils.ticketManager = new TicketManager(0, new HashMap<Long, Ticket>());
         }
 
+        LogSystem.log(LogType.INFO, "Initializing and starting threads");
+        Runtime.getRuntime().addShutdownHook(new ShutdownThread());
+
         LogSystem.log(LogType.INFO, "Load platforms data into cache");
 
-        //LogSystem.log(LogType.INFO, "Refresh commands");
+        // Refresh commands if needed
         //CommandUtils.deleteCommands();
         //CommandUtils.createCommands();
 
@@ -156,4 +160,10 @@ public class CommonUtils {
         return false;
     }
 
+    public static void shutdownBot() {
+        LogSystem.log(LogType.INFO, "Shutting down the bot ..");
+        FileUtils.saveActiveTickets();
+        bot.disconnect();
+        LogSystem.save();
+    }
 }

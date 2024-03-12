@@ -1,16 +1,24 @@
 package cz.nix3r.listeners;
 
+import cz.nix3r.enums.LogType;
 import cz.nix3r.enums.TicketStatus;
 import cz.nix3r.instances.Ticket;
 import cz.nix3r.instances.TicketMember;
 import cz.nix3r.instances.TicketMessage;
 import cz.nix3r.utils.CommonUtils;
+import cz.nix3r.utils.FileUtils;
+import cz.nix3r.utils.LogSystem;
 import org.javacord.api.entity.message.MessageAttachment;
 import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 public class nMessageCreateListener implements MessageCreateListener {
@@ -33,15 +41,38 @@ public class nMessageCreateListener implements MessageCreateListener {
                     TicketMessage message = new TicketMessage(messageCreateEvent.getMessageId(),
                             new TicketMember(messageCreateEvent.getMessageAuthor().getId(), messageCreateEvent.getMessageAuthor().getName()),
                             messageCreateEvent.getMessageContent(),
-                            new ArrayList<byte[]>());
+                            new HashMap<String, String>());
+
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTimeInMillis(ticket.getCreateDate());
 
                     for(MessageAttachment attachment : messageCreateEvent.getMessage().getAttachments()){
+                        String key, fileName;
                         try {
-                            message.getFiles().add(attachment.asByteArray().get());
+
+                            byte[] file = attachment.asByteArray().get();
+                            System.out.println(file.length);
+                            fileName = attachment.getFileName();
+                            key = fileName.substring(0, fileName.indexOf("."));
+                            String path = FileUtils.getArchiveFullPath(ticket);
+
+                            new File(path).mkdirs();
+
+                            try (FileOutputStream fos = new FileOutputStream(path + "/" + fileName)) {
+                                fos.write(file);
+                                fos.flush();
+                            }
+
+                            message.addAttachment(key, path + "/" + fileName);
+
                         } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
+                            e.printStackTrace();
                         } catch (ExecutionException e) {
-                            throw new RuntimeException(e);
+                            e.printStackTrace();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
 
                     }
@@ -61,6 +92,7 @@ public class nMessageCreateListener implements MessageCreateListener {
                         ));
 
                     ticket.getMessages().add(message);
+                    LogSystem.log(LogType.INFO, "Ticket message by '" + messageCreateEvent.getMessageAuthor().getName() + "' saved");
 
                 }
 

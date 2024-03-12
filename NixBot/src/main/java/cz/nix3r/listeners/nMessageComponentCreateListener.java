@@ -95,7 +95,7 @@ public class nMessageComponentCreateListener implements MessageComponentCreateLi
 
         CommonUtils.ticketManager.addTicket(ticket);
         CommonUtils.ticketManager.updateIndex();
-        interaction.createImmediateResponder().setContent("Vytvořená konverzace s podporou").setFlags(MessageFlag.EPHEMERAL).respond();
+        interaction.createImmediateResponder().setContent("Vytvořená konverzace s podporou. Můžeš kliknout zde " + channel.asServerTextChannel().get().getMentionTag()).setFlags(MessageFlag.EPHEMERAL).respond();
 
     }
 
