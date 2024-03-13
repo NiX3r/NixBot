@@ -10,6 +10,7 @@ import org.javacord.api.entity.user.User;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -83,18 +84,41 @@ public class DiscordUtils {
                 .setThumbnail(userAvatar);
     }
 
-    public static void throwError(String message, String owner){
-        throwError(false, message, owner);
+    public static EmbedBuilder createTopStatisticsEmbed(String name, String description, ArrayList<String[]> data){
+        EmbedBuilder output = new EmbedBuilder()
+                .setTitle(name)
+                .setDescription(description)
+                .setColor(Color.decode("#2100FF"));
+        for(int i = 0; i < 5; i++){
+            if(i < data.size())
+                output.addField("#" + (i+1) + " " + data.get(i)[0], data.get(i)[1]);
+        }
+        return output;
     }
 
-    public static void throwError(boolean fatal, String message, String owner){
+    public static EmbedBuilder createStatisticEmbed(ArrayList<String[]> data){
+        EmbedBuilder builder = new EmbedBuilder()
+                .setTitle("Ostatní statistiky")
+                .setColor(Color.decode("#2100FF"));
+        for(String[] item : data){
+            builder.addField(item[0], item[1]);
+        }
+        return builder;
+    }
 
-        LogSystem.log(fatal ? LogType.FATAL_ERROR : LogType.ERROR, message);
+    public static void throwError(Exception ex){
+        throwError(false, ex);
+    }
+
+    public static void throwError(boolean fatal, Exception exception){
+
+        LogSystem.log(fatal ? LogType.FATAL_ERROR : LogType.ERROR, exception.getMessage());
         ((Server)CommonUtils.bot.getServers().toArray()[0]).getTextChannelById(CommonUtils.NIXBOT_CHANNEL_ID).get().sendMessage(
                 new EmbedBuilder().setTitle(fatal ? "Fatal Error" : "Error")
                         .setColor(fatal ? Color.decode("#fc0202") : Color.decode("#fc7702"))
-                        .setDescription(message)
-                        .setFooter(owner)
+                        .addField("Message", exception.getMessage())
+                        .setDescription(exception.getStackTrace().toString())
+                        .setFooter("Version: " + CommonUtils.version)
         ).join();
 
     }

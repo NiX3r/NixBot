@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Netflix",
+    "current_index": 0,
+    "list": [
+      "Daniel",
+      "Jirka",
+      "Anca"
+    ]
+  },
+  {
+    "name": "Disney",
+    "current_index": 0,
+    "list": [
+      "Daniel",
+      "Andrea",
+      "Vojta",
+      "Hedvika",
+      "Andrea",
+      "Jirka"
+    ]
+  },
+  {
+    "name": "HBO",
+    "current_index": 0,
+    "list": [
+      "Kamoska Anci",
+      "Hedvika",
+      "Jirka"
+    ]
+  }
+]

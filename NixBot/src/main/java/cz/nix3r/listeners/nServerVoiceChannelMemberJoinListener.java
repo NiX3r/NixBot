@@ -1,6 +1,9 @@
 package cz.nix3r.listeners;
 
+import cz.nix3r.enums.LogType;
+import cz.nix3r.instances.UserChannelActivityInstance;
 import cz.nix3r.utils.CommonUtils;
+import cz.nix3r.utils.LogSystem;
 import org.javacord.api.entity.channel.ServerVoiceChannel;
 import org.javacord.api.entity.permission.Permissions;
 import org.javacord.api.entity.server.Server;
@@ -16,13 +19,27 @@ public class nServerVoiceChannelMemberJoinListener implements ServerVoiceChannel
             createTempVoiceChannel(serverVoiceChannelMemberJoinEvent.getUser(), serverVoiceChannelMemberJoinEvent.getServer());
         }
 
+        if(serverVoiceChannelMemberJoinEvent.getChannel().asChannelCategory().isPresent() &&
+                serverVoiceChannelMemberJoinEvent.getChannel().asChannelCategory().get().getIdAsString().equals(CommonUtils.CREATE_CHANNEL_CATEGORY_ID)){
+            return;
+        }
+
+        CommonUtils.statisticsManager.getChannelActivities().put(serverVoiceChannelMemberJoinEvent.getUser().getId(), new UserChannelActivityInstance(
+                serverVoiceChannelMemberJoinEvent.getUser().getId(),
+                serverVoiceChannelMemberJoinEvent.getChannel().getId(),
+                System.currentTimeMillis()
+        ));
+
     }
 
     private void createTempVoiceChannel(User creator, Server server){
 
+        LogSystem.log(LogType.INFO, "User '" + creator.getName() + "' tries to create temp channel");
+
         if(CommonUtils.tempChannelManager.alreadyHasTempVoiceChannel(creator.getId())){
             server.getVoiceChannelById(CommonUtils.tempChannelManager.getTempVoiceChannelMap().get(creator.getId())).ifPresent(tempChannel -> {
                 creator.move(tempChannel).join();
+                LogSystem.log(LogType.INFO, "User " + creator.getName() + "' already have temp channel. User moved");
             });
             return;
         }
@@ -34,10 +51,8 @@ public class nServerVoiceChannelMemberJoinListener implements ServerVoiceChannel
                 .create().join();
 
         CommonUtils.tempChannelManager.addTempChannel(creator.getId(), voiceChannel.getId());
-
-
-
         creator.move(voiceChannel).join();
+        LogSystem.log(LogType.INFO, "Temp channel for user '" + creator.getName() +"' created. User moved");
 
     }
 

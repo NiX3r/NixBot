@@ -64,6 +64,15 @@ public class nSlashCommandCreateListener implements SlashCommandCreateListener {
                     AnonymousCommand.run(interaction);
                 break;
 
+            case "ticket":
+                TicketCommand.run(interaction);
+                break;
+
+            case "phonetic":
+                if(checkIsCmdChannel(interaction))
+                    PhoneticCommand.run(interaction);
+                break;
+
         }
 
     }
