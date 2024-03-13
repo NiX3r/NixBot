@@ -111,6 +111,11 @@ public class StatisticsManager {
     public ArrayList<String[]> getRestStatistics(){
         ArrayList<String[]> output = new ArrayList<String[]>();
         output.add(new String[]{ "Počet provolaných hodin tento den", formatTime(statistics.getCallTimeDay())});
+        output.add(new String[]{ "Počet provolaných hodin tento měšís", formatTime(statistics.getCallTimeMonth())});
+        output.add(new String[]{ "Počet provolaných hodin celkově", formatTime(statistics.getCallTimeDay())});
+        output.add(new String[]{ "Počet napsaných zpráv tento den", formatTime(statistics.getTextCounterDay())});
+        output.add(new String[]{ "Počet napsaných zpráv tento měsíc", formatTime(statistics.getTextCounterMonth())});
+        output.add(new String[]{ "Počet napsaných zpráv celkově", formatTime(statistics.getTextCounterEver())});
         return output;
     }
 

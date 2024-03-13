@@ -7,6 +7,8 @@ import cz.nix3r.instances.Ticket;
 import cz.nix3r.listeners.*;
 import cz.nix3r.managers.*;
 import cz.nix3r.threads.ShutdownThread;
+import cz.nix3r.timers.UpdateStatisticsMessageTimer;
+import org.apache.commons.logging.Log;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.activity.ActivityType;
@@ -35,6 +37,8 @@ public class CommonUtils {
     public static MusicManager musicManager;
     public static TicketManager ticketManager;
     public static StatisticsManager statisticsManager;
+
+    private static UpdateStatisticsMessageTimer updateStatisticsMessageTimer;
 
     public static final String WELCOME_CHANNEL_ID = "611985124057284621";
     public static final String NIXBOT_CHANNEL_ID = "1058017127988211822";
@@ -94,7 +98,8 @@ public class CommonUtils {
         version = "2.4";
 
         LogSystem.log(LogType.INFO, "Load settings from file");
-        FileUtils.loadSettings();
+        if(FileUtils.loadSettings() != null)
+            CommonUtils.settings = new AppSettingsInstance(0);
 
         LogSystem.log(LogType.INFO, "Initialize and connect bot");
         bot = new DiscordApiBuilder().setToken("MTA1ODAyMzc0MTA3NjAxNzIyMg.GtNiZE.YbTL7Nn3LQEIW1spqg2BvedptvjDydsFZ5E2Y4").setAllIntents().login().join();
@@ -158,6 +163,9 @@ public class CommonUtils {
 
         LogSystem.log(LogType.INFO, "Update activity");
         bot.updateActivity(ActivityType.PLAYING, "with " + ((Server)bot.getServers().toArray()[0]).getMembers().size() + " users");
+
+        LogSystem.log(LogType.INFO, "Initialize and start timers");
+        updateStatisticsMessageTimer = new UpdateStatisticsMessageTimer();
 
         LogSystem.log(LogType.INFO, "Bot successfully initialized and loaded. It took " + (System.currentTimeMillis() - time_since_start) + "ms");
     }

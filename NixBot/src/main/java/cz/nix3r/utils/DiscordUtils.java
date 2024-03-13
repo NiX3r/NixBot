@@ -85,15 +85,17 @@ public class DiscordUtils {
     }
 
     public static EmbedBuilder createTopStatisticsEmbed(String name, String description, ArrayList<String[]> data){
-        return new EmbedBuilder()
+        EmbedBuilder output = new EmbedBuilder()
                 .setTitle(name)
-                .addField("#1 " + data.get(0)[0], data.get(0)[1])
-                .addField("#2 " + data.get(1)[0], data.get(1)[1])
-                .addField("#3 " + data.get(2)[0], data.get(2)[1])
-                .addField("#4 " + data.get(3)[0], data.get(3)[1])
-                .addField("#5 " + data.get(4)[0], data.get(4)[1])
                 .setDescription(description)
                 .setColor(Color.decode("#2100FF"));
+        for(int i = 0; i < 5; i++){
+            if(i < data.size())
+                output.addField("#" + (i+1) + " " + data.get(i)[0], data.get(i)[1]);
+            else
+                output.addField("#" + (i+1) + " NONE", "-1");
+        }
+        return output;
     }
 
     public static EmbedBuilder createStatisticEmbed(ArrayList<String[]> data){

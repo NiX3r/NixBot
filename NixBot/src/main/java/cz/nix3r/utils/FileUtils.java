@@ -122,7 +122,7 @@ public class FileUtils {
             createDefaultStatisticsFolders();
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
-            String path = STATISTICS_ARCHIVE + "/statistics-" + ((calendar.get(Calendar.MONTH) + 1)) + "-" + (calendar.get(Calendar.YEAR)) + ".json";
+            String path = STATISTICS_ARCHIVE + "statistics-" + ((calendar.get(Calendar.MONTH) + 1)) + "-" + (calendar.get(Calendar.YEAR)) + ".json";
             BufferedWriter f_writer = new BufferedWriter(
                     new FileWriter(path)
             );

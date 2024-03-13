@@ -1,13 +1,16 @@
 package cz.nix3r.timers;
 
+import cz.nix3r.enums.LogType;
 import cz.nix3r.utils.CommonUtils;
 import cz.nix3r.utils.DiscordUtils;
+import cz.nix3r.utils.LogSystem;
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class UpdateStatisticsMessageTimer extends TimerTask {
@@ -25,12 +28,18 @@ public class UpdateStatisticsMessageTimer extends TimerTask {
     public void run() {
         CommonUtils.bot.getServers().forEach(server -> {
             server.getTextChannelById(CommonUtils.STATS_CHANNEL_ID).ifPresent(textChannel -> {
-                Message msg = textChannel.getMessageById(CommonUtils.settings.getStatsMessageId()).join();
+                Message msg = null;
+                try {
+                    msg = textChannel.getMessageById(CommonUtils.settings.getStatsMessageId()).get();
+                } catch (InterruptedException e) {
+                } catch (ExecutionException e) {
+                }
                 if(msg == null){
-                    textChannel
+                    Message newMsg = textChannel.sendMessage(getEmbed()).join();
+                    CommonUtils.settings.setStatsMessageId(newMsg.getId());
                 }
                 else {
-
+                    msg.createUpdater().removeAllEmbeds().addEmbed(getEmbed()).applyChanges();
                 }
             });
         });
@@ -49,19 +58,19 @@ public class UpdateStatisticsMessageTimer extends TimerTask {
                 return DiscordUtils.createTopStatisticsEmbed("Nejpoužívanější hlasový kanál tento měsíc", "", CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getUsedVoiceChannelIdMonth(), false));
             case 3:
                 index++;
-                return DiscordUtils.createTopStatisticsEmbed("Nejpoužívanější hlasový kanál celkově", "", CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getUsedVoiceChannelIdEver()));
+                return DiscordUtils.createTopStatisticsEmbed("Nejpoužívanější hlasový kanál celkově", "", CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getUsedVoiceChannelIdEver(), false));
             case 4:
                 index++;
-                return DiscordUtils.createTopStatisticsEmbed("Nejvíce připojený uživatel tento měsíc", "Uživatelé, kteří se nejvíce připojovali k serveru za poslední měsíc", CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getBestUserCallTimeMonth()));
+                return DiscordUtils.createTopStatisticsEmbed("Nejvíce připojený uživatel tento měsíc", "Uživatelé, kteří se nejvíce připojovali k serveru za poslední měsíc", CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getBestUserCallTimeMonth(), false));
             case 5:
                 index++;
-                return DiscordUtils.createTopStatisticsEmbed("Nejvíce připojený uživatel celkově", "Uživatelé, kteří se nejvíce připojovali k serveru celkově", CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getBestUserCallTimeEver()));
+                return DiscordUtils.createTopStatisticsEmbed("Nejvíce připojený uživatel celkově", "Uživatelé, kteří se nejvíce připojovali k serveru celkově", CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getBestUserCallTimeEver(), false));
             case 6:
                 index++;
-                return DiscordUtils.createTopStatisticsEmbed("Uživatel s nejvíce zprávy tento měsíc", "", CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getBestUserTextCounterMonth()));
+                return DiscordUtils.createTopStatisticsEmbed("Uživatel s nejvíce zprávy tento měsíc", "", CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getBestUserTextCounterMonth(), true));
             case 7:
                 index++;
-                return DiscordUtils.createTopStatisticsEmbed("Uživatel s nejvíce zprávy celkově", "", CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getBestUserTextCounterEver()));
+                return DiscordUtils.createTopStatisticsEmbed("Uživatel s nejvíce zprávy celkově", "", CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getBestUserTextCounterEver(), true));
             case 8:
                 index = 0;
                 return DiscordUtils.createStatisticEmbed(CommonUtils.statisticsManager.getRestStatistics());
