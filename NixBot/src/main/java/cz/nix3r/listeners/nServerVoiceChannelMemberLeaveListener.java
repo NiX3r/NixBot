@@ -43,7 +43,7 @@ public class nServerVoiceChannelMemberLeaveListener implements ServerVoiceChanne
         UserChannelActivityInstance activityInstance = CommonUtils.statisticsManager.getChannelActivities().get(serverVoiceChannelMemberLeaveEvent.getUser().getId());
         long timestamp = System.currentTimeMillis() - activityInstance.getTimestamp();
 
-        CommonUtils.statisticsManager.incrementUsedVoiceChannelId(activityInstance.getChannelId());
+        CommonUtils.statisticsManager.incrementUsedVoiceChannelId(activityInstance.getChannelId(), timestamp);
         CommonUtils.statisticsManager.incrementBestUserCallTime(activityInstance.getUserId(), timestamp);
         CommonUtils.statisticsManager.incrementCallTime(timestamp);
 

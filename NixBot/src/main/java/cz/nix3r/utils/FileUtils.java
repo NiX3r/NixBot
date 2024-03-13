@@ -33,7 +33,7 @@ public class FileUtils {
             return null;
         }
         catch (Exception ex){
-            LogSystem.log(LogType.FATAL_ERROR, "Settings cannot be loaded. Error: " + ex.getMessage());
+            DiscordUtils.throwError(ex);
             return ex;
         }
     }
@@ -50,7 +50,7 @@ public class FileUtils {
             return null;
         }
         catch (Exception ex){
-            LogSystem.log(LogType.FATAL_ERROR, "Settings cannot be saved. Error: " + ex.getMessage());
+            DiscordUtils.throwError(ex);
             return ex;
         }
     }
@@ -71,7 +71,7 @@ public class FileUtils {
             return null;
         }
         catch (Exception ex){
-            LogSystem.log(LogType.FATAL_ERROR, "Active tickets cannot be saved. Error: " + ex.getMessage());
+            DiscordUtils.throwError(ex);
             return ex;
         }
 
@@ -87,7 +87,7 @@ public class FileUtils {
             return null;
         }
         catch (Exception ex){
-            LogSystem.log(LogType.FATAL_ERROR, "Active tickets cannot be loaded. Error: " + ex.getMessage());
+            DiscordUtils.throwError(ex);
             return ex;
         }
 
@@ -110,7 +110,7 @@ public class FileUtils {
             return null;
         }
         catch (Exception ex){
-            LogSystem.log(LogType.ERROR, "Ticket cannot be saved. Error: " + ex.getMessage());
+            DiscordUtils.throwError(ex);
             return ex;
         }
 
@@ -133,7 +133,7 @@ public class FileUtils {
             return null;
         }
         catch (Exception ex){
-            LogSystem.log(LogType.ERROR, "Statistics cannot be saved. Error: " + ex.getMessage());
+            DiscordUtils.throwError(ex);
             return ex;
         }
     }
@@ -152,7 +152,7 @@ public class FileUtils {
         catch (Exception ex){
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
-            LogSystem.log(LogType.FATAL_ERROR, "Current month statistics cannot be loaded. Error: " + ex.getMessage());
+            DiscordUtils.throwError(ex);
             return new StatisticsInstance(new HashMap<Long, Long>(), new HashMap<Long, Long>(), new HashMap<Long, Long>(),
                     new HashMap<Long, Long>(), new HashMap<Long, Long>(), new HashMap<Long, Long>(), new HashMap<Long, Long>(),
                     new HashMap<Long, Long>(), 0, 0, 0, 0, 0, 0,

@@ -57,7 +57,7 @@ public class nServerMemberJoinListener implements ServerMemberJoinListener {
                 user.addRole(server.getRoleById(roleIUd).get()).join();
             }
             catch (Exception ex){
-                DiscordUtils.throwError("Default role " + roleIUd + " does not exists", "nServerMemberJoinListener.addDefaultRole");
+                DiscordUtils.throwError(ex);
             }
         }
 

@@ -6,6 +6,7 @@ import cz.nix3r.instances.Ticket;
 import cz.nix3r.instances.TicketMember;
 import cz.nix3r.instances.TicketMessage;
 import cz.nix3r.utils.CommonUtils;
+import cz.nix3r.utils.DiscordUtils;
 import cz.nix3r.utils.FileUtils;
 import cz.nix3r.utils.LogSystem;
 import org.javacord.api.entity.message.MessageAttachment;
@@ -62,17 +63,14 @@ public class nMessageCreateListener implements MessageCreateListener {
                                 fos.write(file);
                                 fos.flush();
                             }
+                            catch (Exception ex){
+                                DiscordUtils.throwError(ex);
+                            }
 
                             message.addAttachment(key, path + "/" + fileName);
 
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        } catch (Exception ex){
+                            DiscordUtils.throwError(ex);
                         }
 
                     }

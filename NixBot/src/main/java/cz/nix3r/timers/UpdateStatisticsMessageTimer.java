@@ -21,7 +21,7 @@ public class UpdateStatisticsMessageTimer extends TimerTask {
     public UpdateStatisticsMessageTimer(){
         index = 0;
         timer = new Timer();
-        timer.schedule(this, 0, TimeUnit.MINUTES.toMillis(1));
+        timer.schedule(this, 0, TimeUnit.SECONDS.toMillis(20));
     }
 
     @Override

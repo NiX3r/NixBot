@@ -41,9 +41,9 @@ public class StatisticsManager {
         LogSystem.log(LogType.INFO, "Used text channel id '" + id + "' increased");
     }
 
-    public void incrementUsedVoiceChannelId(Long id){
-        statistics.incrementUsedVoiceChannelIdMonth(id);
-        statistics.incrementUsedVoiceChannelIdEver(id);
+    public void incrementUsedVoiceChannelId(Long id, long toAdd){
+        statistics.incrementUsedVoiceChannelIdMonth(id, toAdd);
+        statistics.incrementUsedVoiceChannelIdEver(id, toAdd);
         LogSystem.log(LogType.INFO, "Used voice channel id '" + id + "' increased");
     }
 
@@ -113,15 +113,22 @@ public class StatisticsManager {
         output.add(new String[]{ "Počet provolaných hodin tento den", formatTime(statistics.getCallTimeDay())});
         output.add(new String[]{ "Počet provolaných hodin tento měšís", formatTime(statistics.getCallTimeMonth())});
         output.add(new String[]{ "Počet provolaných hodin celkově", formatTime(statistics.getCallTimeDay())});
-        output.add(new String[]{ "Počet napsaných zpráv tento den", formatTime(statistics.getTextCounterDay())});
-        output.add(new String[]{ "Počet napsaných zpráv tento měsíc", formatTime(statistics.getTextCounterMonth())});
-        output.add(new String[]{ "Počet napsaných zpráv celkově", formatTime(statistics.getTextCounterEver())});
+        output.add(new String[]{ "Počet napsaných zpráv tento den", statistics.getTextCounterDay() + ""});
+        output.add(new String[]{ "Počet napsaných zpráv tento měsíc", statistics.getTextCounterMonth() + ""});
+        output.add(new String[]{ "Počet napsaných zpráv celkově", statistics.getTextCounterEver() + ""});
         return output;
     }
 
     private String formatTime(long milliseconds) {
-        SimpleDateFormat formatter = new SimpleDateFormat("HH'h' mm'm' ss's'");
-        return formatter.format(new Date(milliseconds));
+        String output = "";
+        long temp = milliseconds;
+        long hours = temp / 3600000;
+        temp -= (hours * 3600000);
+        long minutes = temp / 60000;
+        temp -= (minutes * 60000);
+        long seconds = temp / 1000;
+        output = hours + "h " + minutes + "m " + seconds + "s";
+        return output;
     }
 
 }

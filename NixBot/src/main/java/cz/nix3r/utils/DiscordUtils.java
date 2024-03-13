@@ -92,8 +92,6 @@ public class DiscordUtils {
         for(int i = 0; i < 5; i++){
             if(i < data.size())
                 output.addField("#" + (i+1) + " " + data.get(i)[0], data.get(i)[1]);
-            else
-                output.addField("#" + (i+1) + " NONE", "-1");
         }
         return output;
     }
@@ -108,18 +106,19 @@ public class DiscordUtils {
         return builder;
     }
 
-    public static void throwError(String message, String owner){
-        throwError(false, message, owner);
+    public static void throwError(Exception ex){
+        throwError(false, ex);
     }
 
-    public static void throwError(boolean fatal, String message, String owner){
+    public static void throwError(boolean fatal, Exception exception){
 
-        LogSystem.log(fatal ? LogType.FATAL_ERROR : LogType.ERROR, message);
+        LogSystem.log(fatal ? LogType.FATAL_ERROR : LogType.ERROR, exception.getMessage());
         ((Server)CommonUtils.bot.getServers().toArray()[0]).getTextChannelById(CommonUtils.NIXBOT_CHANNEL_ID).get().sendMessage(
                 new EmbedBuilder().setTitle(fatal ? "Fatal Error" : "Error")
                         .setColor(fatal ? Color.decode("#fc0202") : Color.decode("#fc7702"))
-                        .setDescription(message)
-                        .setFooter(owner)
+                        .addField("Message", exception.getMessage())
+                        .setDescription(exception.getStackTrace().toString())
+                        .setFooter("Version: " + CommonUtils.version)
         ).join();
 
     }

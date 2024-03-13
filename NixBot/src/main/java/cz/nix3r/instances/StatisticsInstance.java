@@ -136,13 +136,13 @@ public class StatisticsInstance {
         usedTextChannelIdEver.merge(id, 1L, Long::sum);
     }
 
-    public void incrementUsedVoiceChannelIdMonth(Long id) {
+    public void incrementUsedVoiceChannelIdMonth(Long id, long toAdd) {
         checkCurrentDatetime();
-        usedVoiceChannelIdMonth.merge(id, 1L, Long::sum);
+        usedVoiceChannelIdMonth.merge(id, toAdd, Long::sum);
     }
 
-    public void incrementUsedVoiceChannelIdEver(Long id) {
-        usedVoiceChannelIdEver.merge(id, 1L, Long::sum);
+    public void incrementUsedVoiceChannelIdEver(Long id, long toAdd) {
+        usedVoiceChannelIdEver.merge(id, toAdd, Long::sum);
     }
 
     public void incrementBestUserCallTimeMonth(Long id, long toAdd) {
