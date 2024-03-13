@@ -54,7 +54,7 @@ public class nMessageCreateListener implements MessageCreateListener {
                             System.out.println(file.length);
                             fileName = attachment.getFileName();
                             key = fileName.substring(0, fileName.indexOf("."));
-                            String path = FileUtils.getArchiveFullPath(ticket);
+                            String path = FileUtils.getTicketArchiveFullPath(ticket);
 
                             new File(path).mkdirs();
 
@@ -94,6 +94,12 @@ public class nMessageCreateListener implements MessageCreateListener {
                     ticket.getMessages().add(message);
                     LogSystem.log(LogType.INFO, "Ticket message by '" + messageCreateEvent.getMessageAuthor().getName() + "' saved");
 
+                }
+                // Add to statistics (only if it's in category, and it's not tickets category)
+                else if(!category.getIdAsString().equals(CommonUtils.PROGRAMMING_CATEGORY)){
+                    CommonUtils.statisticsManager.incrementTextCounter();
+                    CommonUtils.statisticsManager.incrementUsedTextChannelId(textChannel.getId());
+                    CommonUtils.statisticsManager.incrementBestUserTextCounterMonth(messageCreateEvent.getMessageAuthor().getId());
                 }
 
             });

@@ -10,6 +10,7 @@ import org.javacord.api.entity.user.User;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -81,6 +82,28 @@ public class DiscordUtils {
                 .addField("Member count", server.getMembers().size() + " total")
                 .setFooter("Version: " + CommonUtils.version)
                 .setThumbnail(userAvatar);
+    }
+
+    public static EmbedBuilder createTopStatisticsEmbed(String name, String description, ArrayList<String[]> data){
+        return new EmbedBuilder()
+                .setTitle(name)
+                .addField("#1 " + data.get(0)[0], data.get(0)[1])
+                .addField("#2 " + data.get(1)[0], data.get(1)[1])
+                .addField("#3 " + data.get(2)[0], data.get(2)[1])
+                .addField("#4 " + data.get(3)[0], data.get(3)[1])
+                .addField("#5 " + data.get(4)[0], data.get(4)[1])
+                .setDescription(description)
+                .setColor(Color.decode("#2100FF"));
+    }
+
+    public static EmbedBuilder createStatisticEmbed(ArrayList<String[]> data){
+        EmbedBuilder builder = new EmbedBuilder()
+                .setTitle("Ostatní statistiky")
+                .setColor(Color.decode("#2100FF"));
+        for(String[] item : data){
+            builder.addField(item[0], item[1]);
+        }
+        return builder;
     }
 
     public static void throwError(String message, String owner){

@@ -1,13 +1,11 @@
 package cz.nix3r.utils;
 
 import cz.nix3r.enums.LogType;
+import cz.nix3r.instances.AppSettingsInstance;
 import cz.nix3r.instances.InviteInstance;
 import cz.nix3r.instances.Ticket;
 import cz.nix3r.listeners.*;
-import cz.nix3r.managers.InviteManager;
-import cz.nix3r.managers.MusicManager;
-import cz.nix3r.managers.TemporaryChannelManager;
-import cz.nix3r.managers.TicketManager;
+import cz.nix3r.managers.*;
 import cz.nix3r.threads.ShutdownThread;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
@@ -18,6 +16,7 @@ import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.server.invite.RichInvite;
 import org.javacord.api.entity.user.User;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,10 +28,13 @@ public class CommonUtils {
     public static String version;
     public static long time_since_start;
 
+    public static AppSettingsInstance settings;
+
     public static TemporaryChannelManager tempChannelManager;
     public static InviteManager inviteManager;
     public static MusicManager musicManager;
     public static TicketManager ticketManager;
+    public static StatisticsManager statisticsManager;
 
     public static final String WELCOME_CHANNEL_ID = "611985124057284621";
     public static final String NIXBOT_CHANNEL_ID = "1058017127988211822";
@@ -42,6 +44,8 @@ public class CommonUtils {
     public static final String UNKNOWN_CHANNEL_ID = "1119262818101903410";
     public static final String SUBMIT_CHANNEL_ID = "1216822816062701618";
     public static final String SUBMIT_CATEGORY_ID = "1216859370269311026";
+    public static final String PROGRAMMING_CATEGORY = "893483481483583508";
+    public static final String STATS_CHANNEL_ID = "1217475154582442086";
     public static final List<String> DEFAULT_ROLES_ID = new ArrayList<String>() {{add("1058009225491656724");}};
 
     public static final String[] WELCOME_MESSAGES = {
@@ -89,6 +93,9 @@ public class CommonUtils {
         time_since_start = System.currentTimeMillis();
         version = "2.4";
 
+        LogSystem.log(LogType.INFO, "Load settings from file");
+        FileUtils.loadSettings();
+
         LogSystem.log(LogType.INFO, "Initialize and connect bot");
         bot = new DiscordApiBuilder().setToken("MTA1ODAyMzc0MTA3NjAxNzIyMg.GtNiZE.YbTL7Nn3LQEIW1spqg2BvedptvjDydsFZ5E2Y4").setAllIntents().login().join();
 
@@ -96,6 +103,8 @@ public class CommonUtils {
         tempChannelManager = new TemporaryChannelManager();
         inviteManager = new InviteManager();
         musicManager = new MusicManager();
+        statisticsManager = new StatisticsManager();
+
         if(FileUtils.loadActiveTickets() != null){
             CommonUtils.ticketManager = new TicketManager(0, new HashMap<Long, Ticket>());
         }
@@ -162,7 +171,9 @@ public class CommonUtils {
 
     public static void shutdownBot() {
         LogSystem.log(LogType.INFO, "Shutting down the bot ..");
+        FileUtils.saveSettings();
         FileUtils.saveActiveTickets();
+        FileUtils.saveStatistics();
         bot.disconnect();
         LogSystem.save();
     }

@@ -1,54 +1,106 @@
 package cz.nix3r.instances;
 
+import cz.nix3r.utils.FileUtils;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
 public class StatisticsInstance {
 
-    private long usedTextChannelIdEver;
-    private long usedVoiceChannelIdMonth;
-    private long usedVoiceChannelIdEver;
+    // HashMap for most used text channels id of current month
+    // Key = channel id | Value = value
+    private HashMap<Long, Long> usedTextChannelIdMonth;
+    // HashMap for most used text channels id ever
+    // Key = channel id | Value = value
+    private HashMap<Long, Long> usedTextChannelIdEver;
+    // HashMap for most used voice channels id of current month
+    // Key = channel id | Value = value
+    private HashMap<Long, Long> usedVoiceChannelIdMonth;
+    // HashMap for most used voice channels id ever
+    // Key = channel id | Value = value
+    private HashMap<Long, Long> usedVoiceChannelIdEver;
+    // HashMap for best users call time of month
+    // Key = user id | Value = value
+    private HashMap<Long, Long> bestUserCallTimeMonth;
+    // HashMap for best users call time ever
+    // Key = user id | Value = value
+    private HashMap<Long, Long> bestUserCallTimeEver;
+    // HashMap for best users text sent of month
+    // Key = user id | Value = value
+    private HashMap<Long, Long> bestUserTextCounterMonth;
+    // HashMap for best users text sent ever
+    // Key = user id | Value = value
+    private HashMap<Long, Long> bestUserTextCounterEver;
+    // long for call time of current day
     private long callTimeDay;
+    // long for call time of current month
     private long callTimeMonth;
+    // long for call time ever
     private long callTimeEver;
+    // long for text sent of current day
     private long textCounterDay;
+    // long for text sent of current month
     private long textCounterMonth;
+    // long for text sent ever
     private long textCounterEver;
-    private long bestUserCallTimeMonth;
-    private long bestUserCallTimeEver;
-    private long bestUserTextCounterMonth;
-    private long bestUserTextCounterEver;
 
     private int currentDay;
     private int currentMonth;
-    private int currentYear;
 
-    public StatisticsInstance(long usedTextChannelIdEver, long usedVoiceChannelIdMonth, long usedVoiceChannelIdEver, long callTimeDay, long callTimeMonth, long callTimeEver, long textCounterDay, long textCounterMonth, long textCounterEver, long bestUserCallTimeMonth, long bestUserCallTimeEver, long bestUserTextCounterMonth, long bestUserTextCounterEver, int currentDay, int currentMonth, int currentYear) {
+    public StatisticsInstance(HashMap<Long, Long> usedTextChannelIdMonth, HashMap<Long, Long> usedTextChannelIdEver,
+                              HashMap<Long, Long> usedVoiceChannelIdMonth, HashMap<Long, Long> usedVoiceChannelIdEver,
+                              HashMap<Long, Long> bestUserCallTimeMonth, HashMap<Long, Long> bestUserCallTimeEver,
+                              HashMap<Long, Long> bestUserTextCounterMonth, HashMap<Long, Long> bestUserTextCounterEver,
+                              long callTimeDay, long callTimeMonth, long callTimeEver, long textCounterDay,
+                              long textCounterMonth, long textCounterEver, int currentDay, int currentMonth) {
+        this.usedTextChannelIdMonth = usedTextChannelIdMonth;
         this.usedTextChannelIdEver = usedTextChannelIdEver;
         this.usedVoiceChannelIdMonth = usedVoiceChannelIdMonth;
         this.usedVoiceChannelIdEver = usedVoiceChannelIdEver;
+        this.bestUserCallTimeMonth = bestUserCallTimeMonth;
+        this.bestUserCallTimeEver = bestUserCallTimeEver;
+        this.bestUserTextCounterMonth = bestUserTextCounterMonth;
+        this.bestUserTextCounterEver = bestUserTextCounterEver;
         this.callTimeDay = callTimeDay;
         this.callTimeMonth = callTimeMonth;
         this.callTimeEver = callTimeEver;
         this.textCounterDay = textCounterDay;
         this.textCounterMonth = textCounterMonth;
         this.textCounterEver = textCounterEver;
-        this.bestUserCallTimeMonth = bestUserCallTimeMonth;
-        this.bestUserCallTimeEver = bestUserCallTimeEver;
-        this.bestUserTextCounterMonth = bestUserTextCounterMonth;
-        this.bestUserTextCounterEver = bestUserTextCounterEver;
         this.currentDay = currentDay;
         this.currentMonth = currentMonth;
-        this.currentYear = currentYear;
     }
 
-    public long getUsedTextChannelIdEver() {
+    public HashMap<Long, Long> getUsedTextChannelIdMonth() {
+        return usedTextChannelIdMonth;
+    }
+
+    public HashMap<Long, Long> getUsedTextChannelIdEver() {
         return usedTextChannelIdEver;
     }
 
-    public long getUsedVoiceChannelIdMonth() {
+    public HashMap<Long, Long> getUsedVoiceChannelIdMonth() {
         return usedVoiceChannelIdMonth;
     }
 
-    public long getUsedVoiceChannelIdEver() {
+    public HashMap<Long, Long> getUsedVoiceChannelIdEver() {
         return usedVoiceChannelIdEver;
+    }
+
+    public HashMap<Long, Long> getBestUserCallTimeMonth() {
+        return bestUserCallTimeMonth;
+    }
+
+    public HashMap<Long, Long> getBestUserCallTimeEver() {
+        return bestUserCallTimeEver;
+    }
+
+    public HashMap<Long, Long> getBestUserTextCounterMonth() {
+        return bestUserTextCounterMonth;
+    }
+
+    public HashMap<Long, Long> getBestUserTextCounterEver() {
+        return bestUserTextCounterEver;
     }
 
     public long getCallTimeDay() {
@@ -75,95 +127,94 @@ public class StatisticsInstance {
         return textCounterEver;
     }
 
-    public long getBestUserCallTimeMonth() {
-        return bestUserCallTimeMonth;
+    public void incrementUsedTextChannelIdMonth(Long id) {
+        checkCurrentDatetime();
+        usedTextChannelIdMonth.merge(id, 1L, Long::sum);
     }
 
-    public long getBestUserCallTimeEver() {
-        return bestUserCallTimeEver;
+    public void incrementUsedTextChannelIdEver(Long id) {
+        usedTextChannelIdEver.merge(id, 1L, Long::sum);
     }
 
-    public long getBestUserTextCounterMonth() {
-        return bestUserTextCounterMonth;
+    public void incrementUsedVoiceChannelIdMonth(Long id) {
+        checkCurrentDatetime();
+        usedVoiceChannelIdMonth.merge(id, 1L, Long::sum);
     }
 
-    public long getBestUserTextCounterEver() {
-        return bestUserTextCounterEver;
+    public void incrementUsedVoiceChannelIdEver(Long id) {
+        usedVoiceChannelIdEver.merge(id, 1L, Long::sum);
     }
 
-    public void incrementUsedTextChannelIdEver() {
-        this.usedTextChannelIdEver++;
+    public void incrementBestUserCallTimeMonth(Long id, long toAdd) {
+        checkCurrentDatetime();
+        bestUserCallTimeMonth.merge(id, toAdd, Long::sum);
     }
 
-    public void incrementUsedVoiceChannelIdMonth() {
-        // Method is intentionally left empty
+    public void incrementBestUserCallTimeEver(Long id, long toAdd) {
+        bestUserCallTimeEver.merge(id, toAdd, Long::sum);
     }
 
-    public void incrementUsedVoiceChannelIdEver() {
-        this.usedVoiceChannelIdEver++;
+    public void incrementBestUserTextCounterMonth(Long id) {
+        checkCurrentDatetime();
+        bestUserTextCounterMonth.merge(id, 1L, Long::sum);
     }
 
-    public void incrementCallTimeDay() {
-        // Method is intentionally left empty
+    public void incrementBestUserTextCounterEver(Long id) {
+        bestUserTextCounterEver.merge(id, 1L, Long::sum);
     }
 
-    public void incrementCallTimeMonth() {
-        // Method is intentionally left empty
+    public void incrementCallTimeDay(long toAdd) {
+        checkCurrentDatetime();
+        callTimeDay += toAdd;
     }
 
-    public void incrementCallTimeEver() {
-        this.callTimeEver++;
+    public void incrementCallTimeMonth(long toAdd) {
+        checkCurrentDatetime();
+        callTimeMonth += toAdd;
+    }
+
+    public void incrementCallTimeEver(long toAdd) {
+        callTimeEver += toAdd;
     }
 
     public void incrementTextCounterDay() {
-        // Method is intentionally left empty
+        checkCurrentDatetime();
+        textCounterDay++;
     }
 
     public void incrementTextCounterMonth() {
-        // Method is intentionally left empty
+        checkCurrentDatetime();
+        textCounterMonth++;
     }
 
     public void incrementTextCounterEver() {
-        this.textCounterEver++;
+        textCounterEver++;
     }
 
-    public void incrementBestUserCallTimeMonth() {
-        // Method is intentionally left empty
+    private void checkCurrentDatetime(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        if(currentMonth != calendar.get(Calendar.MONTH) + 1){
+            FileUtils.saveStatistics();
+            currentMonth = calendar.get(Calendar.YEAR);
+            currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+            resetMonth();
+        }
+        else if(currentDay != calendar.get(Calendar.DAY_OF_MONTH)){
+            currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+            resetDay();
+        }
     }
 
-    public void incrementBestUserCallTimeEver() {
-        this.bestUserCallTimeEver++;
+    private void resetMonth(){
+        usedTextChannelIdMonth = bestUserCallTimeMonth = usedVoiceChannelIdMonth =
+                bestUserTextCounterMonth = new HashMap<Long, Long>();
+        callTimeMonth = textCounterMonth = 0L;
+        resetDay();
     }
 
-    public void incrementBestUserTextCounterMonth() {
-        // Method is intentionally left empty
+    private void resetDay(){
+        callTimeDay = textCounterDay = 0L;
     }
 
-    public void incrementBestUserTextCounterEver() {
-        this.bestUserTextCounterEver++;
-    }
-
-    public int getCurrentDay() {
-        return currentDay;
-    }
-
-    public void setCurrentDay(int currentDay) {
-        this.currentDay = currentDay;
-    }
-
-    public int getCurrentMonth() {
-        return currentMonth;
-    }
-
-    public void setCurrentMonth(int currentMonth) {
-        this.currentMonth = currentMonth;
-    }
-
-    public int getCurrentYear() {
-        return currentYear;
-    }
-
-    public void setCurrentYear(int currentYear) {
-        this.currentYear = currentYear;
-    }
 }

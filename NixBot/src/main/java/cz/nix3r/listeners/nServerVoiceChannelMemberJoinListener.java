@@ -1,6 +1,7 @@
 package cz.nix3r.listeners;
 
 import cz.nix3r.enums.LogType;
+import cz.nix3r.instances.UserChannelActivityInstance;
 import cz.nix3r.utils.CommonUtils;
 import cz.nix3r.utils.LogSystem;
 import org.javacord.api.entity.channel.ServerVoiceChannel;
@@ -17,6 +18,17 @@ public class nServerVoiceChannelMemberJoinListener implements ServerVoiceChannel
         if(serverVoiceChannelMemberJoinEvent.getChannel().getIdAsString().equals(CommonUtils.CREATE_CHANNEL_CHANNEL_ID)){
             createTempVoiceChannel(serverVoiceChannelMemberJoinEvent.getUser(), serverVoiceChannelMemberJoinEvent.getServer());
         }
+
+        if(serverVoiceChannelMemberJoinEvent.getChannel().asChannelCategory().isPresent() &&
+                serverVoiceChannelMemberJoinEvent.getChannel().asChannelCategory().get().getIdAsString().equals(CommonUtils.CREATE_CHANNEL_CATEGORY_ID)){
+            return;
+        }
+
+        CommonUtils.statisticsManager.getChannelActivities().put(serverVoiceChannelMemberJoinEvent.getUser().getId(), new UserChannelActivityInstance(
+                serverVoiceChannelMemberJoinEvent.getUser().getId(),
+                serverVoiceChannelMemberJoinEvent.getChannel().getId(),
+                System.currentTimeMillis()
+        ));
 
     }
 
