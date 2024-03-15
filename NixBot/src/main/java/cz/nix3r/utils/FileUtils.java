@@ -2,7 +2,6 @@ package cz.nix3r.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sedmelluq.discord.lavaplayer.remote.RemoteNode;
 import cz.nix3r.enums.LogType;
 import cz.nix3r.instances.AppSettingsInstance;
 import cz.nix3r.instances.StatisticsInstance;
@@ -33,7 +32,7 @@ public class FileUtils {
             return null;
         }
         catch (Exception ex){
-            DiscordUtils.throwError(ex);
+            LogSystem.log(LogType.ERROR, "Can't load settigns. Error: " + ex.getMessage());
             return ex;
         }
     }
@@ -154,8 +153,11 @@ public class FileUtils {
             calendar.setTimeInMillis(System.currentTimeMillis());
             DiscordUtils.throwError(ex);
             return new StatisticsInstance(new HashMap<Long, Long>(), new HashMap<Long, Long>(), new HashMap<Long, Long>(),
-                    new HashMap<Long, Long>(), new HashMap<Long, Long>(), new HashMap<Long, Long>(), new HashMap<Long, Long>(),
-                    new HashMap<Long, Long>(), 0, 0, 0, 0, 0, 0,
+                    new HashMap<Long, Long>(), new HashMap<Long, Long>(), new HashMap<Long, Long>(),
+                    new HashMap<Long, Long>(), new HashMap<Long, Long>(), new HashMap<Long, Long>(),
+                    new HashMap<Long, Long>(), new HashMap<String, Long>(), new HashMap<String, Long>(), 0,
+                    0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0,
                     calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1);
         }
     }

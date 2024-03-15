@@ -12,6 +12,7 @@ import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -42,13 +43,13 @@ public class DiscordUtils {
                 .setColor(Color.decode("#2100FF"));
     }
 
-    public static EmbedBuilder createJoinEmbed(String nick, long inviterId, Icon userAvatar, Server server){
+    public static EmbedBuilder createJoinEmbed(String nick, String inviterMentionTag, Icon userAvatar, Server server){
         Server nixCrew = (Server)CommonUtils.bot.getServers().toArray()[0];
         return new EmbedBuilder()
                 .setTitle(nick)
                 .setDescription(CommonUtils.WELCOME_MESSAGES[random.nextInt(10)])
                 .setColor(Color.decode("#00d60e"))
-                .addField("Thanks for invite", inviterId == 0 ? "unknown" : nixCrew.getMemberById(inviterId).get().getMentionTag(), true)
+                .addField("Thanks for invite", inviterMentionTag, true)
                 .addField("Member count", server.getMembers().size() + " total", true)
                 .setFooter("Version: " + CommonUtils.version)
                 .setThumbnail(userAvatar);
@@ -96,14 +97,27 @@ public class DiscordUtils {
         return output;
     }
 
-    public static EmbedBuilder createStatisticEmbed(ArrayList<String[]> data){
-        EmbedBuilder builder = new EmbedBuilder()
-                .setTitle("Ostatní statistiky")
-                .setColor(Color.decode("#2100FF"));
-        for(String[] item : data){
-            builder.addField(item[0], item[1]);
+    public static List<EmbedBuilder> createStatisticEmbed(ArrayList<String[]> data){
+        List<EmbedBuilder> output = new ArrayList<EmbedBuilder>();
+        EmbedBuilder temp = new EmbedBuilder();
+        for(int i = 0; i < data.size(); i++){
+            if(i == 0){
+                temp.setTitle("Ostatní statistiky")
+                        .setColor(Color.decode("#2100FF"))
+                        .addField(data.get(i)[0], data.get(i)[1]);
+                output.add(temp);
+            }
+            else if(i % 6 == 0){
+                temp = new EmbedBuilder()
+                    .setColor(Color.decode("#2100FF"))
+                    .addField(data.get(i)[0], data.get(i)[1]);
+                output.add(temp);
+            }
+            else {
+                temp.addField(data.get(i)[0], data.get(i)[1]);
+            }
         }
-        return builder;
+        return output;
     }
 
     public static void throwError(Exception ex){

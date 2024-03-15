@@ -66,6 +66,25 @@ public class StatisticsManager {
         LogSystem.log(LogType.INFO, "Total call time increased by " + toAdd);
     }
 
+    public void incrementCommandsUsed(long userId, String commandName){
+        statistics.incrementBestUserCommandsUsedMonth(userId);
+        statistics.incrementBestUserCommandsUsedEver(userId);
+        statistics.incrementMostCommandsUsedMonth(commandName);
+        statistics.incrementMostCommandsUsedEver(commandName);
+    }
+
+    public void incrementMemberJoin(){
+        statistics.incrementMemberJoinDay();
+        statistics.incrementMemberJoinMonth();
+        statistics.incrementMemberJoinEver();
+    }
+
+    public void incrementMemberLeave(){
+        statistics.incrementMemberLeaveDay();
+        statistics.incrementMemberLeaveMonth();
+        statistics.incrementMemberLeaveEver();
+    }
+
     public void incrementTextCounter(){
         statistics.incrementTextCounterDay();
         statistics.incrementTextCounterMonth();
@@ -73,7 +92,7 @@ public class StatisticsManager {
         LogSystem.log(LogType.INFO, "Total text increased");
     }
 
-    // Get top five used text channel
+    // Get top five used text channel || voice channels || members
     // Returns array list of long array
     // long array contains [0] = channel id, [1] = value
     public ArrayList<String[]> getTopFive(HashMap<Long, Long> toSort, boolean plainValue){
@@ -108,6 +127,34 @@ public class StatisticsManager {
         return output;
     }
 
+    // Get top five used commands
+    // Returns array list of long array
+    // long array contains [0] = channel id, [1] = value
+    public ArrayList<String[]> getTopFive(HashMap<String, Long> toSort){
+        List<Map.Entry<String, Long>> sortedEntries = toSort.entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .collect(Collectors.toList());
+        ArrayList<String[]> topEntries = new ArrayList<>();
+        ArrayList<String[]> output = new ArrayList<String[]>();
+        int index = 0;
+        for (Map.Entry<String, Long> entry : sortedEntries) {
+            if(index < 5){
+                topEntries.add(new String[]{entry.getKey(), entry.getValue().toString()});
+                index++;
+            }
+            else
+                break;
+        }
+        for(String[] item : topEntries){
+            String[] s = new String[2];
+            s[0] = "/" + item[0];
+            s[1] = item[1] + "";
+            output.add(s);
+        }
+        return output;
+    }
+
     public ArrayList<String[]> getRestStatistics(){
         ArrayList<String[]> output = new ArrayList<String[]>();
         output.add(new String[]{ "Počet provolaných hodin tento den", formatTime(statistics.getCallTimeDay())});
@@ -116,6 +163,12 @@ public class StatisticsManager {
         output.add(new String[]{ "Počet napsaných zpráv tento den", statistics.getTextCounterDay() + ""});
         output.add(new String[]{ "Počet napsaných zpráv tento měsíc", statistics.getTextCounterMonth() + ""});
         output.add(new String[]{ "Počet napsaných zpráv celkově", statistics.getTextCounterEver() + ""});
+        output.add(new String[]{ "Počet připojených uživatelů tento den", statistics.getMemberJoinDay() + ""});
+        output.add(new String[]{ "Počet připojených uživatelů tento měsíc", statistics.getMemberJoinMonth() + ""});
+        output.add(new String[]{ "Počet připojených uživatelů celkově", statistics.getMemberJoinEver() + ""});
+        output.add(new String[]{ "Počet odpojených uživatelů tento den", statistics.getMemberLeaveDay() + ""});
+        output.add(new String[]{ "Počet odpojených uživatelů tento měsíc", statistics.getMemberLeaveMonth() + ""});
+        output.add(new String[]{ "Počet odpojených uživatelů celkově", statistics.getMemberLeaveEver() + ""});
         return output;
     }
 

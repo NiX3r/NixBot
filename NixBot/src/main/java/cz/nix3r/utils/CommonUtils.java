@@ -95,7 +95,7 @@ public class CommonUtils {
 
         LogSystem.log(LogType.INFO, "Setup default instances");
         time_since_start = System.currentTimeMillis();
-        version = "2.4";
+        version = "2.5";
 
         LogSystem.log(LogType.INFO, "Load settings from file");
         if(FileUtils.loadSettings() != null)
@@ -150,15 +150,18 @@ public class CommonUtils {
 
         LogSystem.log(LogType.INFO, "Load all invites in invite manager");
         for(RichInvite invite : nixCrew.getInvites().join()){
-            long userId = 0;
+            invite.getInviter().ifPresent(inviter -> {
+                long userId = 0;
 
-            if(invite.getInviter().isPresent()){
-                userId = invite.getInviter().get().getId();
-            }
+                if(invite.getInviter().isPresent()){
+                    userId = invite.getInviter().get().getId();
+                }
 
-            InviteInstance inv = new InviteInstance(invite.getCode(), userId, invite.getUses());
-            inviteManager.addInvite(inv);
-            LogSystem.log(LogType.INFO, "Added invite (code='" + inv.getCode() + "', inviter='" + inv.getCode() + "') into invite manager");
+                InviteInstance inv = new InviteInstance(invite.getCode(), userId, invite.getUses());
+                inviteManager.addInvite(inv);
+                LogSystem.log(LogType.INFO, "Added invite (code='" + inv.getCode() + "', inviter='" + inviter.getName() + "') into invite manager");
+
+            });
         }
 
         LogSystem.log(LogType.INFO, "Update activity");

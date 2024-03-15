@@ -4,6 +4,7 @@ import cz.nix3r.enums.LogType;
 import cz.nix3r.instances.InviteInstance;
 import cz.nix3r.utils.CommonUtils;
 import cz.nix3r.utils.DiscordUtils;
+import cz.nix3r.utils.FileUtils;
 import cz.nix3r.utils.LogSystem;
 import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.server.Server;
@@ -24,10 +25,15 @@ public class nServerMemberJoinListener implements ServerMemberJoinListener {
 
         // Send welcome message
         serverMemberJoinEvent.getServer().getTextChannelById(CommonUtils.WELCOME_CHANNEL_ID).ifPresent(channel -> {
-            channel.sendMessage(DiscordUtils.createJoinEmbed(serverMemberJoinEvent.getUser().getName(), inviterId, serverMemberJoinEvent.getUser().getAvatar(), serverMemberJoinEvent.getServer())).join();
+            serverMemberJoinEvent.getServer().getMemberById(inviterId).ifPresent(inviter -> {
+                channel.sendMessage(DiscordUtils.createJoinEmbed(serverMemberJoinEvent.getUser().getName(), inviter.getMentionTag(), serverMemberJoinEvent.getUser().getAvatar(), serverMemberJoinEvent.getServer())).join();
+            });
         });
 
-        // Update users counter
+        // Update statistics
+        CommonUtils.statisticsManager.incrementMemberJoin();
+
+        // Update activity users counter
         DiscordUtils.updateBotActivity("with " + serverMemberJoinEvent.getServer().getMembers().size() + " users");
         LogSystem.log(LogType.INFO, "Member " + serverMemberJoinEvent.getUser().getName() + " joined on the server. Bot activity updated");
 
@@ -35,18 +41,35 @@ public class nServerMemberJoinListener implements ServerMemberJoinListener {
 
     private long checkWhoInvite(Server server){
 
+        long output = 0;
+        RichInvite indexOneInvite = null;
         for(RichInvite invite : server.getInvites().join()){
-            System.out.println(invite.getCode());
             InviteInstance inv = CommonUtils.inviteManager.getInviteByCode(invite.getCode());
             if(inv != null){
-                System.out.println(inv.getUses() + " == " + invite.getUses());
                 if(inv.getUses() != invite.getUses()){
                     inv.incrementUses();
-                    return inv.getCreator_id();
+                    output = inv.getCreator_id();
                 }
             }
+            else{
+
+                User inviter = invite.getInviter().isPresent() ? invite.getInviter().get() : null;
+
+                if(inviter == null)
+                    continue;
+
+                inv = CommonUtils.inviteManager.addInvite(new InviteInstance(invite.getCode(), inviter.getId(), 0));
+
+                if(invite.getUses() == 1){
+                    if(inv.getUses() != invite.getUses()){
+                        inv.incrementUses();
+                        output = inv.getCreator_id();
+                    }
+                }
+
+            }
         }
-        return 0;
+        return output;
 
     }
 
@@ -54,7 +77,8 @@ public class nServerMemberJoinListener implements ServerMemberJoinListener {
 
         for(String roleIUd : CommonUtils.DEFAULT_ROLES_ID){
             try{
-                user.addRole(server.getRoleById(roleIUd).get()).join();
+                if(server.getRoleById(roleIUd).isPresent())
+                    user.addRole(server.getRoleById(roleIUd).get()).join();
             }
             catch (Exception ex){
                 DiscordUtils.throwError(ex);
