@@ -75,6 +75,10 @@ public class nSlashCommandCreateListener implements SlashCommandCreateListener {
                     PhoneticCommand.run(interaction);
                 break;
 
+            case "role":
+                RoleCommand.run(interaction);
+                break;
+
         }
 
     }

@@ -2,8 +2,10 @@ package cz.nix3r.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import cz.nix3r.enums.LogType;
 import cz.nix3r.instances.AppSettingsInstance;
+import cz.nix3r.instances.RoleSetterInstance;
 import cz.nix3r.instances.StatisticsInstance;
 import cz.nix3r.instances.Ticket;
 import cz.nix3r.managers.TicketManager;
@@ -15,12 +17,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 public class FileUtils {
 
     public static final String TICKETS_ARCHIVE = "./data/tickets_archive/";
     public static final String STATISTICS_ARCHIVE = "./data/statistics_archive/";
     public static final String SETTINGS_PATH = "./settings.json";
+    public static final String ROLE_SETTER_PATH = "./data/role_setter.json";
     private static final String ACTIVE_TICKETS_PATH = "./data/active_tickets.json";
 
     public static Exception loadSettings(){
@@ -46,6 +50,37 @@ public class FileUtils {
             f_writer.flush();
             f_writer.close();
             LogSystem.log(LogType.INFO, "Settings saved");
+            return null;
+        }
+        catch (Exception ex){
+            DiscordUtils.throwError(ex);
+            return ex;
+        }
+    }
+
+    public static Exception loadRoleSetter(){
+        LogSystem.log(LogType.INFO, "Trying to load role setter");
+        try {
+            String json = new String(Files.readAllBytes(Paths.get(ROLE_SETTER_PATH)));
+            CommonUtils.roleSetter = new Gson().fromJson(json, new TypeToken<List<RoleSetterInstance>>(){});
+            LogSystem.log(LogType.INFO, "Role setter loaded");
+            return null;
+        }
+        catch (Exception ex){
+            DiscordUtils.throwError(ex);
+            return ex;
+        }
+    }
+
+    public static Exception saveRoleSetter(){
+        LogSystem.log(LogType.INFO, "Trying to save role setter");
+        try{
+            BufferedWriter f_writer
+                    = new BufferedWriter(new FileWriter(ROLE_SETTER_PATH));
+            f_writer.write(new GsonBuilder().create().toJson(CommonUtils.roleSetter));
+            f_writer.flush();
+            f_writer.close();
+            LogSystem.log(LogType.INFO, "Role setter saved");
             return null;
         }
         catch (Exception ex){

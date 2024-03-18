@@ -85,6 +85,15 @@ public class DiscordUtils {
                 .setThumbnail(userAvatar);
     }
 
+    public static EmbedBuilder createRoleEmbed(){
+        return new EmbedBuilder()
+                .setTitle("Přidej si nebo odeber roli")
+                .setColor(Color.decode("#7900FF"))
+                .setFooter("Version: "  + CommonUtils.version)
+                .addField("Dostupné role", CommonUtils.roleSetter.size() + "")
+                .setDescription("Pomocí kliknutí na tlačítka si můžeš přidávat nebo odebírat role");
+    }
+
     public static EmbedBuilder createTopStatisticsEmbed(String name, String description, ArrayList<String[]> data){
         EmbedBuilder output = new EmbedBuilder()
                 .setTitle(name)

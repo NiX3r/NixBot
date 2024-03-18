@@ -2,6 +2,7 @@ package cz.nix3r.listeners;
 
 import com.vdurmont.emoji.EmojiParser;
 import cz.nix3r.enums.TicketStatus;
+import cz.nix3r.instances.RoleSetterInstance;
 import cz.nix3r.instances.Ticket;
 import cz.nix3r.instances.TicketMember;
 import cz.nix3r.instances.TicketMessage;
@@ -14,6 +15,7 @@ import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.permission.Permissions;
+import org.javacord.api.entity.permission.Role;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.interaction.MessageComponentCreateEvent;
@@ -45,8 +47,21 @@ public class nMessageComponentCreateListener implements MessageComponentCreateLi
                     else
                         createTicket(messageComponentCreateEvent.getInteraction(), customId.replace("nix-ticket-", ""));
                 }
+                else if(customId.contains("nix-role-")){
+                    String roleId = customId.replace("nix-role-", "");
+                    RoleSetterInstance setter = CommonUtils.getRoleSetterByRoleId(roleId);
+                    if(setter == null){
+                        messageComponentInteraction.createImmediateResponder().setContent("Bohužel tato role neexisstuje. Kontaktuj @nix3r").setFlags(MessageFlag.EPHEMERAL).respond();
+                        return;
+                    }
+                    roleSetter(messageComponentCreateEvent.getInteraction(), setter);
+                }
             });
         });
+    }
+
+    private void roleSetter(Interaction interaction, RoleSetterInstance setter){
+        // TODO
     }
 
     private void createTicket(Interaction interaction, String type){
