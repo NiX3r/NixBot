@@ -51,7 +51,7 @@ public class CommonUtils {
     public static final String STATS_CHANNEL_ID = "1217475154582442086";
     public static final String NEWS_CHANNEL_ID = "1219218631632748655";
     public static final String ROLES_CHANNEL_ID = "1219225196594991124";
-    public static final List<String> DEFAULT_ROLES_ID = new ArrayList<String>() {{add("1058009225491656724");}};
+    public static final List<String> DEFAULT_ROLES_ID = new ArrayList<String>() {{add("1058009225491656724"); add("1219589725833265152");}};
 
     public static final String[] WELCOME_MESSAGES = {
             "Welcome! Prepare to be amazed!",

@@ -61,10 +61,31 @@ public class nMessageComponentCreateListener implements MessageComponentCreateLi
     }
 
     private void roleSetter(Interaction interaction, RoleSetterInstance setter){
-        // TODO
+        interaction.getServer().ifPresent(server -> {
+            server.getRoleById(setter.getRoleId()).ifPresent(role -> {
+                boolean done = false;
+                for(Role item : interaction.getUser().getRoles(server)){
+                    if(item.getId() == role.getId()){
+                        interaction.getUser().removeRole(item);
+                        interaction.createImmediateResponder().setContent("Role " + item.getMentionTag() + " odebrána").setFlags(MessageFlag.EPHEMERAL).respond();
+                        done = true;
+                    }
+                }
+                if(!done){
+                    interaction.getUser().addRole(role);
+                    interaction.createImmediateResponder().setContent("Role " + role.getMentionTag() + " přidána").setFlags(MessageFlag.EPHEMERAL).respond();
+                }
+            });
+        });
     }
 
     private void createTicket(Interaction interaction, String type){
+
+
+        if(!interaction.getServer().isPresent()){
+            interaction.createImmediateResponder().setContent("Toto tlačítko je funkční pouze na serveru").setFlags(MessageFlag.EPHEMERAL).respond();
+            return;
+        }
 
         User user = interaction.getUser();
         Server server = interaction.getServer().get();
