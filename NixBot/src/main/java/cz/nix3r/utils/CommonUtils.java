@@ -1,10 +1,7 @@
 package cz.nix3r.utils;
 
 import cz.nix3r.enums.LogType;
-import cz.nix3r.instances.AppSettingsInstance;
-import cz.nix3r.instances.InviteInstance;
-import cz.nix3r.instances.RoleSetterInstance;
-import cz.nix3r.instances.Ticket;
+import cz.nix3r.instances.*;
 import cz.nix3r.listeners.*;
 import cz.nix3r.managers.*;
 import cz.nix3r.threads.ShutdownThread;
@@ -29,6 +26,7 @@ public class CommonUtils {
     public static long time_since_start;
 
     public static AppSettingsInstance settings;
+    public static MessagesInstance messages;
     public static List<RoleSetterInstance> roleSetter;
 
     public static TemporaryChannelManager tempChannelManager;
@@ -53,45 +51,6 @@ public class CommonUtils {
     public static final String ROLES_CHANNEL_ID = "1219225196594991124";
     public static final List<String> DEFAULT_ROLES_ID = new ArrayList<String>() {{add("1058009225491656724"); add("1219589725833265152");}};
 
-    public static final String[] WELCOME_MESSAGES = {
-            "Welcome! Prepare to be amazed!",
-            "Hello and welcome! Abandon all hope, ye who enter here!",
-            "Welcome to our community! Don't worry, we don't bite... hard!",
-            "We're glad to have you here! Our jokes are terrible, but we try!",
-            "Welcome aboard! Fasten your seatbelts and get ready for a wild ride!",
-            "Welcome, new friend! We've been expecting you, and the secret handshake is optional.",
-            "Greetings and welcome! Our sarcasm levels are off the charts, so buckle up!",
-            "A warm welcome to you! Just a heads up, puns are our currency here.",
-            "Welcome to the team! We work hard, but our coffee breaks are legendary.",
-            "Welcome, and enjoy your stay! Remember, laughter is the best medicine!"
-    };
-
-    public static final String[] LEAVE_MESSAGES = {
-            "Sad to see you go! Who will bring the snacks now?",
-            "Leaving so soon? Don't forget to take the office plant with you!",
-            "Goodbye, quitter! We never really liked you anyway... just kidding!",
-            "Off to new adventures? Take us with you in your suitcase, please!",
-            "Farewell, dear friend! Don't forget to send postcards from your secret hideout!",
-            "You're leaving? Time to change the password to the secret clubhouse!",
-            "Goodbye, comrade! May your memes always be dank and your WiFi always strong!",
-            "Leaving already? Did you find the treasure map we hid in the office fridge?",
-            "So long, and thanks for all the fish! Don't forget to bring the towel!",
-            "Adios, amigo! Remember, life is better when you're laughing!"
-    };
-
-    public static final String[] ROLLED_DICE = {
-            "You rolled the dice and it landed on `%i%`! Looks like luck is on your side today.",
-            "Oh, snap! The dice rolled a `%i%`. Prepare for some epic gaming moments!",
-            "Congratulations! You rolled a whopping `%i%`. You're on a winning streak!",
-            "You got a `%i%`! Quick, make a wish! Maybe the dice will grant it.",
-            "Whoa! The dice revealed `%i%`. That's the magic number! Enjoy your victory.",
-            "Guess what? The dice rolled `%i%`. It seems like fortune favors the bold!",
-            "You rolled a `%i%` and unlocked the door to success. Keep going!",
-            "Incredible! The dice shows `%i%`. Prepare for some wild adventures!",
-            "Aha! The dice landed on `%i%`. It's your lucky charm today!",
-            "You rolled the dice and got `%i%`. Time to celebrate, my friend!"
-    };
-
     public static void setupBot(){
 
         LogSystem.log(LogType.INFO, "Setup default instances");
@@ -111,12 +70,13 @@ public class CommonUtils {
         musicManager = new MusicManager();
         statisticsManager = new StatisticsManager();
 
+        LogSystem.log(LogType.INFO, "Load data from files");
         if(FileUtils.loadRoleSetter() != null)
             roleSetter = new ArrayList<RoleSetterInstance>();
-
         if(FileUtils.loadActiveTickets() != null){
             CommonUtils.ticketManager = new TicketManager(0, new HashMap<Long, Ticket>());
         }
+        FileUtils.loadMessages();
 
         LogSystem.log(LogType.INFO, "Initializing and starting threads");
         Runtime.getRuntime().addShutdownHook(new ShutdownThread());

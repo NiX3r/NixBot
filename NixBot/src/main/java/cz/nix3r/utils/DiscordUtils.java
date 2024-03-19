@@ -47,7 +47,7 @@ public class DiscordUtils {
         Server nixCrew = (Server)CommonUtils.bot.getServers().toArray()[0];
         return new EmbedBuilder()
                 .setTitle(nick)
-                .setDescription(CommonUtils.WELCOME_MESSAGES[random.nextInt(10)])
+                .setDescription(CommonUtils.messages.getWelcomeMessages().get(CommonUtils.messages.getWelcomeMessages().size()))
                 .setColor(Color.decode("#00d60e"))
                 .addField("Thanks for invite", inviterMentionTag, true)
                 .addField("Member count", server.getMembers().size() + " total", true)
@@ -68,7 +68,7 @@ public class DiscordUtils {
     public static EmbedBuilder createLeaveEmbed(String nick, Icon userAvatar, Server server){
         return new EmbedBuilder()
                 .setTitle(nick)
-                .setDescription(CommonUtils.LEAVE_MESSAGES[random.nextInt(10)])
+                .setDescription(CommonUtils.messages.getLeaveMessages().get(CommonUtils.messages.getLeaveMessages().size()))
                 .setColor(Color.decode("#d66b00"))
                 .addField("Member count", server.getMembers().size() + " total")
                 .setFooter("Version: " + CommonUtils.version)
