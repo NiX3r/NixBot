@@ -4,10 +4,12 @@ public class AppSettingsInstance {
 
     private long statsMessageId;
     private long rolesMessageId;
+    private String botToken;
 
-    public AppSettingsInstance(long statsMessageId, long rolesMessageId) {
+    public AppSettingsInstance(long statsMessageId, long rolesMessageId, String botToken) {
         this.statsMessageId = statsMessageId;
         this.rolesMessageId = rolesMessageId;
+        this.botToken = botToken;
     }
 
     public long getStatsMessageId() {
@@ -24,5 +26,13 @@ public class AppSettingsInstance {
 
     public void setRolesMessageId(long rolesMessageId) {
         this.rolesMessageId = rolesMessageId;
+    }
+
+    public String getBotToken() {
+        return botToken;
+    }
+
+    public void setBotToken(String botToken) {
+        this.botToken = botToken;
     }
 }

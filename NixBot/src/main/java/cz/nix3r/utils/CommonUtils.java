@@ -58,11 +58,12 @@ public class CommonUtils {
         version = "2.5";
 
         LogSystem.log(LogType.INFO, "Load settings from file");
-        if(FileUtils.loadSettings() != null)
-            CommonUtils.settings = new AppSettingsInstance(0, 0);
+        if(FileUtils.loadSettings() != null){
+            LogSystem.log(LogType.FATAL_ERROR, "Can't load settings. Turning the bot off");
+        }
 
         LogSystem.log(LogType.INFO, "Initialize and connect bot");
-        bot = new DiscordApiBuilder().setToken("MTA1ODAyMzc0MTA3NjAxNzIyMg.GtNiZE.YbTL7Nn3LQEIW1spqg2BvedptvjDydsFZ5E2Y4").setAllIntents().login().join();
+        bot = new DiscordApiBuilder().setToken(CommonUtils.settings.getBotToken()).setAllIntents().login().join();
 
         LogSystem.log(LogType.INFO, "Setup managers");
         tempChannelManager = new TemporaryChannelManager();
