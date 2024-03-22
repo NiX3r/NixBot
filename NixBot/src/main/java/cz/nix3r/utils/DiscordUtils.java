@@ -136,11 +136,17 @@ public class DiscordUtils {
     public static void throwError(boolean fatal, Exception exception){
 
         LogSystem.log(fatal ? LogType.FATAL_ERROR : LogType.ERROR, exception.getMessage());
+        String stackTrace = "";
+        for(var item : exception.getStackTrace()){
+            stackTrace += "\n" + item.toString();
+        }
+        stackTrace = "```" + stackTrace + "\n```";
+        System.out.println(stackTrace);
         ((Server)CommonUtils.bot.getServers().toArray()[0]).getTextChannelById(CommonUtils.NIXBOT_CHANNEL_ID).get().sendMessage(
                 new EmbedBuilder().setTitle(fatal ? "Fatal Error" : "Error")
-                        .setColor(fatal ? Color.decode("#fc0202") : Color.decode("#fc7702"))
-                        .addField("Message", exception.getMessage())
-                        .setDescription(exception.getStackTrace().toString())
+                        .setColor(fatal ? Color.decode("#0f0f0f") : Color.decode("#c90006"))
+                        .addField("Message", exception.getMessage() == null ? "none" : exception.getMessage())
+                        .setDescription(stackTrace)
                         .setFooter("Version: " + CommonUtils.version)
         ).join();
 

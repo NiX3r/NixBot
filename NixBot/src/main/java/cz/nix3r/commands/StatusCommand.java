@@ -23,14 +23,19 @@ public class StatusCommand {
 
     public static void run(SlashCommandInteraction interaction) {
 
+        LogSystem.log(LogType.INFO, "Status command catch by '" + interaction.getUser().getName() + "'");
+        interaction.createImmediateResponder().setContent("Generating status ..").respond().join();
+
+        getStatusMessageBuilder().send(interaction.getChannel().get()).join();
+        LogSystem.log(LogType.INFO, "End of command status by '" + interaction.getUser().getName() + "'");
+
+    }
+
+    public static MessageBuilder getStatusMessageBuilder(){
         long start = System.currentTimeMillis();
         String[] ram = getRamUsage();
         String[] cpuProcess = getCpuUsage();
         BufferedImage screenshot = takeScreenshot();
-
-        LogSystem.log(LogType.INFO, "Status command catch by '" + interaction.getUser().getName() + "'");
-        interaction.createImmediateResponder().setContent("Generating status ..").respond().join();
-
         EmbedBuilder builder = new EmbedBuilder()
                 .setColor(Color.decode(COLOR_PALLETE[totalUsagePoint]))
                 .setTitle("NixBot status")
@@ -48,9 +53,7 @@ public class StatusCommand {
                 .setEmbed(builder)
                 .addAttachment(new File("./nixbot.log"), "NixBot log file");
 
-        message.send(interaction.getChannel().get()).join();
-        LogSystem.log(LogType.INFO, "End of command status by '" + interaction.getUser().getName() + "'");
-
+        return message;
     }
 
     private static String[] getCpuUsage(){

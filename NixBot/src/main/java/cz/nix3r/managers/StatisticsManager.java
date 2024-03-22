@@ -175,12 +175,14 @@ public class StatisticsManager {
     private String formatTime(long milliseconds) {
         String output = "";
         long temp = milliseconds;
+        long days = temp / 86400000;
+        temp -= (days * 86400000);
         long hours = temp / 3600000;
         temp -= (hours * 3600000);
         long minutes = temp / 60000;
         temp -= (minutes * 60000);
         long seconds = temp / 1000;
-        output = hours + "h " + minutes + "m " + seconds + "s";
+        output = (days > 0 ? (days + "d ") : "") + (hours > 0 ? (hours + "h ") : "") + minutes + "m " + seconds + "s";
         return output;
     }
 

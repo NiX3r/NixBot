@@ -1,12 +1,15 @@
 package cz.nix3r.console_commands;
 
+import cz.nix3r.commands.StatusCommand;
 import cz.nix3r.enums.LogType;
 import cz.nix3r.utils.CommonUtils;
+import cz.nix3r.utils.DiscordUtils;
 import cz.nix3r.utils.LogSystem;
 import org.apache.commons.logging.Log;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 
 import java.awt.*;
+import java.util.EmptyStackException;
 
 public class AnnouncementConsoleCommand {
 
@@ -23,7 +26,27 @@ public class AnnouncementConsoleCommand {
         switch (command[1]){
             case "r": case "restart":
                 restart(command);
+                break;
+            case "s": case "status":
+                status(command);
+                break;
         }
+
+    }
+
+    private static void status(String[] command){
+
+        if(command.length != 2){
+            LogSystem.log(LogType.WARNING, "Bad command usage. Usage: 'announcements status'");
+            return;
+        }
+
+        CommonUtils.bot.getServers().forEach(server -> {
+            server.getTextChannelById(CommonUtils.NIXBOT_CHANNEL_ID).ifPresent(textChannel -> {
+                StatusCommand.getStatusMessageBuilder().send(textChannel).join();
+                LogSystem.log(LogType.INFO, "Status sent");
+            });
+        });
 
     }
 
