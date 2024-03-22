@@ -42,7 +42,37 @@ _usage: /volume <volume to set>_
 Command to set bot audio volume. Value should be `0`-`100`.
 ### Dice
 _usage: /dice <dice size>_
-Command to roll a dice. Parameter is optional. Default dice size is 6
+Command to roll a dice. Parameter is optional. Default dice size is 6.
 ### Anonumous
 _usage: /anonymous <message>_
 Command to send anonymous message to specific channel. Messages are semi-anonymous if somebody tries to abuse this command.
+### Ticket
+_usage: /ticket [message | close | resolve | add | remove] <arguments if needed>_
+Commands group to ticket system.
+#### Message
+_usage: /ticket message_
+Command to send ticket create message. Can be use only for admins.
+#### Close
+_usage: /ticket close_
+Command to close current ticket. This command can be only use in ticket channel and can be use only by ticket author or server admin.
+#### Resolve
+_usage: /ticket resolve_
+Command to resolve current ticket. This command can be only use in ticket channel and can be use only by ticket author or server admin.
+#### Add
+_usage: /ticket add <member name>_
+Command to add server member to current ticket. This command can be only use in ticket channel and can be use only by ticket author or server admin.
+#### Remove
+_usage: /ticket remove <member name>_
+Command to remove server member from current ticket. This command can be only use in ticket channel and can be use only by ticket author or server admin.
+### Phonetic
+_usage: /phonetic <message>_
+Command to encode message to NATO phonetic.
+### Role
+_usage: /role [message | set]_
+Commands group to role system.
+#### Message
+_usage: /role message_
+Command to send role system message. This command can be only use by server admin.
+#### Set
+_usage: /role set <role mention> <is adding (boolean)> <emoji for component> <label for component>_
+Command to add role setter. This command can be only use by server admin.
