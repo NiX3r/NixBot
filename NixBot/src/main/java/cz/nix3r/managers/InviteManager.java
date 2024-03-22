@@ -14,8 +14,9 @@ public class InviteManager {
         inviteMap = new HashMap<String, InviteInstance>();
     }
 
-    public void addInvite(InviteInstance instance){
+    public InviteInstance addInvite(InviteInstance instance){
         inviteMap.put(instance.getCode(), instance);
+        return instance;
     }
 
     public InviteInstance getInviteByCode(String code){

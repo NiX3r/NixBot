@@ -18,6 +18,8 @@ public class nSlashCommandCreateListener implements SlashCommandCreateListener {
 
         LogSystem.log(LogType.INFO, "Command '" + interaction.getCommandName() + "' by '" + interaction.getUser().getName() + "' catched");
 
+        CommonUtils.statisticsManager.incrementCommandsUsed(interaction.getUser().getId(), interaction.getCommandName());
+
         switch (interaction.getCommandName()){
 
             case "status":
@@ -71,6 +73,10 @@ public class nSlashCommandCreateListener implements SlashCommandCreateListener {
             case "phonetic":
                 if(checkIsCmdChannel(interaction))
                     PhoneticCommand.run(interaction);
+                break;
+
+            case "role":
+                RoleCommand.run(interaction);
                 break;
 
         }

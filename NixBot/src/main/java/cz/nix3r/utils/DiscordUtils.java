@@ -12,6 +12,7 @@ import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -42,13 +43,13 @@ public class DiscordUtils {
                 .setColor(Color.decode("#2100FF"));
     }
 
-    public static EmbedBuilder createJoinEmbed(String nick, long inviterId, Icon userAvatar, Server server){
+    public static EmbedBuilder createJoinEmbed(String nick, String inviterMentionTag, Icon userAvatar, Server server){
         Server nixCrew = (Server)CommonUtils.bot.getServers().toArray()[0];
         return new EmbedBuilder()
                 .setTitle(nick)
-                .setDescription(CommonUtils.WELCOME_MESSAGES[random.nextInt(10)])
+                .setDescription(CommonUtils.messages.getWelcomeMessages().get(CommonUtils.messages.getWelcomeMessages().size()))
                 .setColor(Color.decode("#00d60e"))
-                .addField("Thanks for invite", inviterId == 0 ? "unknown" : nixCrew.getMemberById(inviterId).get().getMentionTag(), true)
+                .addField("Thanks for invite", inviterMentionTag, true)
                 .addField("Member count", server.getMembers().size() + " total", true)
                 .setFooter("Version: " + CommonUtils.version)
                 .setThumbnail(userAvatar);
@@ -67,7 +68,7 @@ public class DiscordUtils {
     public static EmbedBuilder createLeaveEmbed(String nick, Icon userAvatar, Server server){
         return new EmbedBuilder()
                 .setTitle(nick)
-                .setDescription(CommonUtils.LEAVE_MESSAGES[random.nextInt(10)])
+                .setDescription(CommonUtils.messages.getLeaveMessages().get(CommonUtils.messages.getLeaveMessages().size()))
                 .setColor(Color.decode("#d66b00"))
                 .addField("Member count", server.getMembers().size() + " total")
                 .setFooter("Version: " + CommonUtils.version)
@@ -84,6 +85,15 @@ public class DiscordUtils {
                 .setThumbnail(userAvatar);
     }
 
+    public static EmbedBuilder createRoleEmbed(){
+        return new EmbedBuilder()
+                .setTitle("Přidej si nebo odeber roli")
+                .setColor(Color.decode("#7900FF"))
+                .setFooter("Version: "  + CommonUtils.version)
+                .addField("Dostupné role", CommonUtils.roleSetter.size() + "")
+                .setDescription("Pomocí kliknutí na tlačítka si můžeš přidávat nebo odebírat role");
+    }
+
     public static EmbedBuilder createTopStatisticsEmbed(String name, String description, ArrayList<String[]> data){
         EmbedBuilder output = new EmbedBuilder()
                 .setTitle(name)
@@ -96,14 +106,27 @@ public class DiscordUtils {
         return output;
     }
 
-    public static EmbedBuilder createStatisticEmbed(ArrayList<String[]> data){
-        EmbedBuilder builder = new EmbedBuilder()
-                .setTitle("Ostatní statistiky")
-                .setColor(Color.decode("#2100FF"));
-        for(String[] item : data){
-            builder.addField(item[0], item[1]);
+    public static List<EmbedBuilder> createStatisticEmbed(ArrayList<String[]> data){
+        List<EmbedBuilder> output = new ArrayList<EmbedBuilder>();
+        EmbedBuilder temp = new EmbedBuilder();
+        for(int i = 0; i < data.size(); i++){
+            if(i == 0){
+                temp.setTitle("Ostatní statistiky")
+                        .setColor(Color.decode("#2100FF"))
+                        .addField(data.get(i)[0], data.get(i)[1]);
+                output.add(temp);
+            }
+            else if(i % 6 == 0){
+                temp = new EmbedBuilder()
+                    .setColor(Color.decode("#2100FF"))
+                    .addField(data.get(i)[0], data.get(i)[1]);
+                output.add(temp);
+            }
+            else {
+                temp.addField(data.get(i)[0], data.get(i)[1]);
+            }
         }
-        return builder;
+        return output;
     }
 
     public static void throwError(Exception ex){
@@ -113,11 +136,17 @@ public class DiscordUtils {
     public static void throwError(boolean fatal, Exception exception){
 
         LogSystem.log(fatal ? LogType.FATAL_ERROR : LogType.ERROR, exception.getMessage());
+        String stackTrace = "";
+        for(var item : exception.getStackTrace()){
+            stackTrace += "\n" + item.toString();
+        }
+        stackTrace = "```" + stackTrace + "\n```";
+        System.out.println(stackTrace);
         ((Server)CommonUtils.bot.getServers().toArray()[0]).getTextChannelById(CommonUtils.NIXBOT_CHANNEL_ID).get().sendMessage(
                 new EmbedBuilder().setTitle(fatal ? "Fatal Error" : "Error")
-                        .setColor(fatal ? Color.decode("#fc0202") : Color.decode("#fc7702"))
-                        .addField("Message", exception.getMessage())
-                        .setDescription(exception.getStackTrace().toString())
+                        .setColor(fatal ? Color.decode("#0f0f0f") : Color.decode("#c90006"))
+                        .addField("Message", exception.getMessage() == null ? "none" : exception.getMessage())
+                        .setDescription(stackTrace)
                         .setFooter("Version: " + CommonUtils.version)
         ).join();
 

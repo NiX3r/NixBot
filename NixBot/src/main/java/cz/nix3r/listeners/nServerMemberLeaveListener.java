@@ -14,6 +14,7 @@ public class nServerMemberLeaveListener implements ServerMemberLeaveListener {
         serverMemberLeaveEvent.getServer().getTextChannelById(CommonUtils.WELCOME_CHANNEL_ID).ifPresent(channel -> {
             channel.sendMessage(DiscordUtils.createLeaveEmbed(serverMemberLeaveEvent.getUser().getName(), serverMemberLeaveEvent.getUser().getAvatar(), serverMemberLeaveEvent.getServer())).join();
         });
+        CommonUtils.statisticsManager.incrementMemberLeave();
         DiscordUtils.updateBotActivity("with " + serverMemberLeaveEvent.getServer().getMembers().size() + " users");
         LogSystem.log(LogType.INFO, "Member " + serverMemberLeaveEvent.getUser().getName() + " left from the server. Bot activity updated");
     }

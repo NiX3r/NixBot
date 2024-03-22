@@ -17,7 +17,7 @@ public class DiceCommand {
 
         if(interaction.getArguments().size() == 0){
             int rolled = random.nextInt(6) + 1;
-            interaction.createImmediateResponder().setContent(CommonUtils.ROLLED_DICE[messageId].replace("%i%", String.valueOf(rolled))).respond();
+            interaction.createImmediateResponder().setContent(CommonUtils.messages.getRolledDiceMessages().get(messageId).replace("%i%", String.valueOf(rolled))).respond();
         }
         else {
             long arg = interaction.getArgumentLongValueByIndex(0).get();
@@ -26,7 +26,7 @@ public class DiceCommand {
             if(arg < 2)
                 arg = 2;
             int rolled = random.nextInt(Integer.valueOf((int)arg)) + 1;
-            interaction.createImmediateResponder().setContent(CommonUtils.ROLLED_DICE[messageId].replace("%i%", String.valueOf(rolled))).respond();
+            interaction.createImmediateResponder().setContent(CommonUtils.messages.getRolledDiceMessages().get(messageId).replace("%i%", String.valueOf(rolled))).respond();
         }
 
         LogSystem.log(LogType.INFO, "End of command dice by '" + interaction.getUser().getName() + "'");
