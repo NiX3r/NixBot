@@ -67,7 +67,7 @@ public class AnnouncementConsoleCommand {
                 EmbedBuilder builder = new EmbedBuilder()
                         .setTitle("Restart bota")
                         .setDescription("Dojde k automatickému restartu bota.")
-                        .addField("Restart za", command[2])
+                        .addField("Restart za", command[2] + " minut")
                         .setColor(Color.GREEN)
                         .setThumbnail("https://pluspng.com/img-png/restart-png-restart-icon-1600.png")
                         .setFooter("Console | Version: " + CommonUtils.version);
