@@ -10,6 +10,7 @@ import cz.nix3r.utils.DiscordUtils;
 import cz.nix3r.utils.FileUtils;
 import cz.nix3r.utils.LogSystem;
 import org.javacord.api.entity.message.MessageAttachment;
+import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
@@ -20,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class nMessageCreateListener implements MessageCreateListener {
@@ -57,9 +59,10 @@ public class nMessageCreateListener implements MessageCreateListener {
                             key = fileName.substring(0, fileName.indexOf("."));
                             String path = FileUtils.getTicketArchiveFullPath(ticket);
 
-                            new File(path).mkdirs();
+                            File file1 = new File(path);
+                            file1.mkdirs();
 
-                            try (FileOutputStream fos = new FileOutputStream(path + "/" + fileName)) {
+                            try (FileOutputStream fos = new FileOutputStream(path + "/" + Objects.requireNonNull(file1.listFiles()).length + "-" + fileName)) {
                                 fos.write(file);
                                 fos.flush();
                             }
