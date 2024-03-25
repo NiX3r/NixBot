@@ -130,7 +130,7 @@ public class Ticket {
             serverUser.sendMessage("Konverzace s podporou byla uzavřena.").join();
         });
 
-        LogSystem.log(LogType.INFO, "Ticket closed");
+        LogSystem.log(LogType.INFO, "Ticket '" + (ticket.id + "-" + ticket.author.getName()) + "' closed");
         return 1;
 
     }

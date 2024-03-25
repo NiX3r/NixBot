@@ -18,6 +18,7 @@ public class VolumeCommand {
             if(vol > 100) vol = 100;
             CommonUtils.musicManager.setVolume((int)vol);
             interaction.createImmediateResponder().setContent("Volume successfully updated to " + vol).respond();
+            LogSystem.log(LogType.INFO, "Volume set to " + vol);
         }
 
         LogSystem.log(LogType.INFO, "End of command volume by '" + interaction.getUser().getName() + "'");

@@ -1,6 +1,7 @@
 package cz.nix3r.listeners;
 
 import com.vdurmont.emoji.EmojiParser;
+import cz.nix3r.enums.LogType;
 import cz.nix3r.enums.TicketStatus;
 import cz.nix3r.instances.RoleSetterInstance;
 import cz.nix3r.instances.Ticket;
@@ -8,6 +9,7 @@ import cz.nix3r.instances.TicketMember;
 import cz.nix3r.instances.TicketMessage;
 import cz.nix3r.utils.CommonUtils;
 import cz.nix3r.utils.FileUtils;
+import cz.nix3r.utils.LogSystem;
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.MessageFlag;
@@ -32,6 +34,7 @@ public class nMessageComponentCreateListener implements MessageComponentCreateLi
     public void onComponentCreate(MessageComponentCreateEvent messageComponentCreateEvent) {
         MessageComponentInteraction messageComponentInteraction = messageComponentCreateEvent.getMessageComponentInteraction();
         String customId = messageComponentInteraction.getCustomId();
+        LogSystem.log(LogType.INFO, "Component '" + customId + "' clicked by '" + messageComponentInteraction.getUser().getName() + "'");
         messageComponentInteraction.getServer().ifPresent(server -> {
             messageComponentInteraction.getChannel().ifPresent(textChannel -> {
                 if(customId.contains("nix-ticket-")){
@@ -58,6 +61,7 @@ public class nMessageComponentCreateListener implements MessageComponentCreateLi
                 }
             });
         });
+        LogSystem.log(LogType.INFO, "End of component '" + customId + "' clicked");
     }
 
     private void roleSetter(Interaction interaction, RoleSetterInstance setter){
@@ -68,19 +72,20 @@ public class nMessageComponentCreateListener implements MessageComponentCreateLi
                     if(item.getId() == role.getId()){
                         interaction.getUser().removeRole(item);
                         interaction.createImmediateResponder().setContent("Role " + item.getMentionTag() + " odebrána").setFlags(MessageFlag.EPHEMERAL).respond();
+                        LogSystem.log(LogType.INFO, "Role '" + item.getName() + "' has been took from '" + interaction.getUser().getName() + "'");
                         done = true;
                     }
                 }
                 if(!done){
                     interaction.getUser().addRole(role);
                     interaction.createImmediateResponder().setContent("Role " + role.getMentionTag() + " přidána").setFlags(MessageFlag.EPHEMERAL).respond();
+                    LogSystem.log(LogType.INFO, "Role '" + role.getName() + "' has been added to '" + interaction.getUser().getName() + "'");
                 }
             });
         });
     }
 
     private void createTicket(Interaction interaction, String type){
-
 
         if(!interaction.getServer().isPresent()){
             interaction.createImmediateResponder().setContent("Toto tlačítko je funkční pouze na serveru").setFlags(MessageFlag.EPHEMERAL).respond();
@@ -92,6 +97,7 @@ public class nMessageComponentCreateListener implements MessageComponentCreateLi
 
         if(CommonUtils.ticketManager.getTicketByOwnerId(user.getId()) != null){
             interaction.createImmediateResponder().setContent("Nemůžeš založt další konverzaci s podporou. První uzavři starši konverzaci.").setFlags(MessageFlag.EPHEMERAL).respond();
+            LogSystem.log(LogType.WARNING, "User '" + user.getName() + "' tried to open second ticket");
             return;
         }
 
@@ -132,6 +138,7 @@ public class nMessageComponentCreateListener implements MessageComponentCreateLi
         CommonUtils.ticketManager.addTicket(ticket);
         CommonUtils.ticketManager.updateIndex();
         interaction.createImmediateResponder().setContent("Vytvořená konverzace s podporou. Můžeš kliknout zde " + channel.asServerTextChannel().get().getMentionTag()).setFlags(MessageFlag.EPHEMERAL).respond();
+        LogSystem.log(LogType.INFO, "Ticket '" + (ticket.getId() + "-" + ticket.getAuthor().getName()) + "' created");
 
     }
 

@@ -16,6 +16,8 @@ public class nServerVoiceChannelMemberLeaveListener implements ServerVoiceChanne
     @Override
     public void onServerVoiceChannelMemberLeave(ServerVoiceChannelMemberLeaveEvent serverVoiceChannelMemberLeaveEvent) {
 
+        LogSystem.log(LogType.INFO, "Member '" + serverVoiceChannelMemberLeaveEvent.getUser().getName() + "' left voice channel");
+
         serverVoiceChannelMemberLeaveEvent.getChannel().getCategory().ifPresent(category -> {
             if(category.getIdAsString().equals(CommonUtils.CREATE_CHANNEL_CATEGORY_ID) && !serverVoiceChannelMemberLeaveEvent.getChannel().getIdAsString().equals(CommonUtils.CREATE_CHANNEL_CHANNEL_ID)){
                 closeTempChannel(serverVoiceChannelMemberLeaveEvent.getUser(), serverVoiceChannelMemberLeaveEvent.getServer(), serverVoiceChannelMemberLeaveEvent.getChannel());
@@ -46,6 +48,8 @@ public class nServerVoiceChannelMemberLeaveListener implements ServerVoiceChanne
         CommonUtils.statisticsManager.incrementUsedVoiceChannelId(activityInstance.getChannelId(), timestamp);
         CommonUtils.statisticsManager.incrementBestUserCallTime(activityInstance.getUserId(), timestamp);
         CommonUtils.statisticsManager.incrementCallTime(timestamp);
+
+        LogSystem.log(LogType.INFO, "Member '" + serverVoiceChannelMemberLeaveEvent.getUser().getName() + "' left voice channel event ended");
 
     }
 

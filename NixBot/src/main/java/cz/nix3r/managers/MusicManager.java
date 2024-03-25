@@ -8,11 +8,13 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import cz.nix3r.enums.LogType;
 import cz.nix3r.events.nTrackEndEvent;
 import cz.nix3r.instances.LavaplayerAudioSource;
 import cz.nix3r.instances.SongInstance;
 import cz.nix3r.utils.CommonUtils;
 import cz.nix3r.utils.DiscordUtils;
+import cz.nix3r.utils.LogSystem;
 import org.javacord.api.audio.AudioConnection;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
@@ -100,6 +102,7 @@ public class MusicManager {
                     song.setTrack(track);
                     audioList.add(song);
                     interaction.createImmediateResponder().setContent("Added song " + track.getInfo().title + "\nWaiting in queue: " + audioList.size()).respond();
+                    LogSystem.log(LogType.INFO, "Successfully added '" + track.getInfo().title + "' to music manager");
                 }
 
                 @Override
@@ -110,16 +113,17 @@ public class MusicManager {
                         audioList.add(song);
                     }
                     interaction.createImmediateResponder().setContent("All songs from playlist was added. Added songs: " + playlist.getTracks().size() + "\nWaiting in queue: " + audioList.size()).respond();
+                    LogSystem.log(LogType.INFO, "Successfully added " + playlist.getTracks().size() + " songs to music manager");
                 }
 
                 @Override
                 public void noMatches() {
-                    System.out.println("no matches");
+                    LogSystem.log(LogType.WARNING, "No matches for this song");
                 }
 
                 @Override
                 public void loadFailed(FriendlyException throwable) {
-                    System.out.println("load failed");
+                    DiscordUtils.throwError(throwable);
                 }
             });
 
@@ -138,6 +142,7 @@ public class MusicManager {
                             song.setTrack(track);
                             audioList.add(song);
                             interaction.createImmediateResponder().setContent("Playing song " + track.getInfo().title).respond();
+                            LogSystem.log(LogType.INFO, "Start playing '" + track.getInfo().title + "'");
                             playNext();
                         }
 
@@ -149,17 +154,18 @@ public class MusicManager {
                                 audioList.add(song);
                             }
                             interaction.createImmediateResponder().setContent("All songs from playlist was added. Start playing. Total songs: " + playlist.getTracks().size()).respond();
+                            LogSystem.log(LogType.INFO, "Successfully added " + playlist.getTracks().size() + " songs to music manager. Start playing first in queue");
                             playNext();
                         }
 
                         @Override
                         public void noMatches() {
-                            System.out.println("no matches");
+                            LogSystem.log(LogType.WARNING, "No matches for this song");
                         }
 
                         @Override
                         public void loadFailed(FriendlyException throwable) {
-                            System.out.println("load failed");
+                            DiscordUtils.throwError(throwable);
                         }
                     });
                 });

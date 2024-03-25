@@ -10,6 +10,7 @@ import cz.nix3r.utils.DiscordUtils;
 import cz.nix3r.utils.FileUtils;
 import cz.nix3r.utils.LogSystem;
 import org.javacord.api.entity.message.MessageAttachment;
+import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
@@ -20,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class nMessageCreateListener implements MessageCreateListener {
@@ -28,6 +30,11 @@ public class nMessageCreateListener implements MessageCreateListener {
 
         if(messageCreateEvent.getMessageAuthor().isBotUser())
             return;
+
+        if(messageCreateEvent.getMessage().getFlags().contains(MessageFlag.EPHEMERAL))
+            return;
+
+        LogSystem.log(LogType.INFO, "Message sent by '" + messageCreateEvent.getMessageAuthor().getName() + "'");
 
         messageCreateEvent.getChannel().asServerTextChannel().ifPresent(textChannel -> {
 
@@ -56,10 +63,11 @@ public class nMessageCreateListener implements MessageCreateListener {
                             fileName = attachment.getFileName();
                             key = fileName.substring(0, fileName.indexOf("."));
                             String path = FileUtils.getTicketArchiveFullPath(ticket);
+                            File file1 = new File(path);
+                            file1.mkdirs();
+                            String fullpath = path + "/" + Objects.requireNonNull(file1.listFiles()).length + "-" + fileName;
 
-                            new File(path).mkdirs();
-
-                            try (FileOutputStream fos = new FileOutputStream(path + "/" + fileName)) {
+                            try (FileOutputStream fos = new FileOutputStream(fullpath)) {
                                 fos.write(file);
                                 fos.flush();
                             }
@@ -67,7 +75,8 @@ public class nMessageCreateListener implements MessageCreateListener {
                                 DiscordUtils.throwError(ex);
                             }
 
-                            message.addAttachment(key, path + "/" + fileName);
+                            message.addAttachment(key, fullpath);
+                            LogSystem.log(LogType.INFO, "Attachment '" + fullpath + "' saved");
 
                         } catch (Exception ex){
                             DiscordUtils.throwError(ex);
@@ -98,10 +107,14 @@ public class nMessageCreateListener implements MessageCreateListener {
                     CommonUtils.statisticsManager.incrementTextCounter();
                     CommonUtils.statisticsManager.incrementUsedTextChannelId(textChannel.getId());
                     CommonUtils.statisticsManager.incrementBestUserTextCounterMonth(messageCreateEvent.getMessageAuthor().getId());
+                    LogSystem.log(LogType.INFO, "Server statistics updated");
                 }
 
             });
 
         });
+
+        LogSystem.log(LogType.INFO, "End of message sent event by '" + messageCreateEvent.getMessageAuthor().getName() + "'");
+
     }
 }

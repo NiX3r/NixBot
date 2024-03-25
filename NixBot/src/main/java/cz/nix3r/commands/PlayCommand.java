@@ -18,7 +18,7 @@ public class PlayCommand {
                 else
                     CommonUtils.musicManager.playMusic(interaction, url);
 
-                LogSystem.log(LogType.INFO, "End of command play by '" + interaction.getUser().getName() + "'");
+                LogSystem.log(LogType.INFO, "End of command play by '" + interaction.getUser().getName() + "'. URL: '" + url + "'");
 
             });
 

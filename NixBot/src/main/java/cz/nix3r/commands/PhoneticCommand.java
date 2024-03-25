@@ -9,9 +9,9 @@ import org.javacord.api.interaction.SlashCommandInteraction;
 public class PhoneticCommand {
     public static void run(SlashCommandInteraction interaction) {
 
-        interaction.getArguments().get(0).getStringValue().ifPresent(toCodText -> {
+        interaction.getArguments().get(0).getStringValue().ifPresent(toEncodeText -> {
 
-            char[] codeText = toCodText.toCharArray();
+            char[] codeText = toEncodeText.toCharArray();
             String decoded = "";
 
             for(char c : codeText){
@@ -22,9 +22,9 @@ public class PhoneticCommand {
 
             interaction.createImmediateResponder().setContent("# Your decoded message is\n" + decoded).respond();
 
-        });
+            LogSystem.log(LogType.INFO, "End of command pause by '" + interaction.getUser().getName() + "' message: " + toEncodeText + "'");
 
-        LogSystem.log(LogType.INFO, "End of command pause by '" + interaction.getUser().getName() + "'");
+        });
 
     }
 

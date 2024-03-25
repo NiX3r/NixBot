@@ -35,7 +35,6 @@ public class StatusCommand {
         long start = System.currentTimeMillis();
         String[] ram = getRamUsage();
         String[] cpuProcess = getCpuUsage();
-        BufferedImage screenshot = takeScreenshot();
         EmbedBuilder builder = new EmbedBuilder()
                 .setColor(Color.decode(COLOR_PALLETE[totalUsagePoint]))
                 .setTitle("NixBot status")
@@ -45,7 +44,6 @@ public class StatusCommand {
                 .addField("Time since start", formatTime(System.currentTimeMillis() - CommonUtils.time_since_start), true)
                 .addField("Since start", LogSystem.error_counter + " errors", true)
                 .addField("Generating timestamp", System.currentTimeMillis() - start + " ms", false)
-                .setImage(screenshot)
                 .setThumbnail(((Server)CommonUtils.bot.getServers().toArray()[0]).getIcon().get())
                 .setFooter("Version: " + CommonUtils.version);
 
@@ -132,20 +130,6 @@ public class StatusCommand {
             return String.format("%.2f KB", (double) bytes / kilo);
         } else {
             return bytes + " B";
-        }
-    }
-
-    private static BufferedImage takeScreenshot(){
-        Robot robot = null;
-        try {
-            robot = new Robot();
-            Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
-            BufferedImage screenshot = robot.createScreenCapture(screenRect);
-            LogSystem.log(LogType.INFO, "Took a screenshot successfully");
-            return screenshot;
-        } catch (AWTException e) {
-            LogSystem.log(LogType.ERROR, e.getMessage());
-            return null;
         }
     }
 

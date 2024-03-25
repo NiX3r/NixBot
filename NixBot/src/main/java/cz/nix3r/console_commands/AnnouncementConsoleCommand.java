@@ -15,6 +15,8 @@ public class AnnouncementConsoleCommand {
 
     public static void run(String[] command){
 
+        LogSystem.log(LogType.INFO, "Console command '" + String.join(" ", command) + "' caught");
+
         if(command.length == 1){
             LogSystem.log(LogType.INFO, "Announcement types: restart");
         }
@@ -31,6 +33,8 @@ public class AnnouncementConsoleCommand {
                 status(command);
                 break;
         }
+
+        LogSystem.log(LogType.INFO, "End of the command '" + String.join(" ", command) + "'");
 
     }
 
@@ -63,7 +67,7 @@ public class AnnouncementConsoleCommand {
                 EmbedBuilder builder = new EmbedBuilder()
                         .setTitle("Restart bota")
                         .setDescription("Dojde k automatickému restartu bota.")
-                        .addField("Restart za", command[2])
+                        .addField("Restart za", command[2] + " minut")
                         .setColor(Color.GREEN)
                         .setThumbnail("https://pluspng.com/img-png/restart-png-restart-icon-1600.png")
                         .setFooter("Console | Version: " + CommonUtils.version);

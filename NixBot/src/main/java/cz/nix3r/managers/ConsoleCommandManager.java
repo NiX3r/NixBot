@@ -23,6 +23,8 @@ public class ConsoleCommandManager {
 
         }
 
+        LogSystem.log(LogType.INFO, "End of console command event");
+
     }
 
 }
