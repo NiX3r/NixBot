@@ -55,7 +55,7 @@ public class CommonUtils {
 
         LogSystem.log(LogType.INFO, "Setup default instances");
         time_since_start = System.currentTimeMillis();
-        version = "2.5";
+        version = "2.6";
 
         LogSystem.log(LogType.INFO, "Load settings from file");
         if(FileUtils.loadSettings() != null){
