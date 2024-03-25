@@ -31,6 +31,9 @@ public class nMessageCreateListener implements MessageCreateListener {
         if(messageCreateEvent.getMessageAuthor().isBotUser())
             return;
 
+        if(messageCreateEvent.getMessage().getFlags().contains(MessageFlag.EPHEMERAL))
+            return;
+
         messageCreateEvent.getChannel().asServerTextChannel().ifPresent(textChannel -> {
 
             textChannel.getCategory().ifPresent(category -> {
