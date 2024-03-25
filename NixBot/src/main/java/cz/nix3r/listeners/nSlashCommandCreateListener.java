@@ -10,6 +10,8 @@ import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.listener.interaction.SlashCommandCreateListener;
 
+import java.awt.event.WindowFocusListener;
+
 public class nSlashCommandCreateListener implements SlashCommandCreateListener {
     @Override
     public void onSlashCommandCreate(SlashCommandCreateEvent slashCommandCreateEvent) {
@@ -80,6 +82,8 @@ public class nSlashCommandCreateListener implements SlashCommandCreateListener {
                 break;
 
         }
+
+        LogSystem.log(LogType.INFO, "Command '" + interaction.getCommandName() + "' by '" + interaction.getUser().getName() + "' event ended");
 
     }
 

@@ -1,5 +1,6 @@
 package cz.nix3r.commands;
 
+import com.google.gson.Gson;
 import com.vdurmont.emoji.EmojiParser;
 import cz.nix3r.enums.LogType;
 import cz.nix3r.instances.RoleSetterInstance;
@@ -49,11 +50,13 @@ public class RoleCommand {
             interaction.createImmediateResponder().setContent("Role removed from message").setFlags(MessageFlag.EPHEMERAL).respond();
             sendComponentMessage(interaction);
         }
+        LogSystem.log(LogType.INFO, "End of the command role set by '" + interaction.getUser().getName() + "'. Data: " + new Gson().toJson(setter));
 
     }
 
     private static void message(SlashCommandInteraction interaction) {
         sendComponentMessage(interaction);
+        LogSystem.log(LogType.INFO, "End of the command role message by '" + interaction.getUser().getName() + "'");
     }
 
     private static void sendComponentMessage(SlashCommandInteraction interaction){
@@ -63,7 +66,9 @@ public class RoleCommand {
                 try{
                     msg = textChannel.getMessageById(CommonUtils.settings.getRolesMessageId()).get();
                 }
-                catch (Exception ex){ }
+                catch (Exception ex){
+                    LogSystem.log(LogType.WARNING, "Role message does not exists. Creating a new one");
+                }
 
                 if(msg == null){
 

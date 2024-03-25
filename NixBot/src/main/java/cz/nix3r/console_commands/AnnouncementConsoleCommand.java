@@ -15,6 +15,8 @@ public class AnnouncementConsoleCommand {
 
     public static void run(String[] command){
 
+        LogSystem.log(LogType.INFO, "Console command '" + String.join(" ", command) + "' caught");
+
         if(command.length == 1){
             LogSystem.log(LogType.INFO, "Announcement types: restart");
         }
@@ -31,6 +33,8 @@ public class AnnouncementConsoleCommand {
                 status(command);
                 break;
         }
+
+        LogSystem.log(LogType.INFO, "End of the command '" + String.join(" ", command) + "'");
 
     }
 

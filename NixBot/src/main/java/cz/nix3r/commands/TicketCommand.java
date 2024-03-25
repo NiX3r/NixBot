@@ -166,12 +166,14 @@ public class TicketCommand {
                         }
 
                         interaction.createImmediateResponder().setContent("Uživatel '" + userNick + "¨ přidán").respond();
+                        LogSystem.log(LogType.INFO, "Added '" + userNick + "' to ticket '" + (ticket.getId() + "-" + ticket.getAuthor().getName()) + "'");
                     }
                     else {
                         if(textChannel.asServerTextChannel().isPresent()){
                             textChannel.asServerTextChannel().get().createUpdater().removePermissionOverwrite(user).update();
                         }
                         interaction.createImmediateResponder().setContent("Uživatel '" + userNick + "¨ odebrán").respond();
+                        LogSystem.log(LogType.INFO, "Removed '" + userNick + "' to ticket '" + (ticket.getId() + "-" + ticket.getAuthor().getName()) + "'");
                     }
 
                 });

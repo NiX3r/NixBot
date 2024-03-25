@@ -34,6 +34,8 @@ public class nMessageCreateListener implements MessageCreateListener {
         if(messageCreateEvent.getMessage().getFlags().contains(MessageFlag.EPHEMERAL))
             return;
 
+        LogSystem.log(LogType.INFO, "Message sent by '" + messageCreateEvent.getMessageAuthor().getName() + "'");
+
         messageCreateEvent.getChannel().asServerTextChannel().ifPresent(textChannel -> {
 
             textChannel.getCategory().ifPresent(category -> {
@@ -61,11 +63,11 @@ public class nMessageCreateListener implements MessageCreateListener {
                             fileName = attachment.getFileName();
                             key = fileName.substring(0, fileName.indexOf("."));
                             String path = FileUtils.getTicketArchiveFullPath(ticket);
-
                             File file1 = new File(path);
                             file1.mkdirs();
+                            String fullpath = path + "/" + Objects.requireNonNull(file1.listFiles()).length + "-" + fileName;
 
-                            try (FileOutputStream fos = new FileOutputStream(path + "/" + Objects.requireNonNull(file1.listFiles()).length + "-" + fileName)) {
+                            try (FileOutputStream fos = new FileOutputStream(fullpath)) {
                                 fos.write(file);
                                 fos.flush();
                             }
@@ -73,7 +75,8 @@ public class nMessageCreateListener implements MessageCreateListener {
                                 DiscordUtils.throwError(ex);
                             }
 
-                            message.addAttachment(key, path + "/" + fileName);
+                            message.addAttachment(key, fullpath);
+                            LogSystem.log(LogType.INFO, "Attachment '" + fullpath + "' saved");
 
                         } catch (Exception ex){
                             DiscordUtils.throwError(ex);
@@ -104,10 +107,14 @@ public class nMessageCreateListener implements MessageCreateListener {
                     CommonUtils.statisticsManager.incrementTextCounter();
                     CommonUtils.statisticsManager.incrementUsedTextChannelId(textChannel.getId());
                     CommonUtils.statisticsManager.incrementBestUserTextCounterMonth(messageCreateEvent.getMessageAuthor().getId());
+                    LogSystem.log(LogType.INFO, "Server statistics updated");
                 }
 
             });
 
         });
+
+        LogSystem.log(LogType.INFO, "End of message sent event by '" + messageCreateEvent.getMessageAuthor().getName() + "'");
+
     }
 }

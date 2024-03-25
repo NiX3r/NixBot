@@ -15,6 +15,8 @@ public class nServerVoiceChannelMemberJoinListener implements ServerVoiceChannel
     @Override
     public void onServerVoiceChannelMemberJoin(ServerVoiceChannelMemberJoinEvent serverVoiceChannelMemberJoinEvent) {
 
+        LogSystem.log(LogType.INFO, "Member '" + serverVoiceChannelMemberJoinEvent.getUser().getName() + "' join a voice channel");
+
         if(serverVoiceChannelMemberJoinEvent.getChannel().getIdAsString().equals(CommonUtils.CREATE_CHANNEL_CHANNEL_ID)){
             createTempVoiceChannel(serverVoiceChannelMemberJoinEvent.getUser(), serverVoiceChannelMemberJoinEvent.getServer());
         }
@@ -29,6 +31,8 @@ public class nServerVoiceChannelMemberJoinListener implements ServerVoiceChannel
                 serverVoiceChannelMemberJoinEvent.getChannel().getId(),
                 System.currentTimeMillis()
         ));
+
+        LogSystem.log(LogType.INFO, "Member '" + serverVoiceChannelMemberJoinEvent.getUser().getName() + "' join a voice channel event end");
 
     }
 
