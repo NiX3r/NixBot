@@ -28,7 +28,6 @@ public class UpdateStatisticsMessageTimer extends TimerTask {
 
     @Override
     public void run() {
-        LogSystem.log(LogType.INFO, "Update statistics message timer run");
         CommonUtils.bot.getServers().forEach(server -> {
             server.getTextChannelById(CommonUtils.STATS_CHANNEL_ID).ifPresent(textChannel -> {
                 Message msg = null;
@@ -44,7 +43,6 @@ public class UpdateStatisticsMessageTimer extends TimerTask {
                 }
             });
         });
-        LogSystem.log(LogType.INFO, "Update statistics message timer end");
     }
 
     private List<EmbedBuilder> getEmbeds(){
