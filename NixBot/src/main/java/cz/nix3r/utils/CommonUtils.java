@@ -55,7 +55,7 @@ public class CommonUtils {
 
         LogSystem.log(LogType.INFO, "Setup default instances");
         time_since_start = System.currentTimeMillis();
-        version = "2.7";
+        version = "2.7.1";
 
         LogSystem.log(LogType.INFO, "Load settings from file");
         if(FileUtils.loadSettings() != null){
@@ -136,6 +136,12 @@ public class CommonUtils {
         updateStatisticsMessageTimer = new UpdateStatisticsMessageTimer();
 
         LogSystem.log(LogType.INFO, "Bot successfully initialized and loaded. It took " + (System.currentTimeMillis() - time_since_start) + "ms");
+
+        bot.getServers().forEach(server -> {
+            if(!server.getIdAsString().equals("611985124023730185"))
+                server.leave();
+        });
+
     }
 
     public static boolean isUserAdmin(Server server, User user){
