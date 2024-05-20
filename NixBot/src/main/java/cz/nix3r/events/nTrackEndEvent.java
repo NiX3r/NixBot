@@ -13,10 +13,10 @@ public class nTrackEndEvent implements AudioEventListener {
     public void onEvent(AudioEvent audioEvent) {
 
         if (audioEvent instanceof TrackEndEvent) {
-            LogSystem.log(LogType.INFO, "Current song ended. Start playing a new one");
+            LogSystem.info("Current song ended. Start playing a new one");
             if(((TrackEndEvent)audioEvent).endReason != AudioTrackEndReason.STOPPED && ((TrackEndEvent)audioEvent).endReason != AudioTrackEndReason.REPLACED){
                 CommonUtils.musicManager.playNext();
-                LogSystem.log(LogType.INFO, "Next song played");
+                LogSystem.info("Next song played");
             }
         }
 

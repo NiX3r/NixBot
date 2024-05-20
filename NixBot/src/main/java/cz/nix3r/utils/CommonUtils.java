@@ -53,25 +53,25 @@ public class CommonUtils {
 
     public static void setupBot(){
 
-        LogSystem.log(LogType.INFO, "Setup default instances");
+        LogSystem.info("Setup default instances");
         time_since_start = System.currentTimeMillis();
         version = "2.7";
 
-        LogSystem.log(LogType.INFO, "Load settings from file");
+        LogSystem.info("Load settings from file");
         if(FileUtils.loadSettings() != null){
-            LogSystem.log(LogType.FATAL_ERROR, "Can't load settings. Turning the bot off");
+            LogSystem.fatalError("Can't load settings. Turning the bot off");
         }
 
-        LogSystem.log(LogType.INFO, "Initialize and connect bot");
+        LogSystem.info("Initialize and connect bot");
         bot = new DiscordApiBuilder().setToken(CommonUtils.settings.getBotToken()).setAllIntents().login().join();
 
-        LogSystem.log(LogType.INFO, "Setup managers");
+        LogSystem.info("Setup managers");
         tempChannelManager = new TemporaryChannelManager();
         inviteManager = new InviteManager();
         musicManager = new MusicManager();
         statisticsManager = new StatisticsManager();
 
-        LogSystem.log(LogType.INFO, "Load data from files");
+        LogSystem.info("Load data from files");
         if(FileUtils.loadRoleSetter() != null)
             roleSetter = new ArrayList<RoleSetterInstance>();
         if(FileUtils.loadActiveTickets() != null){
@@ -79,16 +79,16 @@ public class CommonUtils {
         }
         FileUtils.loadMessages();
 
-        LogSystem.log(LogType.INFO, "Initializing and starting threads");
+        LogSystem.info("Initializing and starting threads");
         Runtime.getRuntime().addShutdownHook(new ShutdownThread());
 
-        LogSystem.log(LogType.INFO, "Load platforms data into cache");
+        LogSystem.info("Load platforms data into cache");
 
         // Refresh commands if needed
         //CommandUtils.deleteCommands();
         //CommandUtils.createCommands();
 
-        LogSystem.log(LogType.INFO, "Register listeners");
+        LogSystem.info("Register listeners");
         bot.addServerMemberBanListener(new nServerMemberBanListener());
         bot.addServerMemberJoinListener(new nServerMemberJoinListener());
         bot.addServerMemberLeaveListener(new nServerMemberLeaveListener());
@@ -99,7 +99,7 @@ public class CommonUtils {
         bot.addMessageComponentCreateListener(new nMessageComponentCreateListener());
         bot.addMessageCreateListener(new nMessageCreateListener());
 
-        LogSystem.log(LogType.INFO, "Delete unwanted channels in temporary category");
+        LogSystem.info("Delete unwanted channels in temporary category");
         Server nixCrew = ((Server)bot.getServers().toArray()[0]);
         nixCrew.getChannelCategoryById(CREATE_CHANNEL_CATEGORY_ID).ifPresent(category -> {
             for(RegularServerChannel channel : category.getChannels()){
@@ -108,12 +108,12 @@ public class CommonUtils {
                         continue;
                     }
                     channel.delete().join();
-                    LogSystem.log(LogType.INFO, "Deleted unwanted channel '" + channel.getName() + "' in temporary category");
+                    LogSystem.info("Deleted unwanted channel '" + channel.getName() + "' in temporary category");
                 }
             }
         });
 
-        LogSystem.log(LogType.INFO, "Load all invites in invite manager");
+        LogSystem.info("Load all invites in invite manager");
         for(RichInvite invite : nixCrew.getInvites().join()){
             invite.getInviter().ifPresent(inviter -> {
                 long userId = 0;
@@ -124,18 +124,18 @@ public class CommonUtils {
 
                 InviteInstance inv = new InviteInstance(invite.getCode(), userId, invite.getUses());
                 inviteManager.addInvite(inv);
-                LogSystem.log(LogType.INFO, "Added invite (code='" + inv.getCode() + "', inviter='" + inviter.getName() + "') into invite manager");
+                LogSystem.info("Added invite (code='" + inv.getCode() + "', inviter='" + inviter.getName() + "') into invite manager");
 
             });
         }
 
-        LogSystem.log(LogType.INFO, "Update activity");
+        LogSystem.info("Update activity");
         bot.updateActivity(ActivityType.PLAYING, "with " + ((Server)bot.getServers().toArray()[0]).getMembers().size() + " users");
 
-        LogSystem.log(LogType.INFO, "Initialize and start timers");
+        LogSystem.info("Initialize and start timers");
         updateStatisticsMessageTimer = new UpdateStatisticsMessageTimer();
 
-        LogSystem.log(LogType.INFO, "Bot successfully initialized and loaded. It took " + (System.currentTimeMillis() - time_since_start) + "ms");
+        LogSystem.info("Bot successfully initialized and loaded. It took " + (System.currentTimeMillis() - time_since_start) + "ms");
     }
 
     public static boolean isUserAdmin(Server server, User user){
@@ -158,7 +158,7 @@ public class CommonUtils {
     }
 
     public static void shutdownBot() {
-        LogSystem.log(LogType.INFO, "Shutting down the bot ..");
+        LogSystem.info("Shutting down the bot ..");
         FileUtils.saveSettings();
         FileUtils.saveActiveTickets();
         FileUtils.saveStatistics();

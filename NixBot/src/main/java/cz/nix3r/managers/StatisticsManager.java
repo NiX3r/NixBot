@@ -38,32 +38,32 @@ public class StatisticsManager {
     public void incrementUsedTextChannelId(Long id){
         statistics.incrementUsedTextChannelIdMonth(id);
         statistics.incrementUsedTextChannelIdEver(id);
-        LogSystem.log(LogType.INFO, "Used text channel id '" + id + "' increased");
+        LogSystem.info("Used text channel id '" + id + "' increased");
     }
 
     public void incrementUsedVoiceChannelId(Long id, long toAdd){
         statistics.incrementUsedVoiceChannelIdMonth(id, toAdd);
         statistics.incrementUsedVoiceChannelIdEver(id, toAdd);
-        LogSystem.log(LogType.INFO, "Used voice channel id '" + id + "' increased");
+        LogSystem.info("Used voice channel id '" + id + "' increased");
     }
 
     public void incrementBestUserCallTime(Long id, long toAdd){
         statistics.incrementBestUserCallTimeMonth(id, toAdd);
         statistics.incrementBestUserCallTimeEver(id, toAdd);
-        LogSystem.log(LogType.INFO, "Best user id '" + id + "' call time increased by " + toAdd);
+        LogSystem.info("Best user id '" + id + "' call time increased by " + toAdd);
     }
 
     public void incrementBestUserTextCounterMonth(Long id){
         statistics.incrementBestUserTextCounterMonth(id);
         statistics.incrementBestUserTextCounterEver(id);
-        LogSystem.log(LogType.INFO, "Best user id '" + id + "' text increased");
+        LogSystem.info("Best user id '" + id + "' text increased");
     }
 
     public void incrementCallTime(long toAdd){
         statistics.incrementCallTimeDay(toAdd);
         statistics.incrementCallTimeMonth(toAdd);
         statistics.incrementCallTimeEver(toAdd);
-        LogSystem.log(LogType.INFO, "Total call time increased by " + toAdd);
+        LogSystem.info("Total call time increased by " + toAdd);
     }
 
     public void incrementCommandsUsed(long userId, String commandName){
@@ -89,7 +89,7 @@ public class StatisticsManager {
         statistics.incrementTextCounterDay();
         statistics.incrementTextCounterMonth();
         statistics.incrementTextCounterEver();
-        LogSystem.log(LogType.INFO, "Total text increased");
+        LogSystem.info("Total text increased");
     }
 
     // Get top five used text channel || voice channels || members

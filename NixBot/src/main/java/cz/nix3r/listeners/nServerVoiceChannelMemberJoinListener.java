@@ -15,7 +15,7 @@ public class nServerVoiceChannelMemberJoinListener implements ServerVoiceChannel
     @Override
     public void onServerVoiceChannelMemberJoin(ServerVoiceChannelMemberJoinEvent serverVoiceChannelMemberJoinEvent) {
 
-        LogSystem.log(LogType.INFO, "Member '" + serverVoiceChannelMemberJoinEvent.getUser().getName() + "' join a voice channel");
+        LogSystem.info("Member '" + serverVoiceChannelMemberJoinEvent.getUser().getName() + "' join a voice channel");
 
         if(serverVoiceChannelMemberJoinEvent.getChannel().getIdAsString().equals(CommonUtils.CREATE_CHANNEL_CHANNEL_ID)){
             createTempVoiceChannel(serverVoiceChannelMemberJoinEvent.getUser(), serverVoiceChannelMemberJoinEvent.getServer());
@@ -32,18 +32,18 @@ public class nServerVoiceChannelMemberJoinListener implements ServerVoiceChannel
                 System.currentTimeMillis()
         ));
 
-        LogSystem.log(LogType.INFO, "Member '" + serverVoiceChannelMemberJoinEvent.getUser().getName() + "' join a voice channel event end");
+        LogSystem.info("Member '" + serverVoiceChannelMemberJoinEvent.getUser().getName() + "' join a voice channel event end");
 
     }
 
     private void createTempVoiceChannel(User creator, Server server){
 
-        LogSystem.log(LogType.INFO, "User '" + creator.getName() + "' tries to create temp channel");
+        LogSystem.info("User '" + creator.getName() + "' tries to create temp channel");
 
         if(CommonUtils.tempChannelManager.alreadyHasTempVoiceChannel(creator.getId())){
             server.getVoiceChannelById(CommonUtils.tempChannelManager.getTempVoiceChannelMap().get(creator.getId())).ifPresent(tempChannel -> {
                 creator.move(tempChannel).join();
-                LogSystem.log(LogType.INFO, "User " + creator.getName() + "' already have temp channel. User moved");
+                LogSystem.info("User " + creator.getName() + "' already have temp channel. User moved");
             });
             return;
         }
@@ -56,7 +56,7 @@ public class nServerVoiceChannelMemberJoinListener implements ServerVoiceChannel
 
         CommonUtils.tempChannelManager.addTempChannel(creator.getId(), voiceChannel.getId());
         creator.move(voiceChannel).join();
-        LogSystem.log(LogType.INFO, "Temp channel for user '" + creator.getName() +"' created. User moved");
+        LogSystem.info("Temp channel for user '" + creator.getName() +"' created. User moved");
 
     }
 

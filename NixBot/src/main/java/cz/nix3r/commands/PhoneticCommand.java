@@ -22,7 +22,7 @@ public class PhoneticCommand {
 
             interaction.createImmediateResponder().setContent("# Your decoded message is\n" + decoded).respond();
 
-            LogSystem.log(LogType.INFO, "End of command pause by '" + interaction.getUser().getName() + "' message: " + toEncodeText + "'");
+            LogSystem.info("End of command pause by '" + interaction.getUser().getName() + "' message: " + toEncodeText + "'");
 
         });
 

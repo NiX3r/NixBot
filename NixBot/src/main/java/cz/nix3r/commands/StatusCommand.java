@@ -23,11 +23,11 @@ public class StatusCommand {
 
     public static void run(SlashCommandInteraction interaction) {
 
-        LogSystem.log(LogType.INFO, "Status command catch by '" + interaction.getUser().getName() + "'");
+        LogSystem.info("Status command catch by '" + interaction.getUser().getName() + "'");
         interaction.createImmediateResponder().setContent("Generating status ..").respond().join();
 
         getStatusMessageBuilder().send(interaction.getChannel().get()).join();
-        LogSystem.log(LogType.INFO, "End of command status by '" + interaction.getUser().getName() + "'");
+        LogSystem.info("End of command status by '" + interaction.getUser().getName() + "'");
 
     }
 
@@ -103,7 +103,7 @@ public class StatusCommand {
                 progressBar
         };
 
-        LogSystem.log(LogType.INFO, "Generated RAM usage. Total memory: " + totalMemory + ". Free memory: " + freeMemory + ". Used memory: " + usedMemory);
+        LogSystem.info("Generated RAM usage. Total memory: " + totalMemory + ". Free memory: " + freeMemory + ". Used memory: " + usedMemory);
 
         return response;
 

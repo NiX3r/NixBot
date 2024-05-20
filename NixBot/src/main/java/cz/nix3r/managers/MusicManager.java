@@ -102,7 +102,7 @@ public class MusicManager {
                     song.setTrack(track);
                     audioList.add(song);
                     interaction.createImmediateResponder().setContent("Added song " + track.getInfo().title + "\nWaiting in queue: " + audioList.size()).respond();
-                    LogSystem.log(LogType.INFO, "Successfully added '" + track.getInfo().title + "' to music manager");
+                    LogSystem.info("Successfully added '" + track.getInfo().title + "' to music manager");
                 }
 
                 @Override
@@ -113,12 +113,12 @@ public class MusicManager {
                         audioList.add(song);
                     }
                     interaction.createImmediateResponder().setContent("All songs from playlist was added. Added songs: " + playlist.getTracks().size() + "\nWaiting in queue: " + audioList.size()).respond();
-                    LogSystem.log(LogType.INFO, "Successfully added " + playlist.getTracks().size() + " songs to music manager");
+                    LogSystem.info("Successfully added " + playlist.getTracks().size() + " songs to music manager");
                 }
 
                 @Override
                 public void noMatches() {
-                    LogSystem.log(LogType.WARNING, "No matches for this song");
+                    LogSystem.warning("No matches for this song");
                 }
 
                 @Override
@@ -142,7 +142,7 @@ public class MusicManager {
                             song.setTrack(track);
                             audioList.add(song);
                             interaction.createImmediateResponder().setContent("Playing song " + track.getInfo().title).respond();
-                            LogSystem.log(LogType.INFO, "Start playing '" + track.getInfo().title + "'");
+                            LogSystem.info("Start playing '" + track.getInfo().title + "'");
                             playNext();
                         }
 
@@ -154,13 +154,13 @@ public class MusicManager {
                                 audioList.add(song);
                             }
                             interaction.createImmediateResponder().setContent("All songs from playlist was added. Start playing. Total songs: " + playlist.getTracks().size()).respond();
-                            LogSystem.log(LogType.INFO, "Successfully added " + playlist.getTracks().size() + " songs to music manager. Start playing first in queue");
+                            LogSystem.info("Successfully added " + playlist.getTracks().size() + " songs to music manager. Start playing first in queue");
                             playNext();
                         }
 
                         @Override
                         public void noMatches() {
-                            LogSystem.log(LogType.WARNING, "No matches for this song");
+                            LogSystem.warning("No matches for this song");
                         }
 
                         @Override

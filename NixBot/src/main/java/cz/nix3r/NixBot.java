@@ -12,14 +12,14 @@ public class NixBot {
 
     public static void main(String[] args) {
 
-        LogSystem.log(LogType.INFO, "Bot started. Initializing ..");
+        LogSystem.info("Bot started. Initializing ..");
         try{
             CommonUtils.setupBot();
             ConsoleCommandReaderThread commandThread = new ConsoleCommandReaderThread();
             commandThread.run();
         }
         catch (Exception ex){
-            LogSystem.log(LogType.FATAL_ERROR, "Bot can't be initialized or loaded. Error: " + ex.getMessage());
+            LogSystem.fatalError("Bot can't be initialized or loaded. Error: " + ex.getMessage());
         }
 
     }

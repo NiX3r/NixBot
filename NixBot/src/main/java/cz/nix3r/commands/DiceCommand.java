@@ -29,7 +29,7 @@ public class DiceCommand {
             interaction.createImmediateResponder().setContent(CommonUtils.messages.getRolledDiceMessages().get(messageId).replace("%i%", String.valueOf(rolled))).respond();
         }
 
-        LogSystem.log(LogType.INFO, "End of command dice by '" + interaction.getUser().getName() + "'");
+        LogSystem.info("End of command dice by '" + interaction.getUser().getName() + "'");
 
     }
 }

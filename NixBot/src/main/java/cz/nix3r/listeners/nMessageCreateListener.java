@@ -34,7 +34,7 @@ public class nMessageCreateListener implements MessageCreateListener {
         if(messageCreateEvent.getMessage().getFlags().contains(MessageFlag.EPHEMERAL))
             return;
 
-        LogSystem.log(LogType.INFO, "Message sent by '" + messageCreateEvent.getMessageAuthor().getName() + "'");
+        LogSystem.info("Message sent by '" + messageCreateEvent.getMessageAuthor().getName() + "'");
 
         messageCreateEvent.getChannel().asServerTextChannel().ifPresent(textChannel -> {
 
@@ -76,7 +76,7 @@ public class nMessageCreateListener implements MessageCreateListener {
                             }
 
                             message.addAttachment(key, fullpath);
-                            LogSystem.log(LogType.INFO, "Attachment '" + fullpath + "' saved");
+                            LogSystem.info("Attachment '" + fullpath + "' saved");
 
                         } catch (Exception ex){
                             DiscordUtils.throwError(ex);
@@ -99,7 +99,7 @@ public class nMessageCreateListener implements MessageCreateListener {
                         ));
 
                     ticket.getMessages().add(message);
-                    LogSystem.log(LogType.INFO, "Ticket message by '" + messageCreateEvent.getMessageAuthor().getName() + "' saved");
+                    LogSystem.info("Ticket message by '" + messageCreateEvent.getMessageAuthor().getName() + "' saved");
 
                 }
                 // Add to statistics (only if it's in category, and it's not tickets category)
@@ -107,14 +107,14 @@ public class nMessageCreateListener implements MessageCreateListener {
                     CommonUtils.statisticsManager.incrementTextCounter();
                     CommonUtils.statisticsManager.incrementUsedTextChannelId(textChannel.getId());
                     CommonUtils.statisticsManager.incrementBestUserTextCounterMonth(messageCreateEvent.getMessageAuthor().getId());
-                    LogSystem.log(LogType.INFO, "Server statistics updated");
+                    LogSystem.info("Server statistics updated");
                 }
 
             });
 
         });
 
-        LogSystem.log(LogType.INFO, "End of message sent event by '" + messageCreateEvent.getMessageAuthor().getName() + "'");
+        LogSystem.info("End of message sent event by '" + messageCreateEvent.getMessageAuthor().getName() + "'");
 
     }
 }

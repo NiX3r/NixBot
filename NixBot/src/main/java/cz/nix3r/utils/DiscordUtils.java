@@ -2,6 +2,7 @@ package cz.nix3r.utils;
 
 import cz.nix3r.enums.LogType;
 import cz.nix3r.instances.SongInstance;
+import org.apache.commons.logging.Log;
 import org.javacord.api.entity.Icon;
 import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
@@ -135,7 +136,10 @@ public class DiscordUtils {
 
     public static void throwError(boolean fatal, Exception exception){
 
-        LogSystem.log(fatal ? LogType.FATAL_ERROR : LogType.ERROR, exception.getMessage());
+        if(fatal)
+            LogSystem.fatalError(exception.getMessage());
+        else
+            LogSystem.error(exception.getMessage());
         String stackTrace = "";
         for(var item : exception.getStackTrace()){
             stackTrace += "\n" + item.toString();

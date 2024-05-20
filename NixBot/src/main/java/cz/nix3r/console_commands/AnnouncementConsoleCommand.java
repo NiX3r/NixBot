@@ -15,13 +15,13 @@ public class AnnouncementConsoleCommand {
 
     public static void run(String[] command){
 
-        LogSystem.log(LogType.INFO, "Console command '" + String.join(" ", command) + "' caught");
+        LogSystem.info("Console command '" + String.join(" ", command) + "' caught");
 
         if(command.length == 1){
-            LogSystem.log(LogType.INFO, "Announcement types: restart");
+            LogSystem.info("Announcement types: restart");
         }
         if (command.length < 2){
-            LogSystem.log(LogType.WARNING, "Wrong command usage. Please type: 'ann' or 'announcement'");
+            LogSystem.warning("Wrong command usage. Please type: 'ann' or 'announcement'");
             return;
         }
 
@@ -34,21 +34,21 @@ public class AnnouncementConsoleCommand {
                 break;
         }
 
-        LogSystem.log(LogType.INFO, "End of the command '" + String.join(" ", command) + "'");
+        LogSystem.info("End of the command '" + String.join(" ", command) + "'");
 
     }
 
     private static void status(String[] command){
 
         if(command.length != 2){
-            LogSystem.log(LogType.WARNING, "Bad command usage. Usage: 'announcements status'");
+            LogSystem.warning("Bad command usage. Usage: 'announcements status'");
             return;
         }
 
         CommonUtils.bot.getServers().forEach(server -> {
             server.getTextChannelById(CommonUtils.NIXBOT_CHANNEL_ID).ifPresent(textChannel -> {
                 StatusCommand.getStatusMessageBuilder().send(textChannel).join();
-                LogSystem.log(LogType.INFO, "Status sent");
+                LogSystem.info("Status sent");
             });
         });
 
@@ -57,7 +57,7 @@ public class AnnouncementConsoleCommand {
     private static void restart(String[] command){
 
         if(command.length != 3){
-            LogSystem.log(LogType.WARNING, "Bad command usage. Usage: 'announcements restart <time to restart>'");
+            LogSystem.warning("Bad command usage. Usage: 'announcements restart <time to restart>'");
             return;
         }
 

@@ -16,7 +16,7 @@ public class nServerVoiceChannelMemberLeaveListener implements ServerVoiceChanne
     @Override
     public void onServerVoiceChannelMemberLeave(ServerVoiceChannelMemberLeaveEvent serverVoiceChannelMemberLeaveEvent) {
 
-        LogSystem.log(LogType.INFO, "Member '" + serverVoiceChannelMemberLeaveEvent.getUser().getName() + "' left voice channel");
+        LogSystem.info("Member '" + serverVoiceChannelMemberLeaveEvent.getUser().getName() + "' left voice channel");
 
         serverVoiceChannelMemberLeaveEvent.getChannel().getCategory().ifPresent(category -> {
             if(category.getIdAsString().equals(CommonUtils.CREATE_CHANNEL_CATEGORY_ID) && !serverVoiceChannelMemberLeaveEvent.getChannel().getIdAsString().equals(CommonUtils.CREATE_CHANNEL_CHANNEL_ID)){
@@ -28,7 +28,7 @@ public class nServerVoiceChannelMemberLeaveListener implements ServerVoiceChanne
             if(CommonUtils.musicManager.isPlaying()){
                 serverVoiceChannelMemberLeaveEvent.getChannel().connect().join();
                 CommonUtils.musicManager.playNext();
-                LogSystem.log(LogType.INFO, "Bot tried to leave channel. Bot reconnect and start playing next song");
+                LogSystem.info("Bot tried to leave channel. Bot reconnect and start playing next song");
             }
         }
 
@@ -49,19 +49,19 @@ public class nServerVoiceChannelMemberLeaveListener implements ServerVoiceChanne
         CommonUtils.statisticsManager.incrementBestUserCallTime(activityInstance.getUserId(), timestamp);
         CommonUtils.statisticsManager.incrementCallTime(timestamp);
 
-        LogSystem.log(LogType.INFO, "Member '" + serverVoiceChannelMemberLeaveEvent.getUser().getName() + "' left voice channel event ended");
+        LogSystem.info("Member '" + serverVoiceChannelMemberLeaveEvent.getUser().getName() + "' left voice channel event ended");
 
     }
 
     private void closeTempChannel(User creator, Server server, ServerVoiceChannel channel){
 
-        LogSystem.log(LogType.INFO, "Attempting to delete temp channel '" + channel.getName() + "'");
+        LogSystem.info("Attempting to delete temp channel '" + channel.getName() + "'");
 
         if(channel.getConnectedUserIds().isEmpty()){
 
             CommonUtils.tempChannelManager.getTempVoiceChannelMap().remove(creator.getId());
             channel.delete().join();
-            LogSystem.log(LogType.INFO, "Channel '" + channel.getName() + "' deleted");
+            LogSystem.info("Channel '" + channel.getName() + "' deleted");
 
         }
 

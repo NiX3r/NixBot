@@ -17,7 +17,7 @@ public class PauseCommand {
             interaction.createImmediateResponder().setContent("NixBot song is paused").respond();
         }
 
-        LogSystem.log(LogType.INFO, "End of command pause by '" + interaction.getUser().getName() + "'");
+        LogSystem.info("End of command pause by '" + interaction.getUser().getName() + "'");
 
     }
 }

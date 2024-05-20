@@ -24,28 +24,28 @@ public class FileUtils {
     private static final String ACTIVE_TICKETS_PATH = "./data/active_tickets.json";
 
     public static Exception loadSettings(){
-        LogSystem.log(LogType.INFO, "Trying to load settings");
+        LogSystem.info("Trying to load settings");
         try {
             String json = new String(Files.readAllBytes(Paths.get(SETTINGS_PATH)));
             CommonUtils.settings = new Gson().fromJson(json, AppSettingsInstance.class);
-            LogSystem.log(LogType.INFO, "Settings loaded");
+            LogSystem.info("Settings loaded");
             return null;
         }
         catch (Exception ex){
-            LogSystem.log(LogType.ERROR, "Can't load settigns. Error: " + ex.getMessage());
+            LogSystem.error("Can't load settigns. Error: " + ex.getMessage());
             return ex;
         }
     }
 
     public static Exception saveSettings(){
-        LogSystem.log(LogType.INFO, "Trying to save settings");
+        LogSystem.info("Trying to save settings");
         try{
             BufferedWriter f_writer
                     = new BufferedWriter(new FileWriter(SETTINGS_PATH));
             f_writer.write(new GsonBuilder().create().toJson(CommonUtils.settings));
             f_writer.flush();
             f_writer.close();
-            LogSystem.log(LogType.INFO, "Settings saved");
+            LogSystem.info("Settings saved");
             return null;
         }
         catch (Exception ex){
@@ -55,11 +55,11 @@ public class FileUtils {
     }
 
     public static Exception loadMessages(){
-        LogSystem.log(LogType.INFO, "Trying to load messages");
+        LogSystem.info("Trying to load messages");
         try {
             String json = new String(Files.readAllBytes(Paths.get(MESSAGES_PATH)));
             CommonUtils.messages = new Gson().fromJson(json, MessagesInstance.class);
-            LogSystem.log(LogType.INFO, "messages loaded");
+            LogSystem.info("messages loaded");
             return null;
         }
         catch (Exception ex){
@@ -104,14 +104,14 @@ public class FileUtils {
     }
 
     public static Exception saveMessages(){
-        LogSystem.log(LogType.INFO, "Trying to save messages");
+        LogSystem.info("Trying to save messages");
         try{
             BufferedWriter f_writer
                     = new BufferedWriter(new FileWriter(MESSAGES_PATH));
             f_writer.write(new GsonBuilder().create().toJson(CommonUtils.messages));
             f_writer.flush();
             f_writer.close();
-            LogSystem.log(LogType.INFO, "Messages saved");
+            LogSystem.info("Messages saved");
             return null;
         }
         catch (Exception ex){
@@ -121,11 +121,11 @@ public class FileUtils {
     }
 
     public static Exception loadRoleSetter(){
-        LogSystem.log(LogType.INFO, "Trying to load role setter");
+        LogSystem.info("Trying to load role setter");
         try {
             String json = new String(Files.readAllBytes(Paths.get(ROLE_SETTER_PATH)));
             CommonUtils.roleSetter = new Gson().fromJson(json, new TypeToken<List<RoleSetterInstance>>(){});
-            LogSystem.log(LogType.INFO, "Role setter loaded");
+            LogSystem.info("Role setter loaded");
             return null;
         }
         catch (Exception ex){
@@ -135,14 +135,14 @@ public class FileUtils {
     }
 
     public static Exception saveRoleSetter(){
-        LogSystem.log(LogType.INFO, "Trying to save role setter");
+        LogSystem.info("Trying to save role setter");
         try{
             BufferedWriter f_writer
                     = new BufferedWriter(new FileWriter(ROLE_SETTER_PATH));
             f_writer.write(new GsonBuilder().create().toJson(CommonUtils.roleSetter));
             f_writer.flush();
             f_writer.close();
-            LogSystem.log(LogType.INFO, "Role setter saved");
+            LogSystem.info("Role setter saved");
             return null;
         }
         catch (Exception ex){
@@ -153,7 +153,7 @@ public class FileUtils {
 
     public static Exception saveActiveTickets(){
 
-        LogSystem.log(LogType.INFO, "Trying to save active tickets");
+        LogSystem.info("Trying to save active tickets");
         createDefaultTicketFolders();
 
         try{
@@ -163,7 +163,7 @@ public class FileUtils {
             f_writer.write(new GsonBuilder().create().toJson(CommonUtils.ticketManager));
             f_writer.flush();
             f_writer.close();
-            LogSystem.log(LogType.INFO, "Active tickets saved");
+            LogSystem.info("Active tickets saved");
             return null;
         }
         catch (Exception ex){
@@ -175,11 +175,11 @@ public class FileUtils {
 
     public static Exception loadActiveTickets(){
 
-        LogSystem.log(LogType.INFO, "Trying to load active tickets");
+        LogSystem.info("Trying to load active tickets");
         try {
             String json = new String(Files.readAllBytes(Paths.get(ACTIVE_TICKETS_PATH)));
             CommonUtils.ticketManager = new Gson().fromJson(json, TicketManager.class);
-            LogSystem.log(LogType.INFO, "Active tickets loaded");
+            LogSystem.info("Active tickets loaded");
             return null;
         }
         catch (Exception ex){
@@ -191,7 +191,7 @@ public class FileUtils {
 
     public static Exception saveTicket(Ticket ticket){
 
-        LogSystem.log(LogType.INFO, "Trying to save ticket");
+        LogSystem.info("Trying to save ticket");
         createTicketArchiveFolders(ticket);
 
         try {
@@ -202,7 +202,7 @@ public class FileUtils {
             f_writer.write(new GsonBuilder().create().toJson(CommonUtils.ticketManager.getActiveTickets().get(ticket.getChannelId())));
             f_writer.flush();
             f_writer.close();
-            LogSystem.log(LogType.INFO, "Ticket saved on: " + path);
+            LogSystem.info("Ticket saved on: " + path);
             return null;
         }
         catch (Exception ex){
@@ -213,7 +213,7 @@ public class FileUtils {
     }
 
     public static Exception saveStatistics(){
-        LogSystem.log(LogType.INFO, "Trying to save statistics");
+        LogSystem.info("Trying to save statistics");
         try{
             createDefaultStatisticsFolders();
             Calendar calendar = Calendar.getInstance();
@@ -225,7 +225,7 @@ public class FileUtils {
             f_writer.write(new GsonBuilder().create().toJson(CommonUtils.statisticsManager.getStatistics()));
             f_writer.flush();
             f_writer.close();
-            LogSystem.log(LogType.INFO, "Statistics saved on: " + path);
+            LogSystem.info("Statistics saved on: " + path);
             return null;
         }
         catch (Exception ex){
@@ -235,14 +235,14 @@ public class FileUtils {
     }
 
     public static StatisticsInstance loadCurrentMonthStatistics(){
-        LogSystem.log(LogType.INFO, "Trying to load current month statistics");
+        LogSystem.info("Trying to load current month statistics");
         try {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
             String path = STATISTICS_ARCHIVE + "statistics-" + ((calendar.get(Calendar.MONTH) + 1)) + "-" + (calendar.get(Calendar.YEAR)) + ".json";
             String json = new String(Files.readAllBytes(Paths.get(path)));
             StatisticsInstance instance = new Gson().fromJson(json, StatisticsInstance.class);
-            LogSystem.log(LogType.INFO, "Current month statistics loaded");
+            LogSystem.info("Current month statistics loaded");
             return instance;
         }
         catch (Exception ex){

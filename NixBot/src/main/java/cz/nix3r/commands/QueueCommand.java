@@ -28,7 +28,7 @@ public class QueueCommand {
     private static void clearQueue(SlashCommandInteraction interaction){
         CommonUtils.musicManager.clearQueue();
         interaction.createImmediateResponder().setContent("Queue cleared.").respond();
-        LogSystem.log(LogType.INFO, "End of command queue clear by '" + interaction.getUser().getName() + "'");
+        LogSystem.info("End of command queue clear by '" + interaction.getUser().getName() + "'");
     }
 
     private static void viewQueue(SlashCommandInteraction interaction){
@@ -57,7 +57,7 @@ public class QueueCommand {
                 .setColor(Color.decode("#2100FF"));
 
         interaction.createImmediateResponder().addEmbed(builder).respond();
-        LogSystem.log(LogType.INFO, "End of command queue view by '" + interaction.getUser().getName() + "'");
+        LogSystem.info("End of command queue view by '" + interaction.getUser().getName() + "'");
     }
 
 }

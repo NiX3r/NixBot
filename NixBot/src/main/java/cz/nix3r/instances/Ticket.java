@@ -103,16 +103,16 @@ public class Ticket {
 
     public static int closeTicket(Server server, TextChannel channel, User user, boolean isResolved){
 
-        LogSystem.log(LogType.INFO, "Trying to close a ticket");
+        LogSystem.info("Trying to close a ticket");
         Ticket ticket = CommonUtils.ticketManager.getActiveTickets().get(channel.getId());
 
         if(ticket == null){
-            LogSystem.log(LogType.WARNING, "Ticket not found. Can't find ticket by channel id");
+            LogSystem.warning("Ticket not found. Can't find ticket by channel id");
             return -1;
         }
 
         if(!CommonUtils.isUserAdmin(server, user) && ticket.getAuthor().getId() != user.getId()){
-            LogSystem.log(LogType.WARNING, "User has no permission to close ticket");
+            LogSystem.warning("User has no permission to close ticket");
             return -2;
         }
 
@@ -130,7 +130,7 @@ public class Ticket {
             serverUser.sendMessage("Konverzace s podporou byla uzavřena.").join();
         });
 
-        LogSystem.log(LogType.INFO, "Ticket '" + (ticket.id + "-" + ticket.author.getName()) + "' closed");
+        LogSystem.info("Ticket '" + (ticket.id + "-" + ticket.author.getName()) + "' closed");
         return 1;
 
     }

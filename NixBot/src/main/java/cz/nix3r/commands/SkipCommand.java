@@ -11,7 +11,7 @@ public class SkipCommand {
 
         CommonUtils.musicManager.playNext();
         interaction.createImmediateResponder().setContent("Skipped song successfully").respond();
-        LogSystem.log(LogType.INFO, "End of command skip by '" + interaction.getUser().getName() + "'");
+        LogSystem.info("End of command skip by '" + interaction.getUser().getName() + "'");
 
     }
 }

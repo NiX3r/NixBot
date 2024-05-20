@@ -17,7 +17,7 @@ public class AnonymousCommand {
 
                 channel.sendMessage("## Anonymous message\n```" + message + "```").join();
                 interaction.createImmediateResponder().setContent("Message sent!").setFlags(MessageFlag.EPHEMERAL).respond().join();
-                LogSystem.log(LogType.INFO, "End of command anonymous by '" + interaction.getUser().getName() + "'. Message: `" + message + "`");
+                LogSystem.info("End of command anonymous by '" + interaction.getUser().getName() + "'. Message: `" + message + "`");
 
             });
 

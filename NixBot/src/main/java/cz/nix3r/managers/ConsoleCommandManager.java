@@ -13,7 +13,7 @@ public class ConsoleCommandManager {
         if(commandSplitter.length < 2)
             return;
 
-        LogSystem.log(LogType.INFO, "Console command caught. Command: '" + command + "'");
+        LogSystem.info("Console command caught. Command: '" + command + "'");
 
         switch (commandSplitter[0]){
 
@@ -23,7 +23,7 @@ public class ConsoleCommandManager {
 
         }
 
-        LogSystem.log(LogType.INFO, "End of console command event");
+        LogSystem.info("End of console command event");
 
     }
 

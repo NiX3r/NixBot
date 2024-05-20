@@ -18,7 +18,7 @@ public class nSlashCommandCreateListener implements SlashCommandCreateListener {
 
         SlashCommandInteraction interaction = slashCommandCreateEvent.getSlashCommandInteraction();
 
-        LogSystem.log(LogType.INFO, "Command '" + interaction.getCommandName() + "' by '" + interaction.getUser().getName() + "' catched");
+        LogSystem.info("Command '" + interaction.getCommandName() + "' by '" + interaction.getUser().getName() + "' catched");
 
         CommonUtils.statisticsManager.incrementCommandsUsed(interaction.getUser().getId(), interaction.getCommandName());
 
@@ -83,7 +83,7 @@ public class nSlashCommandCreateListener implements SlashCommandCreateListener {
 
         }
 
-        LogSystem.log(LogType.INFO, "Command '" + interaction.getCommandName() + "' by '" + interaction.getUser().getName() + "' event ended");
+        LogSystem.info("Command '" + interaction.getCommandName() + "' by '" + interaction.getUser().getName() + "' event ended");
 
     }
 

@@ -17,7 +17,12 @@ public class LogSystem {
 
     private static ArrayList<String> logs = new ArrayList<String>();
 
-    public static void log(LogType type, String message){
+    public static void info(String message){log(LogType.INFO, message);}
+    public static void warning(String message){log(LogType.WARNING, message);}
+    public static void error(String message){log(LogType.ERROR, message);}
+    public static void fatalError(String message){log(LogType.FATAL_ERROR, message);}
+
+    private static void log(LogType type, String message){
 
         String line = "[" + LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.MEDIUM)).replace(",", "").replace("/", ".") + "] " + type.toString() + " >> " + message;
         System.out.println(line);

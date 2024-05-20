@@ -50,13 +50,13 @@ public class RoleCommand {
             interaction.createImmediateResponder().setContent("Role removed from message").setFlags(MessageFlag.EPHEMERAL).respond();
             sendComponentMessage(interaction);
         }
-        LogSystem.log(LogType.INFO, "End of the command role set by '" + interaction.getUser().getName() + "'. Data: " + new Gson().toJson(setter));
+        LogSystem.info("End of the command role set by '" + interaction.getUser().getName() + "'. Data: " + new Gson().toJson(setter));
 
     }
 
     private static void message(SlashCommandInteraction interaction) {
         sendComponentMessage(interaction);
-        LogSystem.log(LogType.INFO, "End of the command role message by '" + interaction.getUser().getName() + "'");
+        LogSystem.info("End of the command role message by '" + interaction.getUser().getName() + "'");
     }
 
     private static void sendComponentMessage(SlashCommandInteraction interaction){
@@ -67,7 +67,7 @@ public class RoleCommand {
                     msg = textChannel.getMessageById(CommonUtils.settings.getRolesMessageId()).get();
                 }
                 catch (Exception ex){
-                    LogSystem.log(LogType.WARNING, "Role message does not exists. Creating a new one");
+                    LogSystem.warning("Role message does not exists. Creating a new one");
                 }
 
                 if(msg == null){
@@ -83,7 +83,7 @@ public class RoleCommand {
 
                     msg = builder.send(textChannel).join();
                     CommonUtils.settings.setRolesMessageId(msg.getId());
-                    LogSystem.log(LogType.INFO, "Role message crated and sent. Message ID saved");
+                    LogSystem.info("Role message crated and sent. Message ID saved");
                     interaction.createImmediateResponder().setContent("Message sent").setFlags(MessageFlag.EPHEMERAL).respond();
 
                 }
@@ -99,7 +99,7 @@ public class RoleCommand {
                     });
 
                     updater.applyChanges().join();
-                    LogSystem.log(LogType.INFO, "Role message updated");
+                    LogSystem.info("Role message updated");
                     interaction.createImmediateResponder().setContent("Message sent").setFlags(MessageFlag.EPHEMERAL).respond();
 
 

@@ -15,6 +15,6 @@ public class nServerMemberUnbanListener implements ServerMemberUnbanListener {
             channel.sendMessage(DiscordUtils.createUnbanEmbed(serverMemberUnbanEvent.getUser().getName(), serverMemberUnbanEvent.getUser().getAvatar(), serverMemberUnbanEvent.getServer())).join();
         });
         DiscordUtils.updateBotActivity("with " + serverMemberUnbanEvent.getServer().getMembers().size() + " users");
-        LogSystem.log(LogType.INFO, "Member " + serverMemberUnbanEvent.getUser().getName() + " unbanned from the server. Bot activity updated");
+        LogSystem.info("Member " + serverMemberUnbanEvent.getUser().getName() + " unbanned from the server. Bot activity updated");
     }
 }

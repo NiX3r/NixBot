@@ -24,9 +24,9 @@ public class nServerMemberJoinListener implements ServerMemberJoinListener {
         // Check who invite
         long inviterId = checkWhoInvite(serverMemberJoinEvent.getServer());
         if(inviterId == 0)
-            LogSystem.log(LogType.INFO, "Can't find who invite '" + serverMemberJoinEvent.getUser().getName() + "'");
+            LogSystem.info("Can't find who invite '" + serverMemberJoinEvent.getUser().getName() + "'");
         else
-            LogSystem.log(LogType.INFO, "Member '" + serverMemberJoinEvent.getUser().getName() + "' was invited by member with id '" + inviterId + "'");
+            LogSystem.info("Member '" + serverMemberJoinEvent.getUser().getName() + "' was invited by member with id '" + inviterId + "'");
 
         // Send welcome message
         serverMemberJoinEvent.getServer().getTextChannelById(CommonUtils.WELCOME_CHANNEL_ID).ifPresent(channel -> {
@@ -34,15 +34,15 @@ public class nServerMemberJoinListener implements ServerMemberJoinListener {
                 channel.sendMessage(DiscordUtils.createJoinEmbed(serverMemberJoinEvent.getUser().getName(), inviter.getMentionTag(), serverMemberJoinEvent.getUser().getAvatar(), serverMemberJoinEvent.getServer())).join();
             });
         });
-        LogSystem.log(LogType.INFO, "Welcome message sent");
+        LogSystem.info("Welcome message sent");
 
         // Update statistics
         CommonUtils.statisticsManager.incrementMemberJoin();
-        LogSystem.log(LogType.INFO, "Member join statistics updated");
+        LogSystem.info("Member join statistics updated");
 
         // Update activity users counter
         DiscordUtils.updateBotActivity("with " + serverMemberJoinEvent.getServer().getMembers().size() + " users");
-        LogSystem.log(LogType.INFO, "Member " + serverMemberJoinEvent.getUser().getName() + " joined on the server. Bot activity updated. Event end");
+        LogSystem.info("Member " + serverMemberJoinEvent.getUser().getName() + " joined on the server. Bot activity updated. Event end");
 
     }
 
@@ -86,7 +86,7 @@ public class nServerMemberJoinListener implements ServerMemberJoinListener {
             try{
                 if(server.getRoleById(roleId).isPresent()){
                     user.addRole(server.getRoleById(roleId).get()).join();
-                    LogSystem.log(LogType.INFO, "Role with id '" + roleId + "' added to '" + user.getName() + "'");
+                    LogSystem.info("Role with id '" + roleId + "' added to '" + user.getName() + "'");
                 }
             }
             catch (Exception ex){

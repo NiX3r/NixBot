@@ -16,6 +16,6 @@ public class nServerMemberLeaveListener implements ServerMemberLeaveListener {
         });
         CommonUtils.statisticsManager.incrementMemberLeave();
         DiscordUtils.updateBotActivity("with " + serverMemberLeaveEvent.getServer().getMembers().size() + " users");
-        LogSystem.log(LogType.INFO, "Member " + serverMemberLeaveEvent.getUser().getName() + " left from the server. Bot activity updated");
+        LogSystem.info("Member " + serverMemberLeaveEvent.getUser().getName() + " left from the server. Bot activity updated");
     }
 }

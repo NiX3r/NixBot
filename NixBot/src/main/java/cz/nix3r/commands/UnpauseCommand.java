@@ -17,7 +17,7 @@ public class UnpauseCommand {
             interaction.createImmediateResponder().setContent("NixBot song is unpaused").respond();
         }
 
-        LogSystem.log(LogType.INFO, "End of command unpause by '" + interaction.getUser().getName() + "'");
+        LogSystem.info("End of command unpause by '" + interaction.getUser().getName() + "'");
 
     }
 }
