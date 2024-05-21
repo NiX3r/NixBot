@@ -52,6 +52,8 @@ public class nMessageCreateListener implements MessageCreateListener {
             }
             else {
                 messageCreateEvent.getMessage().reply("Bad code. Please try it again");
+                CommonUtils.verificationManager.getUsersCodes().remove(messageCreateEvent.getMessageAuthor().asUser().get().getId());
+                CommonUtils.verificationManager.sendCode(messageCreateEvent.getMessageAuthor().asUser().get());
                 return;
             }
 
@@ -169,7 +171,7 @@ public class nMessageCreateListener implements MessageCreateListener {
         // Remove from verificate users codes list
         CommonUtils.verificationManager.getUsersCodes().remove(user.getId());
 
-        messageCreateEvent.getMessage().reply("You successfully verificate. Now you can browse our server! :salut:");
+        messageCreateEvent.getMessage().reply("You successfully verificate. Now you can browse our server! :salut_facing:");
 
     }
 
