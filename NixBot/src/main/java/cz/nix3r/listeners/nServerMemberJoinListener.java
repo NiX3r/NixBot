@@ -14,85 +14,57 @@ import org.javacord.api.entity.user.User;
 import org.javacord.api.event.server.member.ServerMemberJoinEvent;
 import org.javacord.api.listener.server.member.ServerMemberJoinListener;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.Random;
+
 public class nServerMemberJoinListener implements ServerMemberJoinListener {
     @Override
     public void onServerMemberJoin(ServerMemberJoinEvent serverMemberJoinEvent) {
 
-        // Give default roles
-        addDefaultRole(serverMemberJoinEvent.getUser(), serverMemberJoinEvent.getServer());
+        if(CommonUtils.verificationManager.getUsersCodes().containsKey(serverMemberJoinEvent.getUser().getId())){
+            return;
+        }
 
-        // Check who invite
-        long inviterId = checkWhoInvite(serverMemberJoinEvent.getServer());
-        if(inviterId == 0)
-            LogSystem.info("Can't find who invite '" + serverMemberJoinEvent.getUser().getName() + "'");
-        else
-            LogSystem.info("Member '" + serverMemberJoinEvent.getUser().getName() + "' was invited by member with id '" + inviterId + "'");
+        String code = CommonUtils.verificationManager.addUser(serverMemberJoinEvent.getUser().getId());
 
-        // Send welcome message
-        serverMemberJoinEvent.getServer().getTextChannelById(CommonUtils.WELCOME_CHANNEL_ID).ifPresent(channel -> {
-            serverMemberJoinEvent.getServer().getMemberById(inviterId).ifPresent(inviter -> {
-                channel.sendMessage(DiscordUtils.createJoinEmbed(serverMemberJoinEvent.getUser().getName(), inviter.getMentionTag(), serverMemberJoinEvent.getUser().getAvatar(), serverMemberJoinEvent.getServer())).join();
-            });
-        });
-        LogSystem.info("Welcome message sent");
+        int width = 600, height = 300;
+        Color backgroundColor = Color.decode("#2c2c2c");
 
-        // Update statistics
-        CommonUtils.statisticsManager.incrementMemberJoin();
-        LogSystem.info("Member join statistics updated");
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = image.createGraphics();
 
-        // Update activity users counter
-        DiscordUtils.updateBotActivity("with " + serverMemberJoinEvent.getServer().getMembers().size() + " users");
+        graphics.setColor(backgroundColor);
+        graphics.fillRect(0, 0, width, height);
+
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics.setColor(Color.WHITE);
+        graphics.setFont(new Font("Arial", Font.BOLD, 40));
+        int textWidth = graphics.getFontMetrics().stringWidth(code);
+        int textHeight = graphics.getFontMetrics().getHeight();
+        int textX = (width - textWidth) / 2;
+        int textY = (height - textHeight) / 2 + textHeight;
+
+        graphics.drawString(code, textX, textY);
+
+        Random random = new Random();
+        graphics.setStroke(new java.awt.BasicStroke(3));
+        for (int i = 0; i < 100; i++) {
+            int x1 = random.nextInt(width);
+            int y1 = random.nextInt(height);
+            int x2 = random.nextInt(width);
+            int y2 = random.nextInt(height);
+            Color lineColor = Color.WHITE;
+            graphics.setColor(lineColor);
+            graphics.drawLine(x1, y1, x2, y2);
+        }
+
+        graphics.dispose();
+
+        var embed = DiscordUtils.createVerificationEmbed();
+        embed.setImage(image);
+        serverMemberJoinEvent.getUser().sendMessage(embed);
         LogSystem.info("Member " + serverMemberJoinEvent.getUser().getName() + " joined on the server. Bot activity updated. Event end");
-
-    }
-
-    private long checkWhoInvite(Server server){
-
-        long output = 0;
-        RichInvite indexOneInvite = null;
-        for(RichInvite invite : server.getInvites().join()){
-            InviteInstance inv = CommonUtils.inviteManager.getInviteByCode(invite.getCode());
-            if(inv != null){
-                if(inv.getUses() != invite.getUses()){
-                    inv.incrementUses();
-                    output = inv.getCreator_id();
-                }
-            }
-            else{
-
-                User inviter = invite.getInviter().isPresent() ? invite.getInviter().get() : null;
-
-                if(inviter == null)
-                    continue;
-
-                inv = CommonUtils.inviteManager.addInvite(new InviteInstance(invite.getCode(), inviter.getId(), 0));
-
-                if(invite.getUses() == 1){
-                    if(inv.getUses() != invite.getUses()){
-                        inv.incrementUses();
-                        output = inv.getCreator_id();
-                    }
-                }
-
-            }
-        }
-        return output;
-
-    }
-
-    private void addDefaultRole(User user, Server server){
-
-        for(String roleId : CommonUtils.DEFAULT_ROLES_ID){
-            try{
-                if(server.getRoleById(roleId).isPresent()){
-                    user.addRole(server.getRoleById(roleId).get()).join();
-                    LogSystem.info("Role with id '" + roleId + "' added to '" + user.getName() + "'");
-                }
-            }
-            catch (Exception ex){
-                DiscordUtils.throwError(ex);
-            }
-        }
 
     }
 

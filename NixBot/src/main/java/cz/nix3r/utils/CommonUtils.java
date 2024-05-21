@@ -3,6 +3,8 @@ package cz.nix3r.utils;
 import cz.nix3r.enums.LogType;
 import cz.nix3r.instances.*;
 import cz.nix3r.listeners.*;
+import cz.nix3r.listeners.logListeners.LogMessageComponentCreateListener;
+import cz.nix3r.listeners.logListeners.LogMessageCreateListener;
 import cz.nix3r.managers.*;
 import cz.nix3r.threads.ShutdownThread;
 import cz.nix3r.timers.UpdateStatisticsMessageTimer;
@@ -34,6 +36,7 @@ public class CommonUtils {
     public static MusicManager musicManager;
     public static TicketManager ticketManager;
     public static StatisticsManager statisticsManager;
+    public static UserVerificationManager verificationManager;
 
     private static UpdateStatisticsMessageTimer updateStatisticsMessageTimer;
 
@@ -60,16 +63,21 @@ public class CommonUtils {
         LogSystem.info("Load settings from file");
         if(FileUtils.loadSettings() != null){
             LogSystem.fatalError("Can't load settings. Turning the bot off");
+            return;
         }
 
         LogSystem.info("Initialize and connect bot");
         bot = new DiscordApiBuilder().setToken(CommonUtils.settings.getBotToken()).setAllIntents().login().join();
+
+        LogSystem.info("Creating new event log file");
+        EventLogSystem.createFile();
 
         LogSystem.info("Setup managers");
         tempChannelManager = new TemporaryChannelManager();
         inviteManager = new InviteManager();
         musicManager = new MusicManager();
         statisticsManager = new StatisticsManager();
+        verificationManager = new UserVerificationManager();
 
         LogSystem.info("Load data from files");
         if(FileUtils.loadRoleSetter() != null)
@@ -98,6 +106,10 @@ public class CommonUtils {
         bot.addServerVoiceChannelMemberLeaveListener(new nServerVoiceChannelMemberLeaveListener());
         bot.addMessageComponentCreateListener(new nMessageComponentCreateListener());
         bot.addMessageCreateListener(new nMessageCreateListener());
+
+        LogSystem.info("Register log listeners");
+        bot.addMessageComponentCreateListener(new LogMessageComponentCreateListener());
+        bot.addMessageCreateListener(new LogMessageCreateListener());
 
         LogSystem.info("Delete unwanted channels in temporary category");
         Server nixCrew = ((Server)bot.getServers().toArray()[0]);
@@ -163,6 +175,7 @@ public class CommonUtils {
         FileUtils.saveActiveTickets();
         FileUtils.saveStatistics();
         FileUtils.saveRoleSetter();
+        FileUtils.saveUsersVerificationCodes();
         bot.disconnect();
         LogSystem.save();
     }

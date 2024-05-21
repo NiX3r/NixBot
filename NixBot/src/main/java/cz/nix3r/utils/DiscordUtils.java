@@ -10,6 +10,7 @@ import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 
 import java.awt.*;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,11 +45,29 @@ public class DiscordUtils {
                 .setColor(Color.decode("#2100FF"));
     }
 
+    public static EmbedBuilder createAnnouncementEmbed(String topic, String message, String author){
+        return new EmbedBuilder()
+                .setTitle(topic)
+                .setDescription(message.replace("\\n", "\n"))
+                .setColor(Color.decode("#2100FF"))
+                .setThumbnail(new File(".\\announcement-thumbnail.png"))
+                .setFooter("Author: " + author + " | Version: " + CommonUtils.version);
+    }
+
+    public static EmbedBuilder createVerificationEmbed(){
+        return new EmbedBuilder()
+                .setTitle("Welcome to NiXCrew")
+                .setDescription("To continue please verificate using our system.\nType in code below")
+                .setColor(Color.decode("#2100FF"))
+                .setFooter("Version: " + CommonUtils.version);
+    }
+
     public static EmbedBuilder createJoinEmbed(String nick, String inviterMentionTag, Icon userAvatar, Server server){
         Server nixCrew = (Server)CommonUtils.bot.getServers().toArray()[0];
+        Random r = new Random();
         return new EmbedBuilder()
                 .setTitle(nick)
-                .setDescription(CommonUtils.messages.getWelcomeMessages().get(CommonUtils.messages.getWelcomeMessages().size()))
+                .setDescription(CommonUtils.messages.getWelcomeMessages().get(r.nextInt(CommonUtils.messages.getWelcomeMessages().size())))
                 .setColor(Color.decode("#00d60e"))
                 .addField("Thanks for invite", inviterMentionTag, true)
                 .addField("Member count", server.getMembers().size() + " total", true)
