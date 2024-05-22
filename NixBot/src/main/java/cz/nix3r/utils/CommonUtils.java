@@ -1,6 +1,5 @@
 package cz.nix3r.utils;
 
-import cz.nix3r.enums.LogType;
 import cz.nix3r.instances.*;
 import cz.nix3r.listeners.*;
 import cz.nix3r.managers.*;
@@ -34,6 +33,7 @@ public class CommonUtils {
     public static MusicManager musicManager;
     public static TicketManager ticketManager;
     public static StatisticsManager statisticsManager;
+    public static UserVerificationManager verificationManager;
 
     private static UpdateStatisticsMessageTimer updateStatisticsMessageTimer;
 
@@ -55,11 +55,12 @@ public class CommonUtils {
 
         LogSystem.info("Setup default instances");
         time_since_start = System.currentTimeMillis();
-        version = "2.7";
+        version = "2.8";
 
         LogSystem.info("Load settings from file");
         if(FileUtils.loadSettings() != null){
             LogSystem.fatalError("Can't load settings. Turning the bot off");
+            return;
         }
 
         LogSystem.info("Initialize and connect bot");
@@ -70,6 +71,7 @@ public class CommonUtils {
         inviteManager = new InviteManager();
         musicManager = new MusicManager();
         statisticsManager = new StatisticsManager();
+        verificationManager = new UserVerificationManager();
 
         LogSystem.info("Load data from files");
         if(FileUtils.loadRoleSetter() != null)
@@ -163,6 +165,7 @@ public class CommonUtils {
         FileUtils.saveActiveTickets();
         FileUtils.saveStatistics();
         FileUtils.saveRoleSetter();
+        FileUtils.saveUsersVerificationCodes();
         bot.disconnect();
         LogSystem.save();
     }

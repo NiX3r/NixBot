@@ -81,6 +81,10 @@ public class nSlashCommandCreateListener implements SlashCommandCreateListener {
                 RoleCommand.run(interaction);
                 break;
 
+            case "announcement":
+                AnnouncementCommand.run(interaction);
+                break;
+
         }
 
         LogSystem.info("Command '" + interaction.getCommandName() + "' by '" + interaction.getUser().getName() + "' event ended");

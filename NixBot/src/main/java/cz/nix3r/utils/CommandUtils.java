@@ -81,6 +81,12 @@ public class CommandUtils {
         )).setDefaultEnabledForPermissions(PermissionType.ADMINISTRATOR).createGlobal(CommonUtils.bot).join();
         LogSystem.info("Created role command");
 
+        SlashCommand.with("announcement", "command to send announcement", Arrays.asList(
+                SlashCommandOption.create(SlashCommandOptionType.STRING, "topic", "topic of announcement", true),
+                SlashCommandOption.create(SlashCommandOptionType.STRING, "message", "message of announcement", true)
+        )).createGlobal(CommonUtils.bot).join();
+        LogSystem.info("Created phonetic command");
+
     }
 
     public static boolean hasSenderAdminPermission(SlashCommandInteraction interaction){

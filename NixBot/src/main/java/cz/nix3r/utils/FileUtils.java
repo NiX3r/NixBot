@@ -21,6 +21,7 @@ public class FileUtils {
     public static final String SETTINGS_PATH = "./settings.json";
     public static final String MESSAGES_PATH = "./messages.json";
     public static final String ROLE_SETTER_PATH = "./data/role_setter.json";
+    public static final String USERS_VERIFICATION_CODES_PATH = "./data/users_ver_codes.json";
     private static final String ACTIVE_TICKETS_PATH = "./data/active_tickets.json";
 
     public static Exception loadSettings(){
@@ -143,6 +144,37 @@ public class FileUtils {
             f_writer.flush();
             f_writer.close();
             LogSystem.info("Role setter saved");
+            return null;
+        }
+        catch (Exception ex){
+            DiscordUtils.throwError(ex);
+            return ex;
+        }
+    }
+
+    public static HashMap<Long, String> loadUsersVerificationCodes(){
+        LogSystem.info("Trying to load users verification codes");
+        try {
+            String json = new String(Files.readAllBytes(Paths.get(USERS_VERIFICATION_CODES_PATH)));
+            var output = new Gson().fromJson(json, new TypeToken<HashMap<Long, String>>(){});
+            LogSystem.info("Users verification codes setter loaded");
+            return output;
+        }
+        catch (Exception ex){
+            DiscordUtils.throwError(ex);
+            return null;
+        }
+    }
+
+    public static Exception saveUsersVerificationCodes(){
+        LogSystem.info("Trying to save users verification codes");
+        try{
+            BufferedWriter f_writer
+                    = new BufferedWriter(new FileWriter(USERS_VERIFICATION_CODES_PATH));
+            f_writer.write(new GsonBuilder().create().toJson(CommonUtils.verificationManager.getUsersCodes()));
+            f_writer.flush();
+            f_writer.close();
+            LogSystem.info("Users verification codes saved");
             return null;
         }
         catch (Exception ex){
