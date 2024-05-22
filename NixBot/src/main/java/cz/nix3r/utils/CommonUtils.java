@@ -1,10 +1,7 @@
 package cz.nix3r.utils;
 
-import cz.nix3r.enums.LogType;
 import cz.nix3r.instances.*;
 import cz.nix3r.listeners.*;
-import cz.nix3r.listeners.logListeners.LogMessageComponentCreateListener;
-import cz.nix3r.listeners.logListeners.LogMessageCreateListener;
 import cz.nix3r.managers.*;
 import cz.nix3r.threads.ShutdownThread;
 import cz.nix3r.timers.UpdateStatisticsMessageTimer;
@@ -58,7 +55,7 @@ public class CommonUtils {
 
         LogSystem.info("Setup default instances");
         time_since_start = System.currentTimeMillis();
-        version = "2.7";
+        version = "2.8";
 
         LogSystem.info("Load settings from file");
         if(FileUtils.loadSettings() != null){
@@ -68,9 +65,6 @@ public class CommonUtils {
 
         LogSystem.info("Initialize and connect bot");
         bot = new DiscordApiBuilder().setToken(CommonUtils.settings.getBotToken()).setAllIntents().login().join();
-
-        LogSystem.info("Creating new event log file");
-        EventLogSystem.createFile();
 
         LogSystem.info("Setup managers");
         tempChannelManager = new TemporaryChannelManager();
@@ -106,10 +100,6 @@ public class CommonUtils {
         bot.addServerVoiceChannelMemberLeaveListener(new nServerVoiceChannelMemberLeaveListener());
         bot.addMessageComponentCreateListener(new nMessageComponentCreateListener());
         bot.addMessageCreateListener(new nMessageCreateListener());
-
-        LogSystem.info("Register log listeners");
-        bot.addMessageComponentCreateListener(new LogMessageComponentCreateListener());
-        bot.addMessageCreateListener(new LogMessageCreateListener());
 
         LogSystem.info("Delete unwanted channels in temporary category");
         Server nixCrew = ((Server)bot.getServers().toArray()[0]);
