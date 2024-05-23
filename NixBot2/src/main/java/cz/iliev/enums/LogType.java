@@ -5,5 +5,5 @@ public enum LogType {
     DEBUG,
     WARNING,
     ERROR,
-    FATAL_ERROR
+    FATAL
 }

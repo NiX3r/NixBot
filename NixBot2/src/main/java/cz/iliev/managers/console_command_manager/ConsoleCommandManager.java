@@ -7,6 +7,10 @@ public class ConsoleCommandManager implements IManager {
 
     private boolean ready;
 
+    public ConsoleCommandManager(){
+        setup();
+    }
+
     @Override
     public void setup() {
 

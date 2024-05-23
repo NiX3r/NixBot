@@ -7,6 +7,10 @@ public class InviteManager implements IManager {
 
     private boolean ready;
 
+    public InviteManager(){
+        setup();
+    }
+
     @Override
     public void setup() {
 

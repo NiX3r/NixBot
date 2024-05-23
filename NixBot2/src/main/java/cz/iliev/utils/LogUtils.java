@@ -21,7 +21,7 @@ public class LogUtils {
         put(LogType.DEBUG, "\u001B[35m");
         put(LogType.WARNING, "\u001B[33m");
         put(LogType.ERROR, "\u001B[93m");
-        put(LogType.FATAL_ERROR, "\u001B[31m");
+        put(LogType.FATAL, "\u001B[31m");
     }};
 
     public static int error_counter = 0;
@@ -30,14 +30,14 @@ public class LogUtils {
     public static void debug(String message){log(LogType.DEBUG, message);}
     public static void warning(String message){log(LogType.WARNING, message);}
     public static void error(String message){log(LogType.ERROR, message);}
-    public static void fatalError(String message){log(LogType.FATAL_ERROR, message);}
+    public static void fatalError(String message){log(LogType.FATAL, message);}
 
     private static void log(LogType type, String message){
 
         String line = COLOR_PALLETE.get(type) +  "[" + LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.MEDIUM)).replace(",", "").replace("/", ".") + "] " + type.toString() + " >> " + message + RESET_COLOR;
         System.out.println(line);
 
-        if(type == LogType.FATAL_ERROR || type == LogType.ERROR)
+        if(type == LogType.FATAL || type == LogType.ERROR)
             error_counter++;
 
         if(type != LogType.DEBUG)

@@ -7,6 +7,10 @@ public class TicketManager implements IManager {
 
     private boolean ready;
 
+    public TicketManager(){
+        setup();
+    }
+
     @Override
     public void setup() {
 

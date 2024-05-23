@@ -7,6 +7,10 @@ public class StatisticsManager implements IManager {
 
     private boolean ready;
 
+    public StatisticsManager(){
+        setup();
+    }
+
     @Override
     public void setup() {
 

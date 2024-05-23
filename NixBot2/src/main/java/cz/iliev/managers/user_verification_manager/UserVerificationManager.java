@@ -7,6 +7,10 @@ public class UserVerificationManager implements IManager {
 
     private boolean ready;
 
+    public UserVerificationManager(){
+        setup();
+    }
+
     @Override
     public void setup() {
 
