@@ -24,7 +24,7 @@ public class LogUtils {
         put(LogType.FATAL, "\u001B[31m");
     }};
 
-    public static int error_counter = 0;
+    private static int errorCounter = 0;
 
     public static void info(String message){log(LogType.INFO, message);}
     public static void debug(String message){log(LogType.DEBUG, message);}
@@ -38,7 +38,7 @@ public class LogUtils {
         System.out.println(line);
 
         if(type == LogType.FATAL || type == LogType.ERROR)
-            error_counter++;
+            errorCounter++;
 
         if(type != LogType.DEBUG)
             save(line);
@@ -61,6 +61,10 @@ public class LogUtils {
             e.printStackTrace();
         }
 
+    }
+
+    public static int getErrorCounter(){
+        return errorCounter;
     }
 
 }

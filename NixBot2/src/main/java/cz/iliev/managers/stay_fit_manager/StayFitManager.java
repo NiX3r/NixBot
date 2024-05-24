@@ -1,23 +1,25 @@
-package cz.iliev.managers.invite_manager;
+package cz.iliev.managers.stay_fit_manager;
 
 import cz.iliev.interfaces.IManager;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
-public class InviteManager implements IManager {
+public class StayFitManager implements IManager {
 
     private boolean ready;
 
     @Override
     public void setup() {
-        LogUtils.info("Load and start InviteManager");
-        LogUtils.info("InviteManager loaded and started. Ready to use");
+        LogUtils.info("Load and start StayFitManager");
+        ready = true;
+        LogUtils.info("StayFitManager loaded and started. Ready to use");
     }
 
     @Override
     public void kill() {
-        LogUtils.info("Kill InviteManager");
-        LogUtils.info("InviteManager killed");
+        LogUtils.info("Kill StayFitManager");
+        ready = false;
+        LogUtils.info("StayFitManager killed");
     }
 
     @Override

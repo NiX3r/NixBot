@@ -2,6 +2,7 @@ package cz.iliev.managers.bot_activity_manager;
 
 import cz.iliev.interfaces.IManager;
 import cz.iliev.utils.CommonUtils;
+import cz.iliev.utils.LogUtils;
 import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
@@ -9,18 +10,16 @@ public class BotActivityManager implements IManager {
 
     private boolean ready;
 
-    public BotActivityManager(){
-        setup();
-    }
-
     @Override
     public void setup() {
-        ready = true;
+        LogUtils.info("Load and start BotActivityManager");
+        LogUtils.info("BotActivityManager loaded and started. Ready to use");
     }
 
     @Override
     public void kill() {
-        ready = false;
+        LogUtils.info("Kill BotActivityManager");
+        LogUtils.info("BotActivityManager killed");
     }
 
     @Override

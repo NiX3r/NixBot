@@ -1,7 +1,6 @@
 package cz.iliev.managers.command_manager.listeners;
 
 import cz.iliev.managers.command_manager.CommandManager;
-import cz.iliev.managers.command_manager.utils.CommandManagerUtils;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.entity.message.MessageFlag;
@@ -28,7 +27,8 @@ public class CommandManagerSlashCommandCreateListener implements SlashCommandCre
         switch (interaction.getCommandName()){
 
             case "status":
-                StatusCommand.run(interaction);
+                if(CommonUtils.isUserAdmin(interaction.getUser()))
+                    CommonUtils.mainManager.onCommand(interaction);
                 break;
 
             case "play": case "queue": case "skip": case "pause": case "unpause": case "volume":
@@ -36,31 +36,21 @@ public class CommandManagerSlashCommandCreateListener implements SlashCommandCre
                     CommonUtils.musicManager.onCommand(interaction);
                 break;
 
-            case "dice":
+            case "dice": case "anonymous": case "phonetic":
                 if(checkIsCmdChannel(interaction))
-                    CommandManagerUtils.rollDice(interaction);
-                break;
-
-            case "anonymous":
-                if(checkIsCmdChannel(interaction))
-                    AnonymousCommand.run(interaction);
+                    CommonUtils.commandManager.getCommandByName(interaction.getCommandName());
                 break;
 
             case "ticket":
-                TicketCommand.run(interaction);
-                break;
-
-            case "phonetic":
-                if(checkIsCmdChannel(interaction))
-                    PhoneticCommand.run(interaction);
+                CommonUtils.ticketManager.onCommand(interaction);
                 break;
 
             case "role":
-                RoleCommand.run(interaction);
+                CommonUtils.roleManager.onCommand(interaction);
                 break;
 
             case "announcement":
-                AnnouncementCommand.run(interaction);
+                CommonUtils.announcementManager.onCommand(interaction);
                 break;
 
         }

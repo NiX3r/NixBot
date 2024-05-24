@@ -7,7 +7,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import cz.iliev.interfaces.IManager;
-import cz.iliev.managers.command_manager.CommandManager;
+import cz.iliev.managers.music_manager.commands.*;
 import cz.iliev.managers.music_manager.instances.LavaplayerAudioSource;
 import cz.iliev.managers.music_manager.instances.SongInstance;
 import cz.iliev.utils.CommonUtils;
@@ -37,27 +37,52 @@ public class MusicManager implements IManager {
 
     @Override
     public void setup() {
-
+        LogUtils.info("Load and start MusicManager");
+        ready = true;
+        LogUtils.info("MusicManager loaded and started. Ready to use");
     }
 
     @Override
     public void kill() {
-
+        LogUtils.info("Kill MusicManager");
+        ready = false;
+        LogUtils.info("MusicManager killed");
     }
 
     @Override
     public boolean restart() {
-        return false;
+        kill();
+        setup();
+        return ready;
     }
 
     @Override
     public void onCommand(SlashCommandInteraction interaction) {
-
+        switch (interaction.getCommandName()){
+            case "skip":
+                new SkipCommand().run(interaction);
+                break;
+            case "pause":
+                new PauseCommand().run(interaction);
+                break;
+            case "unpause":
+                new UnpauseCommand().run(interaction);
+                break;
+            case "volume":
+                new VolumeCommand().run(interaction);
+                break;
+            case "play":
+                new PlayCommand().run(interaction);
+                break;
+            case "queue":
+                new QueueCommand().run(interaction);
+                break;
+        }
     }
 
     @Override
     public void onConsoleCommand(Object data) {
-
+        return;
     }
 
     @Override

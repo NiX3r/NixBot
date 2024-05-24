@@ -8,21 +8,19 @@ import cz.iliev.managers.console_command_manager.ConsoleCommandManager;
 import cz.iliev.managers.invite_manager.InviteManager;
 import cz.iliev.managers.main_manager.MainManager;
 import cz.iliev.managers.music_manager.MusicManager;
+import cz.iliev.managers.role_manager.RoleManager;
 import cz.iliev.managers.statistics_manager.StatisticsManager;
 import cz.iliev.managers.temporary_channel_manager.TemporaryChannelManager;
 import cz.iliev.managers.ticket_manager.TicketManager;
 import cz.iliev.managers.user_verification_manager.UserVerificationManager;
 import cz.iliev.threads.ShutdownThread;
+
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
-import org.javacord.api.entity.activity.ActivityType;
-import org.javacord.api.entity.channel.RegularServerChannel;
+import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.entity.server.Server;
-import org.javacord.api.entity.server.invite.RichInvite;
+import org.javacord.api.entity.user.User;
 
-import javax.swing.plaf.multi.MultiScrollBarUI;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class CommonUtils {
@@ -41,6 +39,7 @@ public class CommonUtils {
     public static InviteManager inviteManager;
     public static MainManager mainManager;
     public static MusicManager musicManager;
+    public static RoleManager roleManager;
     public static StatisticsManager statisticsManager;
     public static TemporaryChannelManager temporaryChannelManager;
     public static TicketManager ticketManager;
@@ -66,6 +65,7 @@ public class CommonUtils {
         inviteManager = new InviteManager();
         mainManager = new MainManager();
         musicManager = new MusicManager();
+        roleManager = new RoleManager();
         statisticsManager = new StatisticsManager();
         temporaryChannelManager = new TemporaryChannelManager();
         ticketManager = new TicketManager();
@@ -89,6 +89,7 @@ public class CommonUtils {
         inviteManager.kill();
         mainManager.kill();
         musicManager.kill();
+        roleManager.kill();
         statisticsManager.kill();
         temporaryChannelManager.kill();
         ticketManager.kill();
@@ -103,6 +104,25 @@ public class CommonUtils {
 
         announcementManager.sendException(exception, isFatal);
 
+    }
+
+    public static void politeDisconnect(Server server){
+        server.getMembers().forEach(member -> {
+            if(server.hasPermission(member, PermissionType.ADMINISTRATOR)){
+                member.sendMessage("Unfortunately NixBot is private bot for private server. Bot is leaving your server now.");
+            }
+        });
+        server.leave().join();
+    }
+
+    public static boolean isUserAdmin(User user){
+        for(Server server : bot.getServers()){
+            if(!server.getIdAsString().equals(NIX_CREW_ID)){
+                politeDisconnect(server);
+            }
+            return server.hasPermission(user, PermissionType.ADMINISTRATOR);
+        }
+        return false;
     }
 
     public static String formatTimeToMinutes(long time){

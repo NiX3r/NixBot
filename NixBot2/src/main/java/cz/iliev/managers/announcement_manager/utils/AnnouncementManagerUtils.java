@@ -2,6 +2,7 @@ package cz.iliev.managers.announcement_manager.utils;
 
 import cz.iliev.managers.announcement_manager.instances.MessagesInstance;
 import cz.iliev.managers.music_manager.instances.SongInstance;
+import cz.iliev.managers.role_manager.instances.RoleSetterInstance;
 import cz.iliev.utils.CommonUtils;
 import org.javacord.api.entity.Icon;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
@@ -61,6 +62,15 @@ public class AnnouncementManagerUtils {
                 .addField("Added by", song.getPlayerName())
                 .addField("Time added", simpleDateFormat.format(date))
                 .setColor(Color.decode("#2100FF"));
+    }
+
+    public static EmbedBuilder createRoleSetterEmbed(int roleSetterCount){
+        return new EmbedBuilder()
+                .setTitle("Add or remove roles")
+                .setColor(Color.decode("#7900FF"))
+                .setFooter("Version: "  + CommonUtils.VERSION)
+                .addField("Available roles", roleSetterCount + "")
+                .setDescription("By clicking buttons below you can add or remove roles");
     }
 
 }

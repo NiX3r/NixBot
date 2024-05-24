@@ -1,4 +1,4 @@
-package cz.iliev.managers.command_manager.interfaces;
+package cz.iliev.interfaces;
 
 import org.javacord.api.interaction.SlashCommandInteraction;
 
