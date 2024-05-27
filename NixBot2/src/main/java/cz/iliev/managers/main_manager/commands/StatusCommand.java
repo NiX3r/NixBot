@@ -44,7 +44,7 @@ public class StatusCommand implements ISlashCommand {
 
         MessageBuilder message = new MessageBuilder()
                 .setEmbed(builder)
-                .addAttachment(new File("./nixbot.log"), "NixBot log file");
+                .addAttachment(new File(LogUtils.getPath()), "NixBot log file");
 
         return message;
     }

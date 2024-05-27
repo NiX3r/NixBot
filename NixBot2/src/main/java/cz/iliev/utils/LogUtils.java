@@ -25,6 +25,7 @@ public class LogUtils {
     }};
 
     private static int errorCounter = 0;
+    private static String path = "./logs/" + CommonUtils.START_TIME + "-nixbot.log";
 
     public static void info(String message){log(LogType.INFO, message);}
     public static void debug(String message){log(LogType.DEBUG, message);}
@@ -50,7 +51,7 @@ public class LogUtils {
         FileWriter fw = null;
         new File("./logs/").mkdirs();
         try {
-            fw = new FileWriter("./logs/" + CommonUtils.START_TIME + "-nixbot.log", true);
+            fw = new FileWriter(path, true);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(line);
             bw.newLine();
@@ -61,6 +62,10 @@ public class LogUtils {
             e.printStackTrace();
         }
 
+    }
+
+    public static String getPath(){
+        return path;
     }
 
     public static int getErrorCounter(){

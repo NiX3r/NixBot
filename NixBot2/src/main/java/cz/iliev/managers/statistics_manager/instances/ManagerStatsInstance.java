@@ -6,6 +6,7 @@ public class ManagerStatsInstance {
 
     private long ticketsDay;
     private long ticketsMonth;
+    private long ticketsEver;
     private long temporaryChannelsMonth;
     private long temporaryChannelsEver;
     private long musicPlayedMonth;
@@ -13,9 +14,10 @@ public class ManagerStatsInstance {
     private long musicTimePlayedDay;
     private long musicTimePlayedMonth;
 
-    public ManagerStatsInstance(long ticketsDay, long ticketsMonth, long temporaryChannelsMonth, long temporaryChannelsEver, long musicPlayedMonth, long musicPlayedEver, long musicTimePlayedDay, long musicTimePlayedMonth) {
+    public ManagerStatsInstance(long ticketsDay, long ticketsMonth, long ticketsEver, long temporaryChannelsMonth, long temporaryChannelsEver, long musicPlayedMonth, long musicPlayedEver, long musicTimePlayedDay, long musicTimePlayedMonth) {
         this.ticketsDay = ticketsDay;
         this.ticketsMonth = ticketsMonth;
+        this.ticketsEver = ticketsEver;
         this.temporaryChannelsMonth = temporaryChannelsMonth;
         this.temporaryChannelsEver = temporaryChannelsEver;
         this.musicPlayedMonth = musicPlayedMonth;
@@ -60,6 +62,7 @@ public class ManagerStatsInstance {
         CommonUtils.statisticsManager.checkCurrentDatetime();
         ticketsDay++;
         ticketsMonth++;
+        ticketsEver++;
     }
 
     public void incrementTemporaryChannels(){
@@ -78,5 +81,21 @@ public class ManagerStatsInstance {
         CommonUtils.statisticsManager.checkCurrentDatetime();
         musicTimePlayedDay += increment;
         musicTimePlayedMonth += increment;
+    }
+
+    public long getTicketsEver() {
+        return ticketsEver;
+    }
+
+    public void resetMonth(){
+        ticketsMonth = 0;
+        temporaryChannelsMonth = 0;
+        musicTimePlayedMonth = 0;
+        musicPlayedMonth = 0;
+    }
+
+    public void resetDay(){
+        ticketsDay = 0;
+        musicTimePlayedDay = 0;
     }
 }

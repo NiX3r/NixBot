@@ -53,10 +53,19 @@ public class VoiceChannelStatsInstance {
         usedVoiceChannelIdEver.merge(channelId, increment, Long::sum);
     }
 
-    public void incrementCallTime(){
+    public void incrementCallTime(long increment){
         CommonUtils.statisticsManager.checkCurrentDatetime();
-        callTimeDay++;
-        callTimeMonth++;
-        callTimeEver++;
+        callTimeDay += increment;
+        callTimeMonth += increment;
+        callTimeEver += increment;
+    }
+
+    public void resetMonth(){
+        callTimeMonth = 0;
+        usedVoiceChannelIdMonth.clear();
+    }
+
+    public void resetDay(){
+        callTimeDay = 0;
     }
 }

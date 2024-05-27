@@ -10,15 +10,21 @@ public class BotActivityManager implements IManager {
 
     private boolean ready;
 
+    public BotActivityManager(){
+        setup();
+    }
+
     @Override
     public void setup() {
         LogUtils.info("Load and start BotActivityManager");
+        ready = true;
         LogUtils.info("BotActivityManager loaded and started. Ready to use");
     }
 
     @Override
     public void kill() {
         LogUtils.info("Kill BotActivityManager");
+        ready = false;
         LogUtils.info("BotActivityManager killed");
     }
 
@@ -42,6 +48,21 @@ public class BotActivityManager implements IManager {
     @Override
     public boolean isReady() {
         return ready;
+    }
+
+    @Override
+    public String managerName() {
+        return "Bot activity manager";
+    }
+
+    @Override
+    public String managerDescription() {
+        return "Manager for updating bot activity\nFeatures: \n- Basic activity\n- Custom activity";
+    }
+
+    @Override
+    public String color() {
+        return "#a3b707";
     }
 
     public void setBasicActivity(){

@@ -4,6 +4,8 @@ import cz.iliev.interfaces.IManager;
 import cz.iliev.managers.ticket_manager.commands.*;
 import cz.iliev.managers.ticket_manager.enums.TicketStatus;
 import cz.iliev.managers.ticket_manager.instances.TicketInstance;
+import cz.iliev.managers.ticket_manager.listeners.TicketManagerMessageComponentCreateListener;
+import cz.iliev.managers.ticket_manager.listeners.TicketManagerMessageCreateListener;
 import cz.iliev.managers.ticket_manager.utils.FileUtils;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
@@ -14,11 +16,11 @@ import org.javacord.api.entity.user.User;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class TicketManager implements IManager {
 
     private boolean ready;
+    private int index;
     private HashMap<Long, TicketInstance> activeTickets;
 
     public static final String TICKET_CHANNEL_ID = "1216822816062701618";
@@ -32,6 +34,9 @@ public class TicketManager implements IManager {
     public void setup() {
         LogUtils.info("Load and start InviteManager");
         activeTickets = FileUtils.loadActiveTickets();
+        index = 0;
+        CommonUtils.bot.addMessageComponentCreateListener(new TicketManagerMessageComponentCreateListener());
+        CommonUtils.bot.addMessageCreateListener(new TicketManagerMessageCreateListener());
         ready = true;
         LogUtils.info("InviteManager loaded and started. Ready to use");
     }
@@ -86,6 +91,21 @@ public class TicketManager implements IManager {
         return ready;
     }
 
+    @Override
+    public String managerName() {
+        return "Ticket manager";
+    }
+
+    @Override
+    public String managerDescription() {
+        return "Manager to create and archive tickets\nFeatures: \n- Create and close or solve tickets\n- Archive tickets in json format";
+    }
+
+    @Override
+    public String color() {
+        return "#2b7c02";
+    }
+
     private boolean inTicketCategory(SlashCommandInteraction interaction){
         if((!interaction.getServer().isPresent()) || (!interaction.getChannel().isPresent())){
             return false;
@@ -98,6 +118,13 @@ public class TicketManager implements IManager {
             return false;
         }
         return true;
+    }
+
+    public void addTicket(TicketInstance ticket){
+        if(activeTickets.containsKey(ticket.getChannelId()))
+            return;
+
+        activeTickets.put(ticket.getChannelId(), ticket);
     }
 
     public HashMap<Long, TicketInstance> getActiveTickets(){
@@ -148,5 +175,21 @@ public class TicketManager implements IManager {
                 activeTickets.remove(ticket.getChannelId());
             }
         }
+    }
+
+    public TicketInstance getTicketByOwner(long ownerId){
+        for(TicketInstance ticket : activeTickets.values()){
+            if(ticket.getAuthor().getId() == ownerId)
+                return ticket;
+        }
+        return null;
+    }
+
+    public void incrementIndex(){
+        this.index++;
+    }
+
+    public int getIndex() {
+        return index;
     }
 }

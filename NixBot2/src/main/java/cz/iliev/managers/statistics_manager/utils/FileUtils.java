@@ -37,7 +37,7 @@ public class FileUtils {
                             new HashMap<String, Long>(),
                             new HashMap<String, Long>()
                     ),
-                    new ManagerStatsInstance(0,0,0,0,0,0,0, 0),
+                    new ManagerStatsInstance(0,0,0, 0,0,0,0,0, 0),
                     new MemberStatsInstance(
                             new HashMap<Long, Long>(),
                             new HashMap<Long, Long>(),
@@ -56,7 +56,8 @@ public class FileUtils {
                             new HashMap<Long, Long>(),
                             new HashMap<Long, Long>(),
                             0, 0, 0
-                    )
+                    ),
+                    new HashMap<Long, Long>()
             );
         }
     }

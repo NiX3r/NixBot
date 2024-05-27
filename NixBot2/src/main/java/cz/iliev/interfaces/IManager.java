@@ -10,5 +10,8 @@ public interface IManager {
     public void onCommand(SlashCommandInteraction interaction);
     public void onConsoleCommand(Object data);
     public boolean isReady();
+    public String managerName();
+    public String managerDescription();
+    public String color();
 
 }

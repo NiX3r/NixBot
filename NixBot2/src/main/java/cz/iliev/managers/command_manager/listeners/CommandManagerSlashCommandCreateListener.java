@@ -4,7 +4,6 @@ import cz.iliev.managers.command_manager.CommandManager;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.entity.message.MessageFlag;
-import org.javacord.api.entity.server.Server;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.listener.interaction.SlashCommandCreateListener;
@@ -20,15 +19,22 @@ public class CommandManagerSlashCommandCreateListener implements SlashCommandCre
             return;
         }
 
-        LogUtils.info("Command '" + interaction.getCommandName() + "' by '" + interaction.getUser().getName() + "' catched");
+        LogUtils.info("Command '" + interaction.getCommandName() + "' by '" + interaction.getUser().getName() + "' caught");
 
-        // TODO - add statistics
+        // Increment command stats
+        CommonUtils.statisticsManager.getStatistics().getCommandStatsInstance().incrementUsedCommand(interaction.getCommandName());
+        // Increment user command stats
+        CommonUtils.statisticsManager.getStatistics().getMemberStatsInstance().incrementUsedCommands(interaction.getUser().getId());
 
         switch (interaction.getCommandName()){
 
             case "status":
                 if(CommonUtils.isUserAdmin(interaction.getUser()))
                     CommonUtils.mainManager.onCommand(interaction);
+                break;
+
+            case "manager":
+                CommonUtils.mainManager.onCommand(interaction);
                 break;
 
             case "play": case "queue": case "skip": case "pause": case "unpause": case "volume":
@@ -38,7 +44,7 @@ public class CommandManagerSlashCommandCreateListener implements SlashCommandCre
 
             case "dice": case "anonymous": case "phonetic":
                 if(checkIsCmdChannel(interaction))
-                    CommonUtils.commandManager.getCommandByName(interaction.getCommandName());
+                    CommonUtils.commandManager.getCommandByName(interaction.getCommandName()).run(interaction);
                 break;
 
             case "ticket":

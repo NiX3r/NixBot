@@ -8,6 +8,10 @@ public class StayFitManager implements IManager {
 
     private boolean ready;
 
+    public StayFitManager(){
+        setup();
+    }
+
     @Override
     public void setup() {
         LogUtils.info("Load and start StayFitManager");
@@ -42,5 +46,20 @@ public class StayFitManager implements IManager {
     @Override
     public boolean isReady() {
         return ready;
+    }
+
+    @Override
+    public String managerName() {
+        return "Stay fit manager";
+    }
+
+    @Override
+    public String managerDescription() {
+        return "Manager to holds healthiness data\nFeatures: \n- Daily hydration data\n- TODO: Daily calories";
+    }
+
+    @Override
+    public String color() {
+        return "#29e53c";
     }
 }

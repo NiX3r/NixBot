@@ -8,15 +8,21 @@ public class ConsoleCommandManager implements IManager {
 
     private boolean ready;
 
+    public ConsoleCommandManager(){
+        setup();
+    }
+
     @Override
     public void setup() {
         LogUtils.info("Load and start ConsoleCommandManager");
+        ready = true;
         LogUtils.info("ConsoleCommandManager loaded and started. Ready to use");
     }
 
     @Override
     public void kill() {
         LogUtils.info("Kill ConsoleCommandManager");
+        ready = false;
         LogUtils.info("ConsoleCommandManager killed");
     }
 
@@ -29,16 +35,31 @@ public class ConsoleCommandManager implements IManager {
 
     @Override
     public void onCommand(SlashCommandInteraction interaction) {
-
+        return;
     }
 
     @Override
     public void onConsoleCommand(Object data) {
-
+        return;
     }
 
     @Override
     public boolean isReady() {
         return ready;
+    }
+
+    @Override
+    public String managerName() {
+        return "Console command manager";
+    }
+
+    @Override
+    public String managerDescription() {
+        return "Manager for catching console commands and sending them to other managers";
+    }
+
+    @Override
+    public String color() {
+        return "#caccc9";
     }
 }

@@ -63,4 +63,14 @@ public class ServerStatsInstance {
         memberLeaveMonth++;
         memberLeaveEver++;
     }
+
+    public void resetMonth(){
+        memberLeaveMonth = 0;
+        memberJoinMonth = 0;
+    }
+
+    public void resetDay(){
+        memberLeaveDay = 0;
+        memberJoinDay = 0;
+    }
 }

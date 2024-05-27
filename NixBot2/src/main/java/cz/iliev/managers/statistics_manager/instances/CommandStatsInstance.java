@@ -31,4 +31,8 @@ public class CommandStatsInstance {
         mostCommandsUsedMonth.merge(name, 1L, Long::sum);
         mostCommandsUsedEver.merge(name, 1L, Long::sum);
     }
+
+    public void resetMonth(){
+        mostCommandsUsedMonth.clear();
+    }
 }

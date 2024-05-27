@@ -2,6 +2,7 @@ package cz.iliev.managers.command_manager.commands;
 
 import cz.iliev.interfaces.ISlashCommand;
 import cz.iliev.utils.CommonUtils;
+import cz.iliev.utils.LogUtils;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
 import java.util.Random;
@@ -25,5 +26,7 @@ public class DiceCommand implements ISlashCommand {
             int rolled = random.nextInt(Integer.valueOf((int)arg)) + 1;
             interaction.createImmediateResponder().setContent(CommonUtils.commandManager.getDiceMessages().get(messageId).replace("%i%", String.valueOf(rolled))).respond();
         }
+
+        LogUtils.info("End of dice command by '" + interaction.getUser().getName() + "'");
     }
 }

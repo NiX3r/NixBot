@@ -21,7 +21,7 @@ public class RoleSetterMessageComponentCreateListener implements MessageComponen
                     String roleId = customId.replace("nix-role-", "");
                     RoleSetterInstance setter = CommonUtils.roleManager.getRoleSetterByRoleId(roleId);
                     if(setter == null){
-                        messageComponentInteraction.createImmediateResponder().setContent("Bohužel tato role neexisstuje. Kontaktuj @nix3r").setFlags(MessageFlag.EPHEMERAL).respond();
+                        messageComponentInteraction.createImmediateResponder().setContent("Unfortunately this role does not exists. Please contact support").setFlags(MessageFlag.EPHEMERAL).respond();
                         return;
                     }
                     roleSetter(messageComponentCreateEvent.getInteraction(), setter);
@@ -37,14 +37,14 @@ public class RoleSetterMessageComponentCreateListener implements MessageComponen
                 for(Role item : interaction.getUser().getRoles(server)){
                     if(item.getId() == role.getId()){
                         interaction.getUser().removeRole(item);
-                        interaction.createImmediateResponder().setContent("Role " + item.getMentionTag() + " odebrána").setFlags(MessageFlag.EPHEMERAL).respond();
+                        interaction.createImmediateResponder().setContent("Role " + item.getMentionTag() + " has been took").setFlags(MessageFlag.EPHEMERAL).respond();
                         LogUtils.info("Role '" + item.getName() + "' has been took from '" + interaction.getUser().getName() + "'");
                         done = true;
                     }
                 }
                 if(!done){
                     interaction.getUser().addRole(role);
-                    interaction.createImmediateResponder().setContent("Role " + role.getMentionTag() + " přidána").setFlags(MessageFlag.EPHEMERAL).respond();
+                    interaction.createImmediateResponder().setContent("Role " + role.getMentionTag() + " has been added").setFlags(MessageFlag.EPHEMERAL).respond();
                     LogUtils.info("Role '" + role.getName() + "' has been added to '" + interaction.getUser().getName() + "'");
                 }
             });

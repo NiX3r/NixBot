@@ -4,7 +4,9 @@ import cz.iliev.interfaces.IManager;
 import cz.iliev.managers.role_manager.commands.MessageCommand;
 import cz.iliev.managers.role_manager.commands.SetCommand;
 import cz.iliev.managers.role_manager.instances.RoleSetterInstance;
+import cz.iliev.managers.role_manager.listeners.RoleSetterMessageComponentCreateListener;
 import cz.iliev.managers.role_manager.utils.FileUtils;
+import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
@@ -25,6 +27,7 @@ public class RoleManager implements IManager {
     public void setup() {
         LogUtils.info("Load and start RoleManager");
         roleSetter = FileUtils.loadRoleSetter();
+        CommonUtils.bot.addMessageComponentCreateListener(new RoleSetterMessageComponentCreateListener());
         ready = true;
         LogUtils.info("RoleManager loaded and started. Ready to use");
     }
@@ -58,12 +61,27 @@ public class RoleManager implements IManager {
 
     @Override
     public void onConsoleCommand(Object data) {
-
+        return;
     }
 
     @Override
     public boolean isReady() {
         return ready;
+    }
+
+    @Override
+    public String managerName() {
+        return "Role manager";
+    }
+
+    @Override
+    public String managerDescription() {
+        return "Manager to set roles\nFeatures: \n- Add or remove role\n- Create message to add/remove roles";
+    }
+
+    @Override
+    public String color() {
+        return "#e52929";
     }
 
     public List<RoleSetterInstance> getRoleSetter(){

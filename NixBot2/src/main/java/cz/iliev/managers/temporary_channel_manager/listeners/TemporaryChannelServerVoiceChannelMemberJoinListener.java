@@ -38,7 +38,9 @@ public class TemporaryChannelServerVoiceChannelMemberJoinListener implements Ser
 
             CommonUtils.temporaryChannelManager.getTempVoiceChannelMap().put(creator.getId(), voiceChannel.getId());
             creator.move(voiceChannel).join();
-            // TODO - add to statistics
+
+            CommonUtils.statisticsManager.getStatistics().getManagerStatsInstance().incrementTemporaryChannels();
+
             LogUtils.info("Temp channel for user '" + creator.getName() + "' created. User moved");
         }, new Runnable() {
             @Override

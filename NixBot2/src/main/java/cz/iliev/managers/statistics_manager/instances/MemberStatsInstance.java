@@ -75,4 +75,10 @@ public class MemberStatsInstance {
         bestUserCommandsUsedMonth.merge(userId, 1L, Long::sum);
         bestUserCommandsUsedEver.merge(userId, 1L, Long::sum);
     }
+
+    public void resetMonth(){
+        bestUserCommandsUsedMonth.clear();
+        bestUserTextCounterMonth.clear();
+        bestUserCallTimeMonth.clear();
+    }
 }

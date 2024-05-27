@@ -58,4 +58,13 @@ public class TextChannelStatsInstance {
         textCounterMonth++;
         textCounterEver++;
     }
+
+    public void resetMonth(){
+        textCounterMonth = 0;
+        usedTextChannelIdMonth.clear();
+    }
+
+    public void resetDay(){
+        textCounterDay = 0;
+    }
 }

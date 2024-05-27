@@ -55,17 +55,32 @@ public class CommandManager implements IManager {
 
     @Override
     public void onCommand(SlashCommandInteraction interaction) {
-
+        return;
     }
 
     @Override
     public void onConsoleCommand(Object data) {
-
+        return;
     }
 
     @Override
     public boolean isReady() {
         return ready;
+    }
+
+    @Override
+    public String managerName() {
+        return "Command manager";
+    }
+
+    @Override
+    public String managerDescription() {
+        return "Manager for catching commands and sending them to other managers";
+    }
+
+    @Override
+    public String color() {
+        return "#383838";
     }
 
     public List<String> getDiceMessages(){

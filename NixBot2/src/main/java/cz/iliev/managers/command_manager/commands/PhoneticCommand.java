@@ -20,7 +20,7 @@ public class PhoneticCommand implements ISlashCommand {
 
             interaction.createImmediateResponder().setContent("# Your decoded message is\n" + decoded).respond();
 
-            LogUtils.info("End of command pause by '" + interaction.getUser().getName() + "' message: " + toEncodeText + "'");
+            LogUtils.info("End of command phonetic by '" + interaction.getUser().getName() + "' message: " + toEncodeText + "'");
 
         });
     }

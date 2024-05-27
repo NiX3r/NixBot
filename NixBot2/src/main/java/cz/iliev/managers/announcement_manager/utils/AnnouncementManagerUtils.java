@@ -6,6 +6,7 @@ import cz.iliev.managers.role_manager.instances.RoleSetterInstance;
 import cz.iliev.utils.CommonUtils;
 import org.javacord.api.entity.Icon;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
+import org.javacord.api.entity.server.Server;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
@@ -71,6 +72,19 @@ public class AnnouncementManagerUtils {
                 .setFooter("Version: "  + CommonUtils.VERSION)
                 .addField("Available roles", roleSetterCount + "")
                 .setDescription("By clicking buttons below you can add or remove roles");
+    }
+
+    public static EmbedBuilder createJoinEmbed(String nick, String inviterMentionTag, Icon userAvatar, Server server){
+        Server nixCrew = (Server)CommonUtils.bot.getServers().toArray()[0];
+        Random r = new Random();
+        return new EmbedBuilder()
+                .setTitle(nick)
+                .setDescription(CommonUtils.announcementManager.getMessages().getWelcomeMessages().get(r.nextInt(CommonUtils.announcementManager.getMessages().getWelcomeMessages().size())))
+                .setColor(Color.decode("#00d60e"))
+                .addField("Thanks for invite", inviterMentionTag, true)
+                .addField("Member count", server.getMembers().size() + " total", true)
+                .setFooter("Version: " + CommonUtils.VERSION)
+                .setThumbnail(userAvatar);
     }
 
 }

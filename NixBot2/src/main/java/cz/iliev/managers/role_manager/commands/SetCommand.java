@@ -6,6 +6,7 @@ import cz.iliev.managers.announcement_manager.utils.AnnouncementManagerUtils;
 import cz.iliev.managers.role_manager.instances.RoleSetterInstance;
 import cz.iliev.managers.role_manager.utils.RoleManagerUtils;
 import cz.iliev.utils.CommonUtils;
+import cz.iliev.utils.LogUtils;
 import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
@@ -29,5 +30,6 @@ public class SetCommand implements ISlashCommand {
             interaction.createImmediateResponder().setContent("Role removed from message").setFlags(MessageFlag.EPHEMERAL).respond();
             RoleManagerUtils.sendComponentMessage(interaction);
         }
+        LogUtils.info("End of command set role by '" + interaction.getUser().getName() + "'");
     }
 }

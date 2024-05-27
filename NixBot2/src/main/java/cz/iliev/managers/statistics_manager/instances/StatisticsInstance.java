@@ -1,5 +1,7 @@
 package cz.iliev.managers.statistics_manager.instances;
 
+import java.util.HashMap;
+
 public class StatisticsInstance {
 
     private long currentTime;
@@ -10,7 +12,10 @@ public class StatisticsInstance {
     private TextChannelStatsInstance textChannelStatsInstance;
     private VoiceChannelStatsInstance voiceChannelStatsInstance;
 
-    public StatisticsInstance(long currentTime, CommandStatsInstance commandStatsInstance, ManagerStatsInstance managerStatsInstance, MemberStatsInstance memberStatsInstance, ServerStatsInstance serverStatsInstance, TextChannelStatsInstance textChannelStatsInstance, VoiceChannelStatsInstance voiceChannelStatsInstance) {
+    // Key = user id | Value = join time
+    private HashMap<Long, Long> memberJoinVoiceTime;
+
+    public StatisticsInstance(long currentTime, CommandStatsInstance commandStatsInstance, ManagerStatsInstance managerStatsInstance, MemberStatsInstance memberStatsInstance, ServerStatsInstance serverStatsInstance, TextChannelStatsInstance textChannelStatsInstance, VoiceChannelStatsInstance voiceChannelStatsInstance, HashMap<Long, Long> memberJoinVoiceTime) {
         this.currentTime = currentTime;
         this.commandStatsInstance = commandStatsInstance;
         this.managerStatsInstance = managerStatsInstance;
@@ -18,6 +23,7 @@ public class StatisticsInstance {
         this.serverStatsInstance = serverStatsInstance;
         this.textChannelStatsInstance = textChannelStatsInstance;
         this.voiceChannelStatsInstance = voiceChannelStatsInstance;
+        this.memberJoinVoiceTime = memberJoinVoiceTime;
     }
 
     public long getCurrentTime() {
@@ -74,5 +80,13 @@ public class StatisticsInstance {
 
     public void setCommandStatsInstance(CommandStatsInstance commandStatsInstance) {
         this.commandStatsInstance = commandStatsInstance;
+    }
+
+    public HashMap<Long, Long> getMemberJoinVoiceTime() {
+        return memberJoinVoiceTime;
+    }
+
+    public void setMemberJoinVoiceTime(HashMap<Long, Long> memberJoinVoiceTime) {
+        this.memberJoinVoiceTime = memberJoinVoiceTime;
     }
 }

@@ -3,11 +3,14 @@ package cz.iliev.managers.music_manager;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import cz.iliev.interfaces.IManager;
 import cz.iliev.managers.music_manager.commands.*;
+import cz.iliev.managers.music_manager.events.TrackEndEvent;
 import cz.iliev.managers.music_manager.instances.LavaplayerAudioSource;
 import cz.iliev.managers.music_manager.instances.SongInstance;
 import cz.iliev.utils.CommonUtils;
@@ -19,6 +22,7 @@ import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MusicManager implements IManager {
@@ -38,6 +42,12 @@ public class MusicManager implements IManager {
     @Override
     public void setup() {
         LogUtils.info("Load and start MusicManager");
+        playerManager = new DefaultAudioPlayerManager();
+        playerManager.registerSourceManager(new YoutubeAudioSourceManager());
+        player = playerManager.createPlayer();
+        audioSource = new LavaplayerAudioSource(CommonUtils.bot, player);
+        audioList = new ArrayList<>();
+        player.addListener(new TrackEndEvent());
         ready = true;
         LogUtils.info("MusicManager loaded and started. Ready to use");
     }
@@ -90,13 +100,30 @@ public class MusicManager implements IManager {
         return ready;
     }
 
+    @Override
+    public String managerName() {
+        return "Music manager";
+    }
+
+    @Override
+    public String managerDescription() {
+        return "Manager for playing Youtube songs\nFeatures: \n- Play youtube song from URL\n- Can be pause/unpause/skip";
+    }
+
+    @Override
+    public String color() {
+        return "#e02a94";
+    }
+
     public void playNext(){
-        if(audioList.size() == 0){
+        if(audioList.isEmpty()){
             player.stopTrack();
             CommonUtils.bot.getYourself().getConnectedVoiceChannels().forEach(ServerVoiceChannel::disconnect);
             CommonUtils.botActivityManager.setBasicActivity();
             return;
         }
+        CommonUtils.statisticsManager.getStatistics().getManagerStatsInstance().incrementMusicPlayed();
+        CommonUtils.statisticsManager.getStatistics().getManagerStatsInstance().incrementMusicTimePlayed(audioList.get(0).getTrack().getDuration());
         player.stopTrack();
         player.playTrack(audioList.get(0).getTrack());
         CommonUtils.announcementManager.sendCurrentSong(audioList.get(0));

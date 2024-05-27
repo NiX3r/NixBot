@@ -2,14 +2,16 @@ package cz.iliev.utils;
 
 import cz.iliev.instances.SettingsInstance;
 import cz.iliev.managers.announcement_manager.AnnouncementManager;
+import cz.iliev.managers.ban_list_manager.BanListManager;
 import cz.iliev.managers.bot_activity_manager.BotActivityManager;
 import cz.iliev.managers.command_manager.CommandManager;
+import cz.iliev.managers.command_manager.utils.CommandManagerUtils;
 import cz.iliev.managers.console_command_manager.ConsoleCommandManager;
-import cz.iliev.managers.invite_manager.InviteManager;
 import cz.iliev.managers.main_manager.MainManager;
 import cz.iliev.managers.music_manager.MusicManager;
 import cz.iliev.managers.role_manager.RoleManager;
 import cz.iliev.managers.statistics_manager.StatisticsManager;
+import cz.iliev.managers.stay_fit_manager.StayFitManager;
 import cz.iliev.managers.temporary_channel_manager.TemporaryChannelManager;
 import cz.iliev.managers.ticket_manager.TicketManager;
 import cz.iliev.managers.user_verification_manager.UserVerificationManager;
@@ -28,19 +30,20 @@ public class CommonUtils {
     public static DiscordApi bot;
     public static SettingsInstance settings;
 
-    public static final String VERSION = "3.0";
+    public static final String VERSION = "3.0.0";
     public static final long START_TIME = System.currentTimeMillis();
     public static final String NIX_CREW_ID = "611985124023730185";
 
     public static AnnouncementManager announcementManager;
+    public static BanListManager banListManager;
     public static BotActivityManager botActivityManager;
     public static CommandManager commandManager;
     public static ConsoleCommandManager consoleCommandManager;
-    public static InviteManager inviteManager;
     public static MainManager mainManager;
     public static MusicManager musicManager;
     public static RoleManager roleManager;
     public static StatisticsManager statisticsManager;
+    public static StayFitManager stayFitManager;
     public static TemporaryChannelManager temporaryChannelManager;
     public static TicketManager ticketManager;
     public static UserVerificationManager userVerificationManager;
@@ -59,38 +62,40 @@ public class CommonUtils {
 
         LogUtils.info("Setup managers");
         announcementManager = new AnnouncementManager();
+        banListManager = new BanListManager();
         botActivityManager = new BotActivityManager();
         commandManager = new CommandManager();
         consoleCommandManager = new ConsoleCommandManager();
-        inviteManager = new InviteManager();
-        mainManager = new MainManager();
         musicManager = new MusicManager();
         roleManager = new RoleManager();
         statisticsManager = new StatisticsManager();
+        stayFitManager = new StayFitManager();
         temporaryChannelManager = new TemporaryChannelManager();
         ticketManager = new TicketManager();
         userVerificationManager = new UserVerificationManager();
+        mainManager = new MainManager();
 
         LogUtils.info("Initializing and starting threads");
         Runtime.getRuntime().addShutdownHook(new ShutdownThread());
 
         // Refresh commands if needed
-        //CommandUtils.deleteCommands();
-        //CommandUtils.createCommands();
+        //CommandManagerUtils.deleteCommands();
+        //CommandManagerUtils.createCommands();
 
         LogUtils.info("Bot successfully initialized and loaded. It took " + (System.currentTimeMillis() - START_TIME) + "ms");
     }
 
     public static void shutdownBot(){
         announcementManager.kill();
+        banListManager.kill();
         botActivityManager.kill();
         commandManager.kill();
         consoleCommandManager.kill();
-        inviteManager.kill();
         mainManager.kill();
         musicManager.kill();
         roleManager.kill();
         statisticsManager.kill();
+        stayFitManager.kill();
         temporaryChannelManager.kill();
         ticketManager.kill();
         userVerificationManager.kill();
@@ -119,6 +124,7 @@ public class CommonUtils {
         for(Server server : bot.getServers()){
             if(!server.getIdAsString().equals(NIX_CREW_ID)){
                 politeDisconnect(server);
+                continue;
             }
             return server.hasPermission(user, PermissionType.ADMINISTRATOR);
         }
