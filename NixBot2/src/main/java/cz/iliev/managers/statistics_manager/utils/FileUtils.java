@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,11 +23,11 @@ public class FileUtils {
     private static final String ARCHIVE_PATH = "./archive/statistics/";
 
     public static StatisticsInstance loadStatistics(){
-        LogUtils.info("Trying to load role setter");
+        LogUtils.info("Trying to load statistics");
         try {
             String json = new String(Files.readAllBytes(Paths.get(PATH)));
             var output = new Gson().fromJson(json, StatisticsInstance.class);
-            LogUtils.info("Role setter messages loaded");
+            LogUtils.info("Statistics loaded");
             return output;
         }
         catch (Exception ex){
@@ -63,14 +64,15 @@ public class FileUtils {
     }
 
     public static Exception saveStatistics(StatisticsInstance data){
-        LogUtils.info("Trying to save role setter");
+        LogUtils.info("Trying to save statistics");
         try{
             BufferedWriter f_writer
                     = new BufferedWriter(new FileWriter(PATH));
             f_writer.write(new GsonBuilder().create().toJson(data));
             f_writer.flush();
             f_writer.close();
-            LogUtils.info("Role setter messages saved");
+            LogUtils.info("Statistics messages saved");
+            archiveStatistics(data);
             return null;
         }
         catch (Exception ex){
@@ -80,14 +82,17 @@ public class FileUtils {
     }
 
     public static Exception archiveStatistics(StatisticsInstance data){
-        LogUtils.info("Trying to save role setter");
+        LogUtils.info("Trying to archive statistics");
         try{
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            String path = ARCHIVE_PATH + calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + "-statistics.json";
             BufferedWriter f_writer
-                    = new BufferedWriter(new FileWriter(PATH));
+                    = new BufferedWriter(new FileWriter(path));
             f_writer.write(new GsonBuilder().create().toJson(data));
             f_writer.flush();
             f_writer.close();
-            LogUtils.info("Role setter messages saved");
+            LogUtils.info("Statistics archived on '" + path + "'");
             return null;
         }
         catch (Exception ex){

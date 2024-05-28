@@ -1,12 +1,18 @@
 package cz.iliev.managers.stay_fit_manager;
 
 import cz.iliev.interfaces.IManager;
+import cz.iliev.managers.stay_fit_manager.instances.MemberFitInstance;
+import cz.iliev.managers.stay_fit_manager.utils.FileUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.interaction.SlashCommandInteraction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StayFitManager implements IManager {
 
     private boolean ready;
+    private List<MemberFitInstance> memberFitList;
 
     public StayFitManager(){
         setup();
@@ -15,6 +21,7 @@ public class StayFitManager implements IManager {
     @Override
     public void setup() {
         LogUtils.info("Load and start StayFitManager");
+        memberFitList = new ArrayList<MemberFitInstance>();
         ready = true;
         LogUtils.info("StayFitManager loaded and started. Ready to use");
     }
@@ -61,5 +68,9 @@ public class StayFitManager implements IManager {
     @Override
     public String color() {
         return "#29e53c";
+    }
+
+    public List<MemberFitInstance> getMemberFitList() {
+        return memberFitList;
     }
 }

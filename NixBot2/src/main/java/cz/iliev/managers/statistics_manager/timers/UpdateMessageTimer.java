@@ -20,7 +20,7 @@ public class UpdateMessageTimer extends TimerTask {
     public UpdateMessageTimer(){
         index = 0;
         timer = new Timer();
-        timer.schedule(this, 0, TimeUnit.SECONDS.toMillis(20));
+        timer.schedule(this, 0, TimeUnit.SECONDS.toMillis(5));
     }
 
     @Override
@@ -64,14 +64,17 @@ public class UpdateMessageTimer extends TimerTask {
                         .setColor(Color.decode("#2100FF"))
                         .setTitle("Manager statistics")
                         .addField("Tickets today", String.valueOf(managerStats.getTicketsDay()), true)
-                        .addField("Tickets this month", String.valueOf(managerStats.getTicketsMonth()), true)
+                        .addField("Tickets monthly", String.valueOf(managerStats.getTicketsMonth()), true)
                         .addField("Tickets ever", String.valueOf(managerStats.getTicketsEver()), true)
-                        .addField("Temporary channels this month", String.valueOf(managerStats.getTemporaryChannelsMonth()), false)
-                        .addField("Temporary channels ever", String.valueOf(managerStats.getTemporaryChannelsEver()), true)
-                        .addField("Music played this month", String.valueOf(managerStats.getMusicPlayedMonth()), false)
+                        .addField("\u200B", "\u200B")
+                        .addField("Temp channels monthly", String.valueOf(managerStats.getTemporaryChannelsMonth()), true)
+                        .addField("Temp channels ever", String.valueOf(managerStats.getTemporaryChannelsEver()), true)
+                        .addField("\u200B", "\u200B")
+                        .addField("Music played monthly", String.valueOf(managerStats.getMusicPlayedMonth()), true)
                         .addField("Music played ever", String.valueOf(managerStats.getMusicPlayedEver()), true)
-                        .addField("Music time today", String.valueOf(managerStats.getMusicTimePlayedDay()), false)
-                        .addField("Music time this month", String.valueOf(managerStats.getMusicTimePlayedMonth()), true)
+                        .addField("\u200B", "\u200B")
+                        .addField("Music time today", String.valueOf(managerStats.getMusicTimePlayedDay()), true)
+                        .addField("Music time monthly", String.valueOf(managerStats.getMusicTimePlayedMonth()), true)
                 );
                 break;
             case 2:
@@ -88,8 +91,8 @@ public class UpdateMessageTimer extends TimerTask {
                 break;
             case 4:
                 index++;
-                var memberCmdMonth = CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getMemberStatsInstance().getBestUserCommandsUsedMonth(), false);
-                var memberCmdEver = CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getMemberStatsInstance().getBestUserCommandsUsedEver(), false);
+                var memberCmdMonth = CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getMemberStatsInstance().getBestUserCommandsUsedMonth(), true);
+                var memberCmdEver = CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getMemberStatsInstance().getBestUserCommandsUsedEver(), true);
                 output.add(createTopStatisticsEmbed("Top members commands", "", null, memberCmdMonth, memberCmdEver));
                 break;
             case 5:
@@ -98,12 +101,14 @@ public class UpdateMessageTimer extends TimerTask {
                 output.add(new EmbedBuilder()
                         .setTitle("Server statistics")
                         .setColor(Color.decode("#2100FF"))
-                        .addField("Member join today", String.valueOf(serverStats.getMemberJoinDay()), true)
-                        .addField("Member join monthly", String.valueOf(serverStats.getMemberJoinMonth()))
-                        .addField("Member join ever", String.valueOf(serverStats.getMemberJoinEver()), false)
-                        .addField("Member leave today", String.valueOf(serverStats.getMemberLeaveDay()), true)
-                        .addField("Member leave monthly", String.valueOf(serverStats.getMemberLeaveMonth()))
-                        .addField("Member leave ever", String.valueOf(serverStats.getMemberLeaveEver()), false)
+                        .addField("User+ today", String.valueOf(serverStats.getMemberJoinDay()), true)
+                        .addField("User+ monthly", String.valueOf(serverStats.getMemberJoinMonth()), true)
+                        .addField("User+ ever", String.valueOf(serverStats.getMemberJoinEver()), true)
+                        .addField("\u200B", "\u200B")
+                        .addField("User- today", String.valueOf(serverStats.getMemberLeaveDay()), true)
+                        .addField("User- monthly", String.valueOf(serverStats.getMemberLeaveMonth()), true)
+                        .addField("User- ever", String.valueOf(serverStats.getMemberLeaveEver()), true)
+                        .setDescription("*User+* stands for user joins server\n*User-* stands for user leaves server")
                 );
                 break;
             case 6:
@@ -128,14 +133,17 @@ public class UpdateMessageTimer extends TimerTask {
                         .setTitle("Text and voice statistics")
                         .setColor(Color.decode("#2100FF"))
                         .addField("Text today", String.valueOf(textStats2.getTextCounterDay()), true)
-                        .addField("Text monthly", String.valueOf(textStats2.getTextCounterMonth()))
-                        .addField("Text ever", String.valueOf(textStats2.getTextCounterEver()), false)
+                        .addField("Text monthly", String.valueOf(textStats2.getTextCounterMonth()), true)
+                        .addField("Text ever", String.valueOf(textStats2.getTextCounterEver()), true)
+                        .addField("\u200B", "\u200B")
                         .addField("Voice today", CommonUtils.statisticsManager.formatTime(voiceStats2.getCallTimeDay()), true)
-                        .addField("Voice monthly", CommonUtils.statisticsManager.formatTime(voiceStats2.getCallTimeMonth()))
-                        .addField("Voice ever", CommonUtils.statisticsManager.formatTime(voiceStats2.getCallTimeEver()), false)
+                        .addField("Voice monthly", CommonUtils.statisticsManager.formatTime(voiceStats2.getCallTimeMonth()), true)
+                        .addField("Voice ever", CommonUtils.statisticsManager.formatTime(voiceStats2.getCallTimeEver()), true)
                 );
                 break;
         }
+        if(index == 9)
+            index = 0;
         return output;
     }
 
@@ -144,13 +152,33 @@ public class UpdateMessageTimer extends TimerTask {
                 .setTitle(name)
                 .setDescription(description)
                 .setColor(Color.decode("#2100FF"));
+
+        if(day != null)
+            output.addField("TODAY", "\u200B", true);
+        if(month != null)
+            output.addField("THIS MONTH", "\u200B", true);
+        if(ever != null)
+            output.addField("EVER", "\u200B", true);
+        output.addField("\u200B", "\u200B", true);
+
         for(int i = 0; i < 5; i++) {
             if(day != null)
-                output.addField("#" + (i+1) + " DAY " + day.get(i)[0], day.get(i)[1], month == null && ever == null);
+                if(i <= (day.size() - 1))
+                    output.addField("#" + (i+1) + " " + day.get(i)[0], day.get(i)[1], true);
+                else
+                    output.addField("#" + (i+1) + " NaN", "NaN", true);
             if(month != null)
-                output.addField("#" + (i+1) + " MONTH " + month.get(i)[0], month.get(i)[1], ever == null);
+                if(i <= (month.size() - 1))
+                    output.addField("#" + (i+1) + " " + month.get(i)[0], month.get(i)[1], true);
+                else
+                    output.addField("#" + (i+1) + " NaN", "NaN", true);
             if(ever != null)
-                output.addField("#" + (i+1) + " EVER " + ever.get(i)[0], ever.get(i)[1], false);
+                if(i <= (ever.size() - 1))
+                    output.addField("#" + (i+1) + " " + ever.get(i)[0], ever.get(i)[1], true);
+                else
+                    output.addField("#" + (i+1) + " NaN", "NaN", true);
+
+            output.addField("\u200B", "\u200B", true);
         }
         return output;
     }
