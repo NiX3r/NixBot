@@ -2,6 +2,8 @@ package cz.iliev.managers.user_verification_manager;
 
 import cz.iliev.interfaces.IManager;
 import cz.iliev.managers.user_verification_manager.instances.InviteInstance;
+import cz.iliev.managers.user_verification_manager.listeners.UserVerificationManagerMessageCreateListener;
+import cz.iliev.managers.user_verification_manager.listeners.UserVerificationManagerServerMemberJoinListener;
 import cz.iliev.managers.user_verification_manager.utils.FileUtils;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
@@ -48,6 +50,8 @@ public class UserVerificationManager implements IManager {
                 });
             });
         });
+        CommonUtils.bot.addMessageCreateListener(new UserVerificationManagerMessageCreateListener());
+        CommonUtils.bot.addServerMemberJoinListener(new UserVerificationManagerServerMemberJoinListener());
         ready = true;
         LogUtils.info("UserVerificationManager loaded and started. Ready to use");
     }

@@ -66,7 +66,7 @@ public class UserVerificationManagerMessageCreateListener implements MessageCrea
         // Remove from verificate users codes list
         CommonUtils.userVerificationManager.getUsersCodes().remove(user.getId());
 
-        messageCreateEvent.getMessage().reply("You successfully verificate. Now you can browse our server! :salut_facing:");
+        messageCreateEvent.getMessage().reply("You successfully verificate. Now you can browse our server! :saluting_facing:");
         LogUtils.info("User successfully verificated and warmly welcomed");
 
     }

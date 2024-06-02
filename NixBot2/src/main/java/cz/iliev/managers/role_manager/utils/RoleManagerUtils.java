@@ -15,6 +15,6 @@ import org.javacord.api.interaction.SlashCommandInteraction;
 public class RoleManagerUtils {
     public static void sendComponentMessage(SlashCommandInteraction interaction){
         CommonUtils.announcementManager.sendRoleSetter(CommonUtils.roleManager.getRoleSetter());
-        interaction.createImmediateResponder().setContent("Message sent").setFlags(MessageFlag.EPHEMERAL).respond();
+        interaction.createImmediateResponder().setContent("Role component message updated").setFlags(MessageFlag.EPHEMERAL).respond();
     }
 }

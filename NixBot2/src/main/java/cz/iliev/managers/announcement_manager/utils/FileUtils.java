@@ -70,7 +70,7 @@ public class FileUtils {
             return null;
         }
         catch (Exception ex){
-            CommonUtils.throwException(ex);
+            CommonUtils.throwException(ex, false, true);
             return ex;
         }
     }

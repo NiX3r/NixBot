@@ -14,6 +14,8 @@ import java.util.concurrent.TimeUnit;
 public class UpdateMessageTimer extends TimerTask {
 
     private final String STATS_CHANNEL_ID = "1217475154582442086";
+    private final int MAX_INDEX = 8;
+
     private Timer timer;
     private int index;
 
@@ -52,13 +54,11 @@ public class UpdateMessageTimer extends TimerTask {
 
         switch (index){
             case 0:
-                index++;
                 var cmdMonth = CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getCommandStatsInstance().getMostCommandsUsedMonth());
                 var cmdEver = CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getCommandStatsInstance().getMostCommandsUsedEver());
                 output.add(createTopStatisticsEmbed("Most command use", "", null, cmdMonth, cmdEver));
                 break;
             case 1:
-                index++;
                 var managerStats = CommonUtils.statisticsManager.getStatistics().getManagerStatsInstance();
                 output.add(new EmbedBuilder()
                         .setColor(Color.decode("#2100FF"))
@@ -78,25 +78,21 @@ public class UpdateMessageTimer extends TimerTask {
                 );
                 break;
             case 2:
-                index++;
                 var memberCallMonth = CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getMemberStatsInstance().getBestUserCallTimeMonth(), false);
                 var memberCallEver = CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getMemberStatsInstance().getBestUserCallTimeEver(), false);
                 output.add(createTopStatisticsEmbed("Top connected members", "", null, memberCallMonth, memberCallEver));
                 break;
             case 3:
-                index++;
                 var memberTextMonth = CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getMemberStatsInstance().getBestUserCallTimeMonth(), true);
                 var memberTextEver = CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getMemberStatsInstance().getBestUserCallTimeEver(), true);
                 output.add(createTopStatisticsEmbed("Top members text", "", null, memberTextMonth, memberTextEver));
                 break;
             case 4:
-                index++;
                 var memberCmdMonth = CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getMemberStatsInstance().getBestUserCommandsUsedMonth(), true);
                 var memberCmdEver = CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getMemberStatsInstance().getBestUserCommandsUsedEver(), true);
                 output.add(createTopStatisticsEmbed("Top members commands", "", null, memberCmdMonth, memberCmdEver));
                 break;
             case 5:
-                index++;
                 var serverStats = CommonUtils.statisticsManager.getStatistics().getServerStatsInstance();
                 output.add(new EmbedBuilder()
                         .setTitle("Server statistics")
@@ -112,21 +108,18 @@ public class UpdateMessageTimer extends TimerTask {
                 );
                 break;
             case 6:
-                index++;
                 var textStats = CommonUtils.statisticsManager.getStatistics().getTextChannelStatsInstance();
                 var textMonth = CommonUtils.statisticsManager.getTopFive(textStats.getUsedTextChannelIdMonth(), true);
                 var textEver = CommonUtils.statisticsManager.getTopFive(textStats.getUsedTextChannelIdEver(), true);
                 output.add(createTopStatisticsEmbed("Top text channels", "", null, textMonth, textEver));
                 break;
             case 7:
-                index++;
                 var voiceStats = CommonUtils.statisticsManager.getStatistics().getVoiceChannelStatsInstance();
                 var voiceMonth = CommonUtils.statisticsManager.getTopFive(voiceStats.getUsedVoiceChannelIdMonth(), true);
                 var voiceEver = CommonUtils.statisticsManager.getTopFive(voiceStats.getUsedVoiceChannelIdEver(), true);
                 output.add(createTopStatisticsEmbed("Top text channels", "", null, voiceMonth, voiceEver));
                 break;
             case 8:
-                index++;
                 var textStats2 = CommonUtils.statisticsManager.getStatistics().getTextChannelStatsInstance();
                 var voiceStats2 = CommonUtils.statisticsManager.getStatistics().getVoiceChannelStatsInstance();
                 output.add(new EmbedBuilder()
@@ -142,8 +135,16 @@ public class UpdateMessageTimer extends TimerTask {
                 );
                 break;
         }
-        if(index == 9)
+
+        output.forEach(embed -> {
+            embed.setFooter("Index: " + index + " | Version: " + CommonUtils.VERSION);
+        });
+
+        if(index == MAX_INDEX)
             index = 0;
+        else
+            index++;
+
         return output;
     }
 

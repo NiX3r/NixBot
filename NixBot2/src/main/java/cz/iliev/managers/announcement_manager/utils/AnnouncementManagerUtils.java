@@ -9,29 +9,12 @@ import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
 
 import java.awt.*;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
 public class AnnouncementManagerUtils {
-
-    private static MessagesInstance messages;
-
-    public static void setMessages(MessagesInstance messagesInstance){
-        messages = messagesInstance;
-    }
-
-    public static EmbedBuilder createWelcomeEmbed(String username, Icon userAvatar, String inviterMentionTag, int serverCount){
-        Random r = new Random();
-        return new EmbedBuilder()
-                .setTitle(username)
-                .setDescription(messages.getWelcomeMessages().get(r.nextInt(messages.getWelcomeMessages().size())))
-                .setColor(Color.decode("#00d60e"))
-                .addField("Thanks for invite", inviterMentionTag, true)
-                .addField("Member count", serverCount + " total", true)
-                .setFooter("Version: " + CommonUtils.VERSION)
-                .setThumbnail(userAvatar);
-    }
 
     public static EmbedBuilder createExceptionEmbed(Exception exception, boolean isFatal){
         String stackTrace = "";
@@ -85,6 +68,15 @@ public class AnnouncementManagerUtils {
                 .addField("Member count", server.getMembers().size() + " total", true)
                 .setFooter("Version: " + CommonUtils.VERSION)
                 .setThumbnail(userAvatar);
+    }
+
+    public static EmbedBuilder createAnnouncementEmbed(String topic, String message, String author){
+        return new EmbedBuilder()
+                .setTitle(topic)
+                .setDescription(message.replace("\\n", "\n"))
+                .setColor(Color.decode("#2100FF"))
+                .setThumbnail(new File(".\\announcement-thumbnail.png"))
+                .setFooter("Author: " + author + " | Version: " + CommonUtils.VERSION);
     }
 
 }

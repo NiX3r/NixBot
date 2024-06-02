@@ -2,6 +2,7 @@ package cz.iliev.managers.announcement_manager;
 
 import com.vdurmont.emoji.EmojiParser;
 import cz.iliev.interfaces.IManager;
+import cz.iliev.managers.announcement_manager.commands.AnnouncementCommand;
 import cz.iliev.managers.announcement_manager.instances.MessagesInstance;
 import cz.iliev.managers.announcement_manager.utils.AnnouncementManagerUtils;
 import cz.iliev.managers.announcement_manager.utils.FileUtils;
@@ -31,7 +32,7 @@ public class AnnouncementManager implements IManager {
     private MessagesInstance messages;
 
     private final String WELCOME_CHANNEL_ID = "611985124057284621";
-    private static final String NEWS_CHANNEL_ID = "1219218631632748655";
+    public static final String NEWS_CHANNEL_ID = "1219218631632748655";
     public static final String NIXBOT_CHANNEL_ID = "1058017127988211822";
 
     public AnnouncementManager(){
@@ -63,7 +64,11 @@ public class AnnouncementManager implements IManager {
 
     @Override
     public void onCommand(SlashCommandInteraction interaction) {
-        return;
+        switch (interaction.getCommandName()){
+            case "announcement":
+                new AnnouncementCommand().run(interaction);
+                break;
+        }
     }
 
     @Override
@@ -190,7 +195,7 @@ public class AnnouncementManager implements IManager {
                 CommonUtils.politeDisconnect(server);
                 return;
             }
-            var embed = AnnouncementManagerUtils.createWelcomeEmbed(user, avatar, inviter, server.getMemberCount());
+            var embed = AnnouncementManagerUtils.createJoinEmbed(user, inviter, avatar, server);
             server.getTextChannelById(WELCOME_CHANNEL_ID).ifPresent(channel -> {
                 channel.sendMessage(embed);
             });

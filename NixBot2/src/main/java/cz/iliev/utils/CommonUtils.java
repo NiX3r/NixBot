@@ -51,7 +51,7 @@ public class CommonUtils {
     public static void setupBot(){
         LogUtils.info("Load settings from file");
 
-        settings = FileUtils.loadTemporaryChannelCache();
+        settings = FileUtils.loadSettings();
         if(settings == null){
             LogUtils.fatalError("Can't load settings. Turning the bot off");
             return;
@@ -99,15 +99,17 @@ public class CommonUtils {
         temporaryChannelManager.kill();
         ticketManager.kill();
         userVerificationManager.kill();
+        FileUtils.saveSettings(settings);
     }
 
-    public static void throwException(Exception exception){throwException(exception, false);}
-    public static void throwException(Exception exception, boolean isFatal){
+    public static void throwException(Exception exception){throwException(exception, false, false);}
+    public static void throwException(Exception exception, boolean isFatal, boolean bypassDiscordMessage){
 
         if(isFatal) LogUtils.fatalError(exception.toString());
         else LogUtils.error(exception.toString());
 
-        announcementManager.sendException(exception, isFatal);
+        if(!bypassDiscordMessage)
+            announcementManager.sendException(exception, isFatal);
 
     }
 

@@ -89,6 +89,7 @@ public class TicketManagerMessageComponentCreateListener implements MessageCompo
                 .setColor(Color.decode("#61B23A"))
                 .setTitle("Ticket system | Ticket channel")
                 .setDescription("This channel was made for ticket purpose. Please try to describe your problem/question as much as possible. Thanks you")
+                .addField("Ping pong!", user.getMentionTag())
                 .setFooter("Version: " + CommonUtils.VERSION);
 
         new MessageBuilder()
