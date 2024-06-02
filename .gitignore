@@ -28,4 +28,4 @@ out
 data
 logs
 *.png
-NixBot/settings.json
+settings.json
