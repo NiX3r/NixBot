@@ -2,19 +2,21 @@ package cz.iliev.managers.ban_list_manager.instances;
 
 import cz.iliev.managers.ban_list_manager.enums.BanType;
 
-public class BanInstance {
+public class PunishmentInstance {
 
     private BanType type;
     private MemberInstance member;
     private MemberInstance admin;
     private long time;
+    private long duration;
     private String description;
 
-    public BanInstance(BanType type, MemberInstance member, MemberInstance admin, long time, String description) {
+    public PunishmentInstance(BanType type, MemberInstance member, MemberInstance admin, long time, long duration, String description) {
         this.type = type;
         this.member = member;
         this.admin = admin;
         this.time = time;
+        this.duration = duration;
         this.description = description;
     }
 
@@ -56,5 +58,13 @@ public class BanInstance {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
     }
 }

@@ -1,10 +1,5 @@
 package cz.iliev.managers.ban_list_manager.listeners;
 
-import cz.iliev.managers.ban_list_manager.enums.BanType;
-import cz.iliev.managers.ban_list_manager.instances.BanInstance;
-import cz.iliev.managers.ban_list_manager.instances.MemberInstance;
-import cz.iliev.utils.CommonUtils;
-import org.javacord.api.entity.server.Ban;
 import org.javacord.api.event.server.member.ServerMemberBanEvent;
 import org.javacord.api.listener.server.member.ServerMemberBanListener;
 

@@ -127,7 +127,7 @@ public class MusicManager implements IManager {
         player.stopTrack();
         player.playTrack(audioList.get(0).getTrack());
         CommonUtils.announcementManager.sendCurrentSong(audioList.get(0));
-        CommonUtils.botActivityManager.setActivity(ActivityType.PLAYING, "\uD83C\uDFB5 " + audioList.get(0).getTrack().getInfo().title);
+        CommonUtils.botActivityManager.setActivity(ActivityType.PLAYING, "\uD83C\uDFB5 " + audioList.get(0).getTrack().getInfo().title, 60000);
         audioList.remove(0);
     }
 

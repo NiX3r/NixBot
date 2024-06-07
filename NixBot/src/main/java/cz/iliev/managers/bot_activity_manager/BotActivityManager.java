@@ -1,14 +1,21 @@
 package cz.iliev.managers.bot_activity_manager;
 
 import cz.iliev.interfaces.IManager;
+import cz.iliev.managers.bot_activity_manager.instances.BotActivityInstance;
+import cz.iliev.managers.bot_activity_manager.timers.BotActivityTimer;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BotActivityManager implements IManager {
 
     private boolean ready;
+    private List<BotActivityInstance> activities;
+    private boolean timerRunning;
 
     public BotActivityManager(){
         setup();
@@ -17,6 +24,9 @@ public class BotActivityManager implements IManager {
     @Override
     public void setup() {
         LogUtils.info("Load and start BotActivityManager");
+        setBasicActivity();
+        timerRunning = false;
+        activities = new ArrayList<BotActivityInstance>();
         ready = true;
         LogUtils.info("BotActivityManager loaded and started. Ready to use");
     }
@@ -70,7 +80,26 @@ public class BotActivityManager implements IManager {
         CommonUtils.bot.updateActivity(ActivityType.WATCHING, " for " + membersCount + " users here");
     }
 
-    public void setActivity(ActivityType type, String message){
-        CommonUtils.bot.updateActivity(type, message);
+    public void setActivity(ActivityType type, String message, long length){
+        BotActivityInstance activity = new BotActivityInstance(type, message, length);
+
+        if(timerRunning){
+            activities.add(activity);
+        }
+        else {
+            BotActivityTimer timer = new BotActivityTimer(activity);
+        }
+    }
+
+    public List<BotActivityInstance> getActivities() {
+        return activities;
+    }
+
+    public boolean isTimerRunning() {
+        return timerRunning;
+    }
+
+    public void setTimerRunning(boolean timerRunning) {
+        this.timerRunning = timerRunning;
     }
 }

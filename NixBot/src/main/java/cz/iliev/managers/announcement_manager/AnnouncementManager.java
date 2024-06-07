@@ -202,6 +202,20 @@ public class AnnouncementManager implements IManager {
         });
     }
 
+    public void sendLeave(String user, Icon avatar, boolean isBan){
+
+        CommonUtils.bot.getServers().forEach(server -> {
+            if(!server.getIdAsString().equals(CommonUtils.NIX_CREW_ID)){
+                CommonUtils.politeDisconnect(server);
+                return;
+            }
+            var embed = AnnouncementManagerUtils.createLeaveEmbed(user, avatar, isBan, server);
+            server.getTextChannelById(WELCOME_CHANNEL_ID).ifPresent(channel -> {
+                channel.sendMessage(embed);
+            });
+        });
+    }
+
     public void sendRestart(String minutes){
         CommonUtils.bot.getServers().forEach(server -> {
             if(!server.getIdAsString().equals(CommonUtils.NIX_CREW_ID)){

@@ -1,9 +1,8 @@
 package cz.iliev.managers.ban_list_manager;
 
 import cz.iliev.interfaces.IManager;
-import cz.iliev.managers.ban_list_manager.instances.BanInstance;
+import cz.iliev.managers.ban_list_manager.instances.PunishmentInstance;
 import cz.iliev.managers.ban_list_manager.utils.FileUtils;
-import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
@@ -12,7 +11,7 @@ import java.util.List;
 public class BanListManager implements IManager {
 
     private boolean ready;
-    private List<BanInstance> bans;
+    private List<PunishmentInstance> bans;
 
     public BanListManager(){
         setup();
@@ -28,7 +27,6 @@ public class BanListManager implements IManager {
 
     @Override
     public void kill() {
-        FileUtils.saveBans(bans);
         ready = false;
     }
 
@@ -69,7 +67,7 @@ public class BanListManager implements IManager {
         return "#8c0404";
     }
 
-    public void addBan(BanInstance ban){
+    public void addBan(PunishmentInstance ban){
         bans.add(ban);
     }
 }
