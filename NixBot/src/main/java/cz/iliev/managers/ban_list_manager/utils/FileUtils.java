@@ -14,24 +14,34 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class FileUtils {
 
     private static final String PATH = "./data/ban_list.csv";
 
-    public static List<PunishmentInstance> loadActiveBans(){
+    public static HashMap<Long, PunishmentInstance> loadActiveBans(){
         LogUtils.info("Trying to load active bans");
         try {
-            List<PunishmentInstance> bans = new ArrayList<PunishmentInstance>();
+            HashMap<Long, PunishmentInstance> bans = new HashMap<Long, PunishmentInstance>();
             List<String> lines = Files.readAllLines(Paths.get(PATH));
             lines.remove(0);
             lines.forEach(line -> {
                 var punishment = serializePunishment(line);
                 if(punishment.getType() == BanType.BAN){
                     if((punishment.getDuration() == 0) || (System.currentTimeMillis() > (punishment.getTime() + punishment.getDuration()))){
-                        bans.add(punishment);
+                        if(bans.containsKey(punishment.getMember().getMemberId()) &&
+                                bans.get(punishment.getMember().getMemberId()).getTime() > punishment.getTime()){
+                            return;
+                        }
+                        bans.put(punishment.getMember().getMemberId(), punishment);
                     }
+                }
+                // if bans was mark as active but after that was unban => remove from active bans
+                if(punishment.getType() == BanType.UNBAN &&
+                    bans.containsKey(punishment.getMember().getMemberId())){
+                    bans.remove(punishment.getMember().getMemberId());
                 }
             });
             LogUtils.info("Active bans loaded");
@@ -39,7 +49,7 @@ public class FileUtils {
         }
         catch (Exception ex){
             CommonUtils.throwException(ex);
-            return new ArrayList<PunishmentInstance>();
+            return new HashMap<Long, PunishmentInstance>();
         }
     }
 

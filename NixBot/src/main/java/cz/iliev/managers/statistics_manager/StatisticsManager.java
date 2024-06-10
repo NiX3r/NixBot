@@ -99,6 +99,7 @@ public class StatisticsManager implements IManager {
             resetMonth();
         }
         else if(now.get(Calendar.DAY_OF_MONTH) != statsTime.get(Calendar.DAY_OF_MONTH)){
+            FileUtils.archiveStatistics(statistics);
             resetDay();
         }
     }
