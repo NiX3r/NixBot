@@ -96,12 +96,12 @@ public class CommandManagerUtils {
         SlashCommand.with("ban", "command to ban member", Arrays.asList(
                 SlashCommandOption.create(SlashCommandOptionType.USER, "member", "member to be ban", true),
                 SlashCommandOption.create(SlashCommandOptionType.STRING, "reason", "reason of ban", true),
-                SlashCommandOption.create(SlashCommandOptionType.LONG, "duration", "ban duration", false)
+                SlashCommandOption.create(SlashCommandOptionType.LONG, "duration", "ban duration in millis", false)
         )).createGlobal(CommonUtils.bot).join();
         LogUtils.info("Created ban command");
 
         SlashCommand.with("unban", "command to unban member", Arrays.asList(
-                SlashCommandOption.create(SlashCommandOptionType.USER, "member", "member to be unban", true)
+                SlashCommandOption.create(SlashCommandOptionType.STRING, "member", "member's nick to be unban", true)
         )).createGlobal(CommonUtils.bot).join();
         LogUtils.info("Created unban command");
 
@@ -113,7 +113,8 @@ public class CommandManagerUtils {
 
         SlashCommand.with("mute", "command to mute member", Arrays.asList(
                 SlashCommandOption.create(SlashCommandOptionType.USER, "member", "member to be mute", true),
-                SlashCommandOption.create(SlashCommandOptionType.STRING, "reason", "reason of mute", true)
+                SlashCommandOption.create(SlashCommandOptionType.STRING, "reason", "reason of mute", true),
+                SlashCommandOption.create(SlashCommandOptionType.LONG, "duration", "ban of mute in seconds", false)
         )).createGlobal(CommonUtils.bot).join();
         LogUtils.info("Created mute command");
 

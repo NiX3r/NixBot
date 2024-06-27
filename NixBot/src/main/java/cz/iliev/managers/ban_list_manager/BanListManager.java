@@ -18,7 +18,10 @@ import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
+import org.javacord.api.interaction.SlashCommand;
 import org.javacord.api.interaction.SlashCommandInteraction;
+import org.javacord.api.interaction.SlashCommandOption;
+import org.javacord.api.interaction.SlashCommandOptionType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +58,7 @@ public class BanListManager implements IManager {
                 }
             });
         });
+
         ready = true;
         LogUtils.info("AnnouncementManager loaded and started. Ready to use");
     }

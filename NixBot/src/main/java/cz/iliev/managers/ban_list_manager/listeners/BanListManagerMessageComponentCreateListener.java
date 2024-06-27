@@ -67,10 +67,10 @@ public class BanListManagerMessageComponentCreateListener implements MessageComp
                             // Do the magic
                             actionName = "banned";
                             if(punishment.getDuration() == 0){
-                                server.banUser(member, Duration.ofDays(999999999), punishment.getDescription());
+                                server.banUser(member.getId(), Duration.ofSeconds(250), punishment.getDescription()).join();
                             }
                             else {
-                                server.banUser(member, punishment.getDuration(), TimeUnit.MILLISECONDS,punishment.getDescription());
+                                server.banUser(member, Duration.ofSeconds(punishment.getDuration()), punishment.getDescription());
                             }
                             break;
                         case UNBAN:

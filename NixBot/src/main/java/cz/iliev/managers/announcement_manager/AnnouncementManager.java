@@ -5,6 +5,7 @@ import cz.iliev.interfaces.IManager;
 import cz.iliev.managers.announcement_manager.commands.AnnouncementCommand;
 import cz.iliev.managers.announcement_manager.instances.MessagesInstance;
 import cz.iliev.managers.announcement_manager.listeners.AnnouncementServerMemberBanListener;
+import cz.iliev.managers.announcement_manager.listeners.AnnouncementServerMemberLeaveListener;
 import cz.iliev.managers.announcement_manager.utils.AnnouncementManagerUtils;
 import cz.iliev.managers.announcement_manager.utils.FileUtils;
 import cz.iliev.managers.command_manager.CommandManager;
@@ -46,7 +47,7 @@ public class AnnouncementManager implements IManager {
         LogUtils.info("Load and start AnnouncementManager");
         messages = FileUtils.loadMessages();
         CommonUtils.bot.addServerMemberBanListener(new AnnouncementServerMemberBanListener());
-        CommonUtils.bot.addServerMemberLeaveListener(new StatisticsManagerServerMemberLeaveListener());
+        CommonUtils.bot.addServerMemberLeaveListener(new AnnouncementServerMemberLeaveListener());
         ready = true;
         LogUtils.info("AnnouncementManager loaded and started. Ready to use");
     }

@@ -118,7 +118,7 @@ public class UserVerificationManager implements IManager {
 
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         graphics.setColor(Color.WHITE);
-        graphics.setFont(new Font("Arial", Font.BOLD, 80));
+        graphics.setFont(new Font("Consola", Font.BOLD, 80));
         int textWidth = graphics.getFontMetrics().stringWidth(code);
         int textHeight = graphics.getFontMetrics().getHeight();
         int textX = (width - textWidth) / 2;
@@ -128,7 +128,7 @@ public class UserVerificationManager implements IManager {
 
         Random random = new Random();
         graphics.setStroke(new java.awt.BasicStroke(3));
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 70; i++) {
             int x1 = random.nextInt(width);
             int y1 = random.nextInt(height);
             int x2 = random.nextInt(width);
@@ -142,7 +142,7 @@ public class UserVerificationManager implements IManager {
 
         var embed = new EmbedBuilder()
                 .setTitle("Welcome to NiXCrew")
-                .setDescription("To continue please verificate using our system.\nType in code below")
+                .setDescription("```To continue please verificate using our system.\nType in code below```")
                 .setColor(Color.decode("#2100FF"))
                 .setFooter("Version: " + CommonUtils.VERSION);
         embed.setImage(image);
@@ -153,7 +153,7 @@ public class UserVerificationManager implements IManager {
         if(usersCodes.containsKey(userId))
             return null;
         Random rand = new Random();
-        int r = rand.nextInt(100000,1000000);
+        int r = rand.nextInt(1048576,11184810);
         String code = Integer.toHexString(r);
         usersCodes.put(userId, code);
         return code;

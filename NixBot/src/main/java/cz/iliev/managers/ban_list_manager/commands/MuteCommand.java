@@ -17,13 +17,14 @@ public class MuteCommand implements ISlashCommand {
     public void run(SlashCommandInteraction interaction) {
         User toBan = interaction.getArgumentUserValueByIndex(0).get();
         String reason = interaction.getArgumentStringValueByIndex(1).get();
-        var response = CommonUtils.banListManager.addCachePunishment(toBan, interaction.getUser(), reason, 0, BanType.TIMEOUT);
+        long duration = interaction.getArgumentLongValueByIndex(2).isPresent() ? interaction.getArgumentLongValueByIndex(2).get() : 3600000;
+        var response = CommonUtils.banListManager.addCachePunishment(toBan, interaction.getUser(), reason, duration, BanType.TIMEOUT);
 
         if(response){
             interaction.createImmediateResponder()
                     .addComponents(
                             ActionRow.of(
-                                    Button.success("nix-ban-undo-" + toBan.getId(), "Undo ban"),
+                                    Button.success("nix-ban-undo-" + toBan.getId(), "Undo"),
                                     Button.danger("nix-ban-confirm-" + toBan.getId(), "Confirm")
                             )
                     )

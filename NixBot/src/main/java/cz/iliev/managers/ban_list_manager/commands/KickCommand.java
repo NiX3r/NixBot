@@ -23,7 +23,7 @@ public class KickCommand implements ISlashCommand {
             interaction.createImmediateResponder()
                     .addComponents(
                         ActionRow.of(
-                                Button.success("nix-ban-undo-" + toBan.getId(), "Undo ban"),
+                                Button.success("nix-ban-undo-" + toBan.getId(), "Undo"),
                                 Button.danger("nix-ban-confirm-" + toBan.getId(), "Confirm")
                         ))
                     .setContent("## Are you sure you want to kick `" + toBan.getName() + "`")

@@ -27,7 +27,7 @@ public class UnbanCommand implements ISlashCommand {
             interaction.createImmediateResponder()
                     .addComponents(
                             ActionRow.of(
-                                    Button.success("nix-ban-undo-" + toBan.getId(), "Undo ban"),
+                                    Button.success("nix-ban-undo-" + toBan.getId(), "Undo"),
                                     Button.danger("nix-ban-confirm-" + toBan.getId(), "Confirm")
                             )
                     )

@@ -30,8 +30,8 @@ public class BanCommand implements ISlashCommand {
             interaction.createImmediateResponder()
                     .addComponents(
                             ActionRow.of(
-                                    Button.success("nix-ban-undo-" + toBan.getId(), "Undo ban", EmojiParser.parseToUnicode(":x:")),
-                                    Button.danger("nix-ban-confirm-" + toBan.getId(), "Confirm", EmojiParser.parseToUnicode(":white_check_mark:"))
+                                    Button.success("nix-ban-undo-" + toBan.getId(), "Undo"),
+                                    Button.danger("nix-ban-confirm-" + toBan.getId(), "Confirm")
                             )
                     )
                     .setContent("Are you sure you want to ban `" + toBan.getName() + "`")
