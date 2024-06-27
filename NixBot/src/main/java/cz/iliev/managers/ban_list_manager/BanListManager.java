@@ -74,7 +74,7 @@ public class BanListManager implements IManager {
     @Override
     public void onCommand(SlashCommandInteraction interaction) {
 
-        if(CommonUtils.isUserAdmin(interaction.getUser())){
+        if(!CommonUtils.isUserAdmin(interaction.getUser())){
             interaction.createImmediateResponder().setContent("This command is only for admin").setFlags(MessageFlag.EPHEMERAL).respond();
             return;
         }
@@ -141,7 +141,7 @@ public class BanListManager implements IManager {
             toBan.getRoles(server).forEach(role -> adminRoles.add(role.getName()));
 
             var ban = new PunishmentInstance(
-                    BanType.BAN,
+                    type,
                     new MemberInstance(
                             toBan.getId(),
                             toBan.getName(),

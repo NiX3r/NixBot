@@ -4,12 +4,14 @@ import com.vdurmont.emoji.EmojiParser;
 import cz.iliev.interfaces.IManager;
 import cz.iliev.managers.announcement_manager.commands.AnnouncementCommand;
 import cz.iliev.managers.announcement_manager.instances.MessagesInstance;
+import cz.iliev.managers.announcement_manager.listeners.AnnouncementServerMemberBanListener;
 import cz.iliev.managers.announcement_manager.utils.AnnouncementManagerUtils;
 import cz.iliev.managers.announcement_manager.utils.FileUtils;
 import cz.iliev.managers.command_manager.CommandManager;
 import cz.iliev.managers.music_manager.instances.SongInstance;
 import cz.iliev.managers.role_manager.RoleManager;
 import cz.iliev.managers.role_manager.instances.RoleSetterInstance;
+import cz.iliev.managers.statistics_manager.listeners.StatisticsManagerServerMemberLeaveListener;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.entity.Icon;
@@ -43,6 +45,8 @@ public class AnnouncementManager implements IManager {
     public void setup() {
         LogUtils.info("Load and start AnnouncementManager");
         messages = FileUtils.loadMessages();
+        CommonUtils.bot.addServerMemberBanListener(new AnnouncementServerMemberBanListener());
+        CommonUtils.bot.addServerMemberLeaveListener(new StatisticsManagerServerMemberLeaveListener());
         ready = true;
         LogUtils.info("AnnouncementManager loaded and started. Ready to use");
     }
@@ -211,7 +215,7 @@ public class AnnouncementManager implements IManager {
             }
             var embed = AnnouncementManagerUtils.createLeaveEmbed(user, avatar, isBan, server);
             server.getTextChannelById(WELCOME_CHANNEL_ID).ifPresent(channel -> {
-                channel.sendMessage(embed);
+                channel.sendMessage(embed).join();
             });
         });
     }

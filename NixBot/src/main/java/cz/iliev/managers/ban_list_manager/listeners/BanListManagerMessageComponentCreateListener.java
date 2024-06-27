@@ -24,7 +24,7 @@ public class BanListManagerMessageComponentCreateListener implements MessageComp
                     undo(memberId, messageComponentInteraction);
                 }
                 if(customId.contains("nix-ban-confirm-")){
-                    long memberId = Long.parseLong(customId.replace("nix-ban-undo-", ""));
+                    long memberId = Long.parseLong(customId.replace("nix-ban-confirm-", ""));
                     confirm(memberId, messageComponentInteraction);
                 }
             });
@@ -35,6 +35,7 @@ public class BanListManagerMessageComponentCreateListener implements MessageComp
         if(CommonUtils.banListManager.getBanCache().containsKey(memberId)){
             CommonUtils.banListManager.getBanCache().remove(memberId);
             messageComponentInteraction.createImmediateResponder().setContent("Successfully undo punishment for '" + memberId + "'").setFlags(MessageFlag.EPHEMERAL).respond();
+            messageComponentInteraction.getMessage().delete();
         }
         else {
             messageComponentInteraction.createImmediateResponder().setContent("Unfortunately I can't find match for this member in cache").setFlags(MessageFlag.EPHEMERAL).respond();
@@ -50,11 +51,17 @@ public class BanListManagerMessageComponentCreateListener implements MessageComp
                     CommonUtils.politeDisconnect(server);
                     return;
                 }
+
+                if(!server.getMemberById(punishment.getMember().getMemberId()).isPresent()){
+                    messageComponentInteraction.createImmediateResponder().setContent("Unfortunately this member is not on Nix Crew server").setFlags(MessageFlag.EPHEMERAL).respond();
+                    return;
+                }
+
                 server.getMemberById(punishment.getMember().getMemberId()).ifPresent(member -> {
                     FileUtils.savePunishment(punishment);
                     String actionName = "NONE";
                     switch (punishment.getType()){
-                        case BAN -> {
+                        case BAN:
                             // Update in active ban list
                             CommonUtils.banListManager.getBans().put(punishment.getMember().getMemberId(), punishment);
                             // Do the magic
@@ -65,28 +72,29 @@ public class BanListManagerMessageComponentCreateListener implements MessageComp
                             else {
                                 server.banUser(member, punishment.getDuration(), TimeUnit.MILLISECONDS,punishment.getDescription());
                             }
-                        }
-                        case UNBAN -> {
+                            break;
+                        case UNBAN:
                             // Update in active ban list
                             CommonUtils.banListManager.getBans().remove(punishment.getMember().getMemberId());
                             actionName = "unbanned";
                             // Do the magic
                             server.unbanUser(punishment.getMember().getMemberId(), punishment.getDescription());
-                        }
-                        case KICK -> {
+                            break;
+                        case KICK:
                             actionName = "kicked";
                             // Do the magic
                             server.kickUser(member, punishment.getDescription());
-                        }
-                        case TIMEOUT -> {
+                            break;
+                        case TIMEOUT:
                             actionName = "timeouted";
                             // Do the magic
                             Duration duration = Duration.ofMillis(punishment.getDuration());
                             server.timeoutUser(member, duration, punishment.getDescription());
-                        }
+                            break;
                     }
                     CommonUtils.botActivityManager.setActivity(ActivityType.WATCHING, " new " + actionName + " member '" + punishment.getMember().getMemberName() + "'", 60000);
                     messageComponentInteraction.createImmediateResponder().setContent("Successfully " + actionName + " member '" + punishment.getMember().getMemberName() + "'").setFlags(MessageFlag.EPHEMERAL).respond();
+                    messageComponentInteraction.getMessage().delete();
                 });
             });
         }

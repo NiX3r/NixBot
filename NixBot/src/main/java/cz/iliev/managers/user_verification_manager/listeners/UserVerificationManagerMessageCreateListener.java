@@ -49,7 +49,7 @@ public class UserVerificationManagerMessageCreateListener implements MessageCrea
 
         // Send welcome message
         server.getMemberById(checkWhoInvite(server)).ifPresentOrElse(inviter -> {
-            CommonUtils.announcementManager.sendWelcome(user.getName(), user.getAvatar(), user.getMentionTag());
+            CommonUtils.announcementManager.sendWelcome(user.getName(), user.getAvatar(), inviter.getMentionTag());
         }, new Runnable() {
             @Override
             public void run() {

@@ -78,9 +78,9 @@ public class FileUtils {
             BufferedWriter f_writer
                     = new BufferedWriter(new FileWriter(PATH, true));
 
-            String data = ban.getType() + ";" + ban.getMember().getMemberId() + ";" + ban.getMember().getMemberName() + String.join(",", ban.getMember().getRolesName() + ";" +
+            String data = ban.getType() + ";" + ban.getMember().getMemberId() + ";" + ban.getMember().getMemberName() + ";" + String.join(",", ban.getMember().getRolesName()) + ";" +
                     ban.getAdmin().getMemberId() + ";" + ban.getAdmin().getMemberName() + ";" + String.join(",", ban.getAdmin().getRolesName()) + ";" +
-                    ban.getTime() + ";" + ban.getDuration() + ";" + ban.getDescription());
+                    ban.getTime() + ";" + ban.getDuration() + ";" + ban.getDescription();
 
             f_writer.newLine();
             f_writer.write(data);

@@ -27,14 +27,15 @@ public class BanCommand implements ISlashCommand {
         var response = CommonUtils.banListManager.addCachePunishment(toBan, interaction.getUser(), reason, duration, BanType.BAN);
 
         if(response){
-            interaction.respondWithModal(
-                    "nix-ban-" + toBan.getId(),
-                    "Are you sure you want to ban '" + toBan.getName() + "'",
-                    Arrays.asList(ActionRow.of(
-                            Button.secondary("nix-ban-undo-" + toBan.getId(), "Undo ban", EmojiParser.parseToUnicode(":x:")),
-                            Button.secondary("nix-ban-confirm-" + toBan.getId(), "Confirm", EmojiParser.parseToUnicode(":white_check_mark:"))
-                    ))
-            );
+            interaction.createImmediateResponder()
+                    .addComponents(
+                            ActionRow.of(
+                                    Button.success("nix-ban-undo-" + toBan.getId(), "Undo ban", EmojiParser.parseToUnicode(":x:")),
+                                    Button.danger("nix-ban-confirm-" + toBan.getId(), "Confirm", EmojiParser.parseToUnicode(":white_check_mark:"))
+                            )
+                    )
+                    .setContent("Are you sure you want to ban `" + toBan.getName() + "`")
+                    .setFlags(MessageFlag.EPHEMERAL).respond();
         }
         else {
             interaction.createImmediateResponder().setContent("There is already modal for this user. Please firstly the old one").setFlags(MessageFlag.EPHEMERAL).respond();
