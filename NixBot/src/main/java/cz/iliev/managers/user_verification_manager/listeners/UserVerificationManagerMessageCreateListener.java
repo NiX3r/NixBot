@@ -4,6 +4,7 @@ import cz.iliev.managers.user_verification_manager.UserVerificationManager;
 import cz.iliev.managers.user_verification_manager.instances.InviteInstance;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
+import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.channel.ChannelType;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.server.invite.RichInvite;
@@ -48,7 +49,7 @@ public class UserVerificationManagerMessageCreateListener implements MessageCrea
 
         // Send welcome message
         server.getMemberById(checkWhoInvite(server)).ifPresentOrElse(inviter -> {
-            CommonUtils.announcementManager.sendWelcome(user.getName(), user.getAvatar(), user.getMentionTag());
+            CommonUtils.announcementManager.sendWelcome(user.getName(), user.getAvatar(), inviter.getMentionTag());
         }, new Runnable() {
             @Override
             public void run() {
@@ -61,7 +62,7 @@ public class UserVerificationManagerMessageCreateListener implements MessageCrea
         LogUtils.info("Member join statistics updated");
 
         // Update activity users counter
-        CommonUtils.botActivityManager.setBasicActivity();
+        CommonUtils.botActivityManager.setActivity(ActivityType.WATCHING, "new member '" + user.getName() + "'", 60000);
 
         // Remove from verificate users codes list
         CommonUtils.userVerificationManager.getUsersCodes().remove(user.getId());

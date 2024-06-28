@@ -4,5 +4,5 @@ public enum BanType {
     TIMEOUT,
     KICK,
     BAN,
-    PARDON
+    UNBAN
 }
