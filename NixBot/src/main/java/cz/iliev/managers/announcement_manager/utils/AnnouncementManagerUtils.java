@@ -96,7 +96,7 @@ public class AnnouncementManagerUtils {
                 .setTitle(topic)
                 .setDescription(message.replace("\\n", "\n"))
                 .setColor(Color.decode("#2100FF"))
-                .setThumbnail(new File(".\\announcement-thumbnail.png"))
+                .setThumbnail(new File("./announcement-thumbnail.png"))
                 .setFooter("Author: " + author + " | Version: " + CommonUtils.VERSION);
     }
 
