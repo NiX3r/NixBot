@@ -4,12 +4,15 @@ import com.vdurmont.emoji.EmojiParser;
 import cz.iliev.interfaces.IManager;
 import cz.iliev.managers.announcement_manager.commands.AnnouncementCommand;
 import cz.iliev.managers.announcement_manager.instances.MessagesInstance;
+import cz.iliev.managers.announcement_manager.listeners.AnnouncementServerMemberBanListener;
+import cz.iliev.managers.announcement_manager.listeners.AnnouncementServerMemberLeaveListener;
 import cz.iliev.managers.announcement_manager.utils.AnnouncementManagerUtils;
 import cz.iliev.managers.announcement_manager.utils.FileUtils;
 import cz.iliev.managers.command_manager.CommandManager;
 import cz.iliev.managers.music_manager.instances.SongInstance;
 import cz.iliev.managers.role_manager.RoleManager;
 import cz.iliev.managers.role_manager.instances.RoleSetterInstance;
+import cz.iliev.managers.statistics_manager.listeners.StatisticsManagerServerMemberLeaveListener;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.entity.Icon;
@@ -43,6 +46,8 @@ public class AnnouncementManager implements IManager {
     public void setup() {
         LogUtils.info("Load and start AnnouncementManager");
         messages = FileUtils.loadMessages();
+        CommonUtils.bot.addServerMemberBanListener(new AnnouncementServerMemberBanListener());
+        CommonUtils.bot.addServerMemberLeaveListener(new AnnouncementServerMemberLeaveListener());
         ready = true;
         LogUtils.info("AnnouncementManager loaded and started. Ready to use");
     }
@@ -198,6 +203,20 @@ public class AnnouncementManager implements IManager {
             var embed = AnnouncementManagerUtils.createJoinEmbed(user, inviter, avatar, server);
             server.getTextChannelById(WELCOME_CHANNEL_ID).ifPresent(channel -> {
                 channel.sendMessage(embed);
+            });
+        });
+    }
+
+    public void sendLeave(String user, Icon avatar, boolean isBan){
+
+        CommonUtils.bot.getServers().forEach(server -> {
+            if(!server.getIdAsString().equals(CommonUtils.NIX_CREW_ID)){
+                CommonUtils.politeDisconnect(server);
+                return;
+            }
+            var embed = AnnouncementManagerUtils.createLeaveEmbed(user, avatar, isBan, server);
+            server.getTextChannelById(WELCOME_CHANNEL_ID).ifPresent(channel -> {
+                channel.sendMessage(embed).join();
             });
         });
     }

@@ -68,7 +68,6 @@ public class AnnouncementManagerUtils {
     }
 
     public static EmbedBuilder createJoinEmbed(String nick, String inviterMentionTag, Icon userAvatar, Server server){
-        Server nixCrew = (Server)CommonUtils.bot.getServers().toArray()[0];
         Random r = new Random();
         return new EmbedBuilder()
                 .setTitle(nick)
@@ -76,6 +75,18 @@ public class AnnouncementManagerUtils {
                 .setColor(Color.decode("#00d60e"))
                 .addField("Thanks for invite", inviterMentionTag, true)
                 .addField("Member count", server.getMembers().size() + " total", true)
+                .setFooter("Version: " + CommonUtils.VERSION)
+                .setThumbnail(userAvatar);
+    }
+
+    public static EmbedBuilder createLeaveEmbed(String nick, Icon userAvatar, boolean isBan, Server server){
+        Random r = new Random();
+        return new EmbedBuilder()
+                .setTitle(nick)
+                .setDescription(CommonUtils.announcementManager.getMessages().getLeaveMessages().get(r.nextInt(CommonUtils.announcementManager.getMessages().getWelcomeMessages().size())))
+                .setColor(Color.decode("#d6000e"))
+                .addField("Member count", server.getMembers().size() + " total", true)
+                .addField("Reason", isBan ? "was banned" : "left", true)
                 .setFooter("Version: " + CommonUtils.VERSION)
                 .setThumbnail(userAvatar);
     }
