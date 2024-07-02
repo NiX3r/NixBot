@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class TicketService {
+public class DatabaseTicketService {
 
     public static void AddTicket(TicketInstance ticket, Consumer<Boolean> callback){
 

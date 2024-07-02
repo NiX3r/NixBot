@@ -1,5 +1,6 @@
 package cz.iliev.managers.user_verification_manager.listeners;
 
+import cz.iliev.managers.database_manager.services.DatabaseMemberService;
 import cz.iliev.managers.user_verification_manager.UserVerificationManager;
 import cz.iliev.managers.user_verification_manager.instances.InviteInstance;
 import cz.iliev.utils.CommonUtils;
@@ -37,38 +38,48 @@ public class UserVerificationManagerMessageCreateListener implements MessageCrea
         User user = messageCreateEvent.getMessageAuthor().asUser().get();
         Server server = CommonUtils.bot.getServers().stream().findFirst().get();
 
-        // Give default roles
-        addDefaultRole(user, server);
+        // Add to database
+        DatabaseMemberService.finishVerification(user.getId(), error -> {
 
-        // Check who invite
-        long inviterId = checkWhoInvite(server);
-        if(inviterId == 0)
-            LogUtils.info("Can't find who invite '" + user.getName() + "'");
-        else
-            LogUtils.info("Member '" + user.getName() + "' was invited by member with id '" + inviterId + "'");
-
-        // Send welcome message
-        server.getMemberById(checkWhoInvite(server)).ifPresentOrElse(inviter -> {
-            CommonUtils.announcementManager.sendWelcome(user.getName(), user.getAvatar(), inviter.getMentionTag());
-        }, new Runnable() {
-            @Override
-            public void run() {
-                CommonUtils.announcementManager.sendWelcome(user.getName(), user.getAvatar(), "NaN");
+            if(error == null){
+                LogUtils.error("Error while finishing verification for user '" + user.getName() + "'. Error: '" + error.getMessage() + "'");
+                return;
             }
+
+            // Give default roles
+            addDefaultRole(user, server);
+
+            // Check who invite
+            long inviterId = checkWhoInvite(server);
+            if(inviterId == 0)
+                LogUtils.info("Can't find who invite '" + user.getName() + "'");
+            else
+                LogUtils.info("Member '" + user.getName() + "' was invited by member with id '" + inviterId + "'");
+
+            // Send welcome message
+            server.getMemberById(checkWhoInvite(server)).ifPresentOrElse(inviter -> {
+                CommonUtils.announcementManager.sendWelcome(user.getName(), user.getAvatar(), inviter.getMentionTag());
+            }, new Runnable() {
+                @Override
+                public void run() {
+                    CommonUtils.announcementManager.sendWelcome(user.getName(), user.getAvatar(), "NaN");
+                }
+            });
+
+            // Update statistics
+            CommonUtils.statisticsManager.getStatistics().getServerStatsInstance().incrementMemberJoin();
+            LogUtils.info("Member join statistics updated");
+
+            // Update activity users counter
+            CommonUtils.botActivityManager.setActivity(ActivityType.WATCHING, "new member '" + user.getName() + "'", 60000);
+
+            // Remove from verificate users codes list
+            CommonUtils.userVerificationManager.getUsersCodes().remove(user.getId());
+
+            messageCreateEvent.getMessage().reply("You successfully verificate. Now you can browse our server! :saluting_facing:");
+            LogUtils.info("User successfully verificated and warmly welcomed");
+
         });
-
-        // Update statistics
-        CommonUtils.statisticsManager.getStatistics().getServerStatsInstance().incrementMemberJoin();
-        LogUtils.info("Member join statistics updated");
-
-        // Update activity users counter
-        CommonUtils.botActivityManager.setActivity(ActivityType.WATCHING, "new member '" + user.getName() + "'", 60000);
-
-        // Remove from verificate users codes list
-        CommonUtils.userVerificationManager.getUsersCodes().remove(user.getId());
-
-        messageCreateEvent.getMessage().reply("You successfully verificate. Now you can browse our server! :saluting_facing:");
-        LogUtils.info("User successfully verificated and warmly welcomed");
 
     }
 

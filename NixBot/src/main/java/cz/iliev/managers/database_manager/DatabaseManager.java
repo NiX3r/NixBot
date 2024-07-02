@@ -1,21 +1,26 @@
 package cz.iliev.managers.database_manager;
 
 import cz.iliev.interfaces.IManager;
-import cz.iliev.managers.stay_fit_manager.instances.MemberFitInstance;
+import cz.iliev.managers.database_manager.services.DatabaseCommonService;
+import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.interaction.SlashCommandInteraction;
-
-import java.util.ArrayList;
 
 public class DatabaseManager implements IManager {
 
     private boolean ready;
+
+
 
     public DatabaseManager(){ setup(); }
 
     @Override
     public void setup() {
         LogUtils.info("Load and start DatabaseManager");
+        DatabaseCommonService.setupConnection(err -> {
+            if(err != null)
+                CommonUtils.throwException(err, true, false);
+        });
         ready = true;
         LogUtils.info("DatabaseManager loaded and started. Ready to use");
     }

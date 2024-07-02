@@ -1,16 +1,17 @@
 package cz.iliev.utils;
 
-import com.vdurmont.emoji.EmojiParser;
 import cz.iliev.instances.SettingsInstance;
 import cz.iliev.managers.announcement_manager.AnnouncementManager;
 import cz.iliev.managers.ban_list_manager.BanListManager;
-import cz.iliev.managers.ban_list_manager.enums.BanType;
-import cz.iliev.managers.ban_list_manager.instances.MemberInstance;
-import cz.iliev.managers.ban_list_manager.instances.PunishmentInstance;
 import cz.iliev.managers.bot_activity_manager.BotActivityManager;
+import cz.iliev.managers.cache_manager.CacheManager;
 import cz.iliev.managers.command_manager.CommandManager;
-import cz.iliev.managers.command_manager.utils.CommandManagerUtils;
 import cz.iliev.managers.console_command_manager.ConsoleCommandManager;
+import cz.iliev.managers.database_manager.DatabaseManager;
+import cz.iliev.managers.database_manager.entities.Member;
+import cz.iliev.managers.database_manager.entities.Verification;
+import cz.iliev.managers.database_manager.services.DatabaseCommonService;
+import cz.iliev.managers.database_manager.services.DatabaseMemberService;
 import cz.iliev.managers.main_manager.MainManager;
 import cz.iliev.managers.music_manager.MusicManager;
 import cz.iliev.managers.role_manager.RoleManager;
@@ -23,15 +24,10 @@ import cz.iliev.threads.ShutdownThread;
 
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
-import org.javacord.api.entity.message.MessageFlag;
-import org.javacord.api.entity.message.component.ActionRow;
-import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 public class CommonUtils {
@@ -39,7 +35,7 @@ public class CommonUtils {
     public static DiscordApi bot;
     public static SettingsInstance settings;
 
-    public static final String VERSION = "3.0.1";
+    public static final String VERSION = "4.0.0";
     public static final long START_TIME = System.currentTimeMillis();
     public static final String NIX_CREW_ID = "611985124023730185";
 
@@ -57,6 +53,10 @@ public class CommonUtils {
     public static TicketManager ticketManager;
     public static UserVerificationManager userVerificationManager;
 
+    public static CacheManager cacheManager;
+
+    public static DatabaseManager databaseManager;
+
     public static void setupBot(){
         LogUtils.info("Load settings from file");
 
@@ -73,6 +73,14 @@ public class CommonUtils {
 
         LogUtils.info("Setup managers");
         announcementManager = new AnnouncementManager();
+        cacheManager = new CacheManager();
+        databaseManager = new DatabaseManager();
+
+        if(DatabaseCommonService.getConnection() == null){
+            LogUtils.fatalError("Shutting down the bot ...");
+            return;
+        }
+
         banListManager = new BanListManager();
         botActivityManager = new BotActivityManager();
         commandManager = new CommandManager();

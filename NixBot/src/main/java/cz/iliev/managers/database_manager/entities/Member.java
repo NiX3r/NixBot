@@ -10,7 +10,7 @@ public class Member {
     // foreigns
     private Verification verification;
 
-    public Member(long id, String nickname, long createDate, String email){
+    public Member(long id, String nickname, long createDate){
 
         this.id = id;
         this.nickname = nickname;
