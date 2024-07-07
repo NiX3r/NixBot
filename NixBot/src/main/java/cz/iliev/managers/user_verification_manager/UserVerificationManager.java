@@ -1,9 +1,6 @@
 package cz.iliev.managers.user_verification_manager;
 
 import cz.iliev.interfaces.IManager;
-import cz.iliev.managers.database_manager.entities.Member;
-import cz.iliev.managers.database_manager.entities.Verification;
-import cz.iliev.managers.database_manager.services.DatabaseMemberService;
 import cz.iliev.managers.user_verification_manager.instances.InviteInstance;
 import cz.iliev.managers.user_verification_manager.listeners.UserVerificationManagerMessageCreateListener;
 import cz.iliev.managers.user_verification_manager.listeners.UserVerificationManagerServerMemberJoinListener;
@@ -111,67 +108,46 @@ public class UserVerificationManager implements IManager {
         if(code == null)
             return;
 
-        Member member = new Member(user.getId(), user.getName(), System.currentTimeMillis());
-        DatabaseMemberService.addMember(member, memberException -> {
+        int width = 600, height = 300;
+        Color backgroundColor = Color.decode("#2c2c2c");
 
-            if(memberException != null){
-                LogUtils.error("Error while adding member to database. Error: '" + memberException.getMessage() + "'");
-                return;
-            }
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = image.createGraphics();
 
-            Verification verification = new Verification(-1, code, System.currentTimeMillis(), -1, false);
-            member.setVerification(verification);
-            DatabaseMemberService.addVerification(member, verificationException -> {
+        graphics.setColor(backgroundColor);
+        graphics.fillRect(0, 0, width, height);
 
-                if(verificationException != null){
-                    LogUtils.error("Error while adding verification to database. Error: '" + verificationException.getMessage() + "'");
-                    return;
-                }
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics.setColor(Color.WHITE);
+        graphics.setFont(new Font("Consola", Font.BOLD, 80));
+        int textWidth = graphics.getFontMetrics().stringWidth(code);
+        int textHeight = graphics.getFontMetrics().getHeight();
+        int textX = (width - textWidth) / 2;
+        int textY = (height - textHeight) / 2 + textHeight;
 
-                int width = 600, height = 300;
-                Color backgroundColor = Color.decode("#2c2c2c");
+        graphics.drawString(code, textX, textY);
 
-                BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-                Graphics2D graphics = image.createGraphics();
+        Random random = new Random();
+        graphics.setStroke(new java.awt.BasicStroke(3));
+        for (int i = 0; i < 70; i++) {
+            int x1 = random.nextInt(width);
+            int y1 = random.nextInt(height);
+            int x2 = random.nextInt(width);
+            int y2 = random.nextInt(height);
+            Color lineColor = Color.WHITE;
+            graphics.setColor(lineColor);
+            graphics.drawLine(x1, y1, x2, y2);
+        }
 
-                graphics.setColor(backgroundColor);
-                graphics.fillRect(0, 0, width, height);
+        graphics.dispose();
 
-                graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                graphics.setColor(Color.WHITE);
-                graphics.setFont(new Font("Consola", Font.BOLD, 80));
-                int textWidth = graphics.getFontMetrics().stringWidth(code);
-                int textHeight = graphics.getFontMetrics().getHeight();
-                int textX = (width - textWidth) / 2;
-                int textY = (height - textHeight) / 2 + textHeight;
-
-                graphics.drawString(code, textX, textY);
-
-                Random random = new Random();
-                graphics.setStroke(new java.awt.BasicStroke(3));
-                for (int i = 0; i < 70; i++) {
-                    int x1 = random.nextInt(width);
-                    int y1 = random.nextInt(height);
-                    int x2 = random.nextInt(width);
-                    int y2 = random.nextInt(height);
-                    Color lineColor = Color.WHITE;
-                    graphics.setColor(lineColor);
-                    graphics.drawLine(x1, y1, x2, y2);
-                }
-
-                graphics.dispose();
-
-                var embed = new EmbedBuilder()
-                        .setTitle("Welcome to NiXCrew")
-                        .setDescription("```To continue please verificate using our system.\nType in code below```")
-                        .setColor(Color.decode("#2100FF"))
-                        .setFooter("Version: " + CommonUtils.VERSION);
-                embed.setImage(image);
-                user.sendMessage(embed);
-
-            });
-
-        });
+        var embed = new EmbedBuilder()
+                .setTitle("Welcome to NiXCrew")
+                .setDescription("```To continue please verificate using our system.\nType in code below```")
+                .setColor(Color.decode("#2100FF"))
+                .setFooter("Version: " + CommonUtils.VERSION);
+        embed.setImage(image);
+        user.sendMessage(embed);
     }
 
     private String addUser(long userId){

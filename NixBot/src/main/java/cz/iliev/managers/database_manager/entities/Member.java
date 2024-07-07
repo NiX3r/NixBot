@@ -5,17 +5,14 @@ public class Member {
     private long id;
     private String nickname;
     private long createDate;
+    private long verificateDate;
     private String email;
-
-    // foreigns
-    private Verification verification;
 
     public Member(long id, String nickname, long createDate){
 
         this.id = id;
         this.nickname = nickname;
         this.createDate = createDate;
-        this.email = email;
     }
 
     public long getId() {
@@ -46,11 +43,11 @@ public class Member {
         this.email = email;
     }
 
-    public Verification getVerification() {
-        return verification;
+    public long getVerificateDate() {
+        return verificateDate;
     }
 
-    public void setVerification(Verification verification) {
-        this.verification = verification;
+    public void setVerificateDate(long verificateDate) {
+        this.verificateDate = verificateDate;
     }
 }

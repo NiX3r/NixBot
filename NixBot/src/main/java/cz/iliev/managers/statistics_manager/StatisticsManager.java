@@ -1,6 +1,7 @@
 package cz.iliev.managers.statistics_manager;
 
 import cz.iliev.interfaces.IManager;
+import cz.iliev.managers.statistics_manager.enums.TimeUnitEnum;
 import cz.iliev.managers.statistics_manager.instances.StatisticsInstance;
 import cz.iliev.managers.statistics_manager.listeners.StatisticsManagerMessageCreateListener;
 import cz.iliev.managers.statistics_manager.listeners.StatisticsManagerServerMemberLeaveListener;
@@ -12,6 +13,8 @@ import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -197,5 +200,21 @@ public class StatisticsManager implements IManager {
         long seconds = temp / 1000;
         output = (days > 0 ? (days + "d ") : "") + (hours > 0 ? (hours + "h ") : "") + minutes + "m " + seconds + "s";
         return output;
+    }
+
+    public String formatDate(TimeUnitEnum unit){
+
+        if(unit == TimeUnitEnum.EVER)
+            return null;
+
+        String format = "yyyy";
+        if(unit == TimeUnitEnum.MONTH)
+            format += "-MM";
+        else if(unit == TimeUnitEnum.DAY)
+            format += "-MM-DD";
+        DateFormat simple = new SimpleDateFormat(format);
+        var date = new Date(System.currentTimeMillis());
+        return simple.format(date);
+
     }
 }

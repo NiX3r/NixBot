@@ -39,10 +39,10 @@ public class UserVerificationManagerMessageCreateListener implements MessageCrea
         Server server = CommonUtils.bot.getServers().stream().findFirst().get();
 
         // Add to database
-        DatabaseMemberService.finishVerification(user.getId(), error -> {
+        DatabaseMemberService.finishVerification(user.getId(), response -> {
 
-            if(error == null){
-                LogUtils.error("Error while finishing verification for user '" + user.getName() + "'. Error: '" + error.getMessage() + "'");
+            if(response instanceof Exception){
+                LogUtils.fatalError("Error while finishing verification for user '" + user.getName() + "'. Error: '" + ((Exception)response).getMessage() + "'");
                 return;
             }
 

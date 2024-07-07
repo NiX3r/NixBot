@@ -2,7 +2,9 @@ package cz.iliev.managers.ticket_manager.commands;
 
 import com.vdurmont.emoji.EmojiParser;
 import cz.iliev.interfaces.ISlashCommand;
+import cz.iliev.managers.database_manager.services.DatabaseTicketService;
 import cz.iliev.managers.ticket_manager.TicketManager;
+import cz.iliev.managers.ticket_manager.instances.TicketType;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.entity.channel.TextChannel;
@@ -27,27 +29,39 @@ public class MessageCommand implements ISlashCommand {
             return;
         }
 
-        TextChannel channel = interaction.getServer().get().getTextChannelById(TicketManager.TICKET_CHANNEL_ID).get();
+        DatabaseTicketService.getTicketTypes(response -> {
 
-        EmbedBuilder builder = new EmbedBuilder()
-                .setColor(Color.decode("#61B23A"))
-                .setTitle("Ticket Manager")
-                .setDescription("Hello! :wave: \nDon't be shy and ask anything!")
-                .addField("Rule #1", "Don't abuse this manager")
-                .addField("Rule #2", "After create a ticket, please describe as much as possible your problem")
-                .addField("Rule #3", "Whole conversation is archived for future development")
-                .setFooter("Version: " + CommonUtils.VERSION);
+            if(response instanceof Exception){
+                LogUtils.fatalError("Error while getting ticket types. Error: '" + ((Exception)response).getMessage() + "'");
+                return;
+            }
 
-        new MessageBuilder()
-                .setEmbed(builder)
-                .addComponents(
-                        ActionRow.of(Button.secondary("nix-ticket-support", "Support", EmojiParser.parseToUnicode(":question:")), Button.secondary("nix-ticket-reclamation", "Reclamation", EmojiParser.parseToUnicode(":wrench:"))),
-                        ActionRow.of(Button.secondary("nix-ticket-engrave", "Engraving", EmojiParser.parseToUnicode(":straight_ruler:")), Button.secondary("nix-ticket-software", "Software", EmojiParser.parseToUnicode(":computer:"))),
-                        ActionRow.of(Button.secondary("nix-ticket-sponsor", "Sponsors", EmojiParser.parseToUnicode(":busts_in_silhouette:")), Button.secondary("nix-ticket-other", "Other", EmojiParser.parseToUnicode(":telephone:")))
-                )
-                .send(channel);
+            var types = (java.util.List<TicketType>)response;
+            TextChannel channel = interaction.getServer().get().getTextChannelById(TicketManager.TICKET_CHANNEL_ID).get();
 
-        interaction.createImmediateResponder().setContent("Sent").respond();
+            EmbedBuilder builder = new EmbedBuilder()
+                    .setColor(Color.decode("#61B23A"))
+                    .setTitle("Ticket Manager")
+                    .setDescription("Hello! :wave: \nDon't be shy and ask anything!")
+                    .addField("Rule #1", "Don't abuse this manager")
+                    .addField("Rule #2", "After create a ticket, please describe as much as possible your problem")
+                    .addField("Rule #3", "Whole conversation is archived for future development")
+                    .setFooter("Version: " + CommonUtils.VERSION);
+
+            var message = new MessageBuilder().setEmbed(builder);
+
+            for(var type : types){
+                message.addComponents(
+                        ActionRow.of(Button.secondary("nix-ticket-" + type.getName(), type.getName() + " - " + type.getDescription(), EmojiParser.parseToUnicode(":" + type.getEmoji() + ":")))
+                );
+            }
+            message.send(channel);
+
+            interaction.createImmediateResponder().setContent("Sent").respond();
+
+        });
+
+
         LogUtils.info("End of command message by '" + interaction.getUser().getName() + "'");
     }
 }
