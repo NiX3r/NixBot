@@ -10,8 +10,6 @@ public class DatabaseManager implements IManager {
 
     private boolean ready;
 
-
-
     public DatabaseManager(){ setup(); }
 
     @Override

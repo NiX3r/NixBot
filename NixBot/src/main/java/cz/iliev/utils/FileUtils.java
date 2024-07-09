@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,8 +36,32 @@ public class FileUtils {
             return output;
         }
         catch (Exception ex){
+            saveNixDefaultSettings();
             return null;
         }
+    }
+
+    public static void saveNixDefaultSettings(){
+        SettingsInstance settingsInstance = new SettingsInstance(
+                0,
+                0,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "611985124057284621",
+                "1219218631632748655",
+                "1058017127988211822",
+                "1118284494198288445",
+                "1219225196594991124",
+                "1118311195867369513",
+                "1118291032065441882",
+                "1216822816062701618",
+                "1216859370269311026",
+                new ArrayList<String>() {{add("1058009225491656724"); add("1219589725833265152");}}
+        );
+        saveSettings(settingsInstance);
     }
 
     public static Exception saveSettings(SettingsInstance data){

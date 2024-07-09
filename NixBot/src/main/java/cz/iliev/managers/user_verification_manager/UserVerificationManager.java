@@ -24,7 +24,7 @@ public class UserVerificationManager implements IManager {
     private HashMap<Long, String> usersCodes;
     private java.util.List<InviteInstance> invites;
 
-    public static final List<String> DEFAULT_ROLES_ID = new ArrayList<String>() {{add("1058009225491656724"); add("1219589725833265152");}};
+    public static List<String> DEFAULT_ROLES_ID = CommonUtils.settings.getDefaultRolesId();
 
     public UserVerificationManager(){
         setup();

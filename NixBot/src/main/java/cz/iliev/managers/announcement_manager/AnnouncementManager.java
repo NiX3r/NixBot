@@ -34,9 +34,9 @@ public class AnnouncementManager implements IManager {
     private boolean ready;
     private MessagesInstance messages;
 
-    private final String WELCOME_CHANNEL_ID = "611985124057284621";
-    public static final String NEWS_CHANNEL_ID = "1219218631632748655";
-    public static final String NIXBOT_CHANNEL_ID = "1058017127988211822";
+    public static String WELCOME_CHANNEL_ID = CommonUtils.settings.getWelcomeChannelId();
+    public static String NEWS_CHANNEL_ID = CommonUtils.settings.getNewsChannelId();
+    public static String NIXBOT_CHANNEL_ID = CommonUtils.settings.getNixBotChannelId();
 
     public AnnouncementManager(){
         setup();

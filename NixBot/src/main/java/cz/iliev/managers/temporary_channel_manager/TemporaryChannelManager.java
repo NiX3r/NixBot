@@ -17,8 +17,8 @@ public class TemporaryChannelManager implements IManager {
     private HashMap<Long, Long> tempVoiceChannelMap;
     private boolean ready;
 
-    public static final String TEMP_CHANNEL_ID = "1118311195867369513";
-    public static final String TEMP_CATEGORY_ID = "1118291032065441882";
+    public static String TEMP_CHANNEL_ID = CommonUtils.settings.getTempChannelId();
+    public static String TEMP_CATEGORY_ID = CommonUtils.settings.getTempCategoryId();
 
     public TemporaryChannelManager(){
         setup();

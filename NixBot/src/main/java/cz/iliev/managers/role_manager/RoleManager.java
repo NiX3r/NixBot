@@ -17,7 +17,7 @@ public class RoleManager implements IManager {
     private boolean ready;
     private List<RoleSetterInstance> roleSetter;
 
-    public static final String ROLES_CHANNEL_ID = "1219225196594991124";
+    public static String ROLES_CHANNEL_ID = CommonUtils.settings.getRoleChannelId();
 
     public RoleManager(){
         setup();

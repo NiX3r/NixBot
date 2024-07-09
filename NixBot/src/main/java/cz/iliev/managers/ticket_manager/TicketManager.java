@@ -23,8 +23,8 @@ public class TicketManager implements IManager {
     private int index;
     private HashMap<Long, TicketInstance> activeTickets;
 
-    public static final String TICKET_CHANNEL_ID = "1216822816062701618";
-    public static final String TICKET_CATEGORY_ID = "1216859370269311026";
+    public static String TICKET_CHANNEL_ID = CommonUtils.settings.getTicketChannelId();
+    public static String TICKET_CATEGORY_ID = CommonUtils.settings.getTicketCategoryId();
 
     public TicketManager(){
         setup();

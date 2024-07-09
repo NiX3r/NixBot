@@ -20,7 +20,7 @@ public class CommandManager implements IManager {
     private List<String> diceMessages;
     private HashMap<String, ISlashCommand> noManagerCommands;
 
-    public static final String CMD_CHANNEL_ID = "1118284494198288445";
+    public static String CMD_CHANNEL_ID = CommonUtils.settings.getCommandChannelId();
 
     public CommandManager(){
         setup();
