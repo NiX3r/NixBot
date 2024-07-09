@@ -6,7 +6,7 @@ import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 
 public class CommandUsedBehavior {
-    public static void behavior(String commandName){
+    public static void behave(String commandName){
 
         String categoryName = "CommandUsed";
 

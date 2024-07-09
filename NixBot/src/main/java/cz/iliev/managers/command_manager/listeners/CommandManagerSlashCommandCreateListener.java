@@ -1,6 +1,8 @@
 package cz.iliev.managers.command_manager.listeners;
 
 import cz.iliev.managers.command_manager.CommandManager;
+import cz.iliev.managers.statistics_manager.behaviors.CommandUsedBehavior;
+import cz.iliev.managers.statistics_manager.behaviors.UserCommandBehavior;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.entity.message.MessageFlag;
@@ -20,11 +22,6 @@ public class CommandManagerSlashCommandCreateListener implements SlashCommandCre
         }
 
         LogUtils.info("Command '" + interaction.getCommandName() + "' by '" + interaction.getUser().getName() + "' caught");
-
-        // Increment command stats
-        CommonUtils.statisticsManager.getStatistics().getCommandStatsInstance().incrementUsedCommand(interaction.getCommandName());
-        // Increment user command stats
-        CommonUtils.statisticsManager.getStatistics().getMemberStatsInstance().incrementUsedCommands(interaction.getUser().getId());
 
         switch (interaction.getCommandName()){
 

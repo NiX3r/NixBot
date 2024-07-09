@@ -22,11 +22,8 @@ public class StatisticsManagerServerVoiceChannelMemberJoinListener implements Se
             return;
         }
 
-        CommonUtils.statisticsManager.getStatistics().getMemberJoinVoiceTime().put(
-                serverVoiceChannelMemberJoinEvent.getUser().getId(),
-                System.currentTimeMillis()
-        );
-        LogUtils.info("Member join voice statistics updated");
+        CommonUtils.cacheManager.memberJoinVoice.put(serverVoiceChannelMemberJoinEvent.getUser().getId(), System.currentTimeMillis());
+        LogUtils.info("Member and voice channel put in cache");
 
     }
 }

@@ -6,12 +6,12 @@ import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 
 public class ReactionBehavior {
-    public static void behave(){
+    public static void behave(String emoji){
 
         String categoryName = "Reaction";
 
         // Update reaction ever
-        DatabaseStatisticsService.updateStatistics(categoryName, -1, null, null, 1, response -> {
+        DatabaseStatisticsService.updateStatistics(categoryName, -1, emoji, null, 1, response -> {
             if(response instanceof Exception){
                 LogUtils.fatalError("Error while increment reaction ever. Error: '" + ((Exception)response).getMessage() + "'");
                 return;
@@ -20,7 +20,7 @@ public class ReactionBehavior {
         });
 
         // Update reaction day
-        DatabaseStatisticsService.updateStatistics(categoryName + "Day", -1, null, CommonUtils.statisticsManager.formatDate(TimeUnitEnum.DAY), 1, response -> {
+        DatabaseStatisticsService.updateStatistics(categoryName + "Day", -1, emoji, CommonUtils.statisticsManager.formatDate(TimeUnitEnum.DAY), 1, response -> {
             if(response instanceof Exception){
                 LogUtils.fatalError("Error while increment reaction month. Error: '" + ((Exception)response).getMessage() + "'");
                 return;
@@ -29,7 +29,7 @@ public class ReactionBehavior {
         });
 
         // Update reaction month
-        DatabaseStatisticsService.updateStatistics(categoryName + "Month", -1, null, CommonUtils.statisticsManager.formatDate(TimeUnitEnum.MONTH), 1, response -> {
+        DatabaseStatisticsService.updateStatistics(categoryName + "Month", -1, emoji, CommonUtils.statisticsManager.formatDate(TimeUnitEnum.MONTH), 1, response -> {
             if(response instanceof Exception){
                 LogUtils.fatalError("Error while increment reaction month. Error: '" + ((Exception)response).getMessage() + "'");
                 return;

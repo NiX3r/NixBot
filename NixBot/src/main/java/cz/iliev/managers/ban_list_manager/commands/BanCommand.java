@@ -1,21 +1,13 @@
 package cz.iliev.managers.ban_list_manager.commands;
 
-import com.vdurmont.emoji.EmojiParser;
 import cz.iliev.interfaces.ISlashCommand;
 import cz.iliev.managers.ban_list_manager.enums.BanType;
-import cz.iliev.managers.ban_list_manager.instances.PunishmentInstance;
-import cz.iliev.managers.ban_list_manager.instances.MemberInstance;
-import cz.iliev.managers.ban_list_manager.utils.FileUtils;
 import cz.iliev.utils.CommonUtils;
-import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.interaction.SlashCommandInteraction;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class BanCommand implements ISlashCommand {
     @Override

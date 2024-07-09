@@ -1,7 +1,8 @@
 package cz.iliev.managers.ban_list_manager.listeners;
 
-import cz.iliev.managers.ban_list_manager.utils.FileUtils;
+import cz.iliev.managers.database_manager.services.DatabaseBanService;
 import cz.iliev.utils.CommonUtils;
+import cz.iliev.utils.LogUtils;
 import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.event.interaction.MessageComponentCreateEvent;
@@ -9,8 +10,6 @@ import org.javacord.api.interaction.MessageComponentInteraction;
 import org.javacord.api.listener.interaction.MessageComponentCreateListener;
 
 import java.time.Duration;
-import java.time.temporal.TemporalUnit;
-import java.util.concurrent.TimeUnit;
 
 public class BanListManagerMessageComponentCreateListener implements MessageComponentCreateListener {
     @Override
@@ -58,12 +57,9 @@ public class BanListManagerMessageComponentCreateListener implements MessageComp
                 }
 
                 server.getMemberById(punishment.getMember().getMemberId()).ifPresent(member -> {
-                    FileUtils.savePunishment(punishment);
                     String actionName = "NONE";
                     switch (punishment.getType()){
                         case BAN:
-                            // Update in active ban list
-                            CommonUtils.banListManager.getBans().put(punishment.getMember().getMemberId(), punishment);
                             // Do the magic
                             actionName = "banned";
                             if(punishment.getDuration() == 0){
@@ -74,8 +70,6 @@ public class BanListManagerMessageComponentCreateListener implements MessageComp
                             }
                             break;
                         case UNBAN:
-                            // Update in active ban list
-                            CommonUtils.banListManager.getBans().remove(punishment.getMember().getMemberId());
                             actionName = "unbanned";
                             // Do the magic
                             server.unbanUser(punishment.getMember().getMemberId(), punishment.getDescription());
@@ -92,6 +86,25 @@ public class BanListManagerMessageComponentCreateListener implements MessageComp
                             server.timeoutUser(member, duration, punishment.getDescription());
                             break;
                     }
+
+                    // Add punishment do database
+                    CommonUtils.banListManager.getBans().put(punishment.getMember().getMemberId(), punishment);
+                    DatabaseBanService.addPunishment(
+                            punishment.getMember().getMemberId(),
+                            punishment.getAdmin().getMemberId(),
+                            punishment.getType(),
+                            punishment.getTime(),
+                            punishment.getDuration(),
+                            punishment.getDescription(),
+                            response -> {
+                                if(response instanceof Exception){
+                                    LogUtils.fatalError("Error while adding punishment to database. Error: '" + ((Exception)response).getMessage() + "'");
+                                    return;
+                                }
+                                LogUtils.info("Successfully added punishment to database");
+                            }
+                    );
+
                     CommonUtils.botActivityManager.setActivity(ActivityType.WATCHING, " new " + actionName + " member '" + punishment.getMember().getMemberName() + "'", 60000);
                     messageComponentInteraction.createImmediateResponder().setContent("Successfully " + actionName + " member '" + punishment.getMember().getMemberName() + "'").setFlags(MessageFlag.EPHEMERAL).respond();
                     messageComponentInteraction.getMessage().delete();

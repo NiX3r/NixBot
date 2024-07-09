@@ -1,6 +1,7 @@
 package cz.iliev.managers.user_verification_manager.listeners;
 
 import cz.iliev.managers.database_manager.services.DatabaseMemberService;
+import cz.iliev.managers.statistics_manager.behaviors.MemberJoinBehavior;
 import cz.iliev.managers.user_verification_manager.UserVerificationManager;
 import cz.iliev.managers.user_verification_manager.instances.InviteInstance;
 import cz.iliev.utils.CommonUtils;
@@ -67,7 +68,7 @@ public class UserVerificationManagerMessageCreateListener implements MessageCrea
             });
 
             // Update statistics
-            CommonUtils.statisticsManager.getStatistics().getServerStatsInstance().incrementMemberJoin();
+            MemberJoinBehavior.behavior();
             LogUtils.info("Member join statistics updated");
 
             // Update activity users counter

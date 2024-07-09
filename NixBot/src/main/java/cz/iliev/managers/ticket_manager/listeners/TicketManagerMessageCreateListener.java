@@ -1,7 +1,6 @@
 package cz.iliev.managers.ticket_manager.listeners;
 
 import cz.iliev.managers.ticket_manager.TicketManager;
-import cz.iliev.managers.ticket_manager.enums.TicketStatus;
 import cz.iliev.managers.ticket_manager.instances.TicketInstance;
 import cz.iliev.managers.ticket_manager.instances.TicketMemberInstance;
 import cz.iliev.managers.ticket_manager.instances.TicketMessageInstance;

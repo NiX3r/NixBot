@@ -1,6 +1,5 @@
 package cz.iliev.managers.ban_list_manager;
 
-import com.vdurmont.emoji.EmojiParser;
 import cz.iliev.interfaces.IManager;
 import cz.iliev.managers.ban_list_manager.commands.BanCommand;
 import cz.iliev.managers.ban_list_manager.commands.KickCommand;
@@ -10,23 +9,15 @@ import cz.iliev.managers.ban_list_manager.enums.BanType;
 import cz.iliev.managers.ban_list_manager.instances.MemberInstance;
 import cz.iliev.managers.ban_list_manager.instances.PunishmentInstance;
 import cz.iliev.managers.ban_list_manager.listeners.BanListManagerMessageComponentCreateListener;
-import cz.iliev.managers.ban_list_manager.utils.FileUtils;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.entity.message.MessageFlag;
-import org.javacord.api.entity.message.component.ActionRow;
-import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
-import org.javacord.api.interaction.SlashCommand;
 import org.javacord.api.interaction.SlashCommandInteraction;
-import org.javacord.api.interaction.SlashCommandOption;
-import org.javacord.api.interaction.SlashCommandOptionType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 public class BanListManager implements IManager {
 
@@ -41,7 +32,6 @@ public class BanListManager implements IManager {
     @Override
     public void setup() {
         LogUtils.info("Load and start AnnouncementManager");
-        bans = FileUtils.loadActiveBans();
         banCache = new HashMap<Long, PunishmentInstance>();
         CommonUtils.bot.addMessageComponentCreateListener(new BanListManagerMessageComponentCreateListener());
         LogUtils.info("Check real bans with load active bans");

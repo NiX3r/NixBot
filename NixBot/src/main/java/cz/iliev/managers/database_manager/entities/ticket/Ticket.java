@@ -19,7 +19,7 @@ public class Ticket {
     private List<Member> members;
     private List<String> attachments;
 
-    public Ticket(long id, int localId, long createDate, long closeDate, long channelId) {
+    public Ticket(long id, int localId, long createDate, long closeDate, long channelId, ) {
         this.id = id;
         this.localId = localId;
         this.createDate = createDate;

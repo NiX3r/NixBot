@@ -1,9 +1,11 @@
 package cz.iliev.managers.ticket_manager;
 
 import cz.iliev.interfaces.IManager;
+import cz.iliev.managers.database_manager.entities.ticket.Ticket;
+import cz.iliev.managers.database_manager.entities.ticket.TicketStatus;
+import cz.iliev.managers.database_manager.entities.ticket.TicketType;
+import cz.iliev.managers.database_manager.services.DatabaseTicketService;
 import cz.iliev.managers.ticket_manager.commands.*;
-import cz.iliev.managers.ticket_manager.enums.TicketStatus;
-import cz.iliev.managers.ticket_manager.instances.TicketInstance;
 import cz.iliev.managers.ticket_manager.listeners.TicketManagerMessageComponentCreateListener;
 import cz.iliev.managers.ticket_manager.listeners.TicketManagerMessageCreateListener;
 import cz.iliev.managers.ticket_manager.utils.FileUtils;
@@ -16,12 +18,15 @@ import org.javacord.api.entity.user.User;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class TicketManager implements IManager {
 
     private boolean ready;
     private int index;
-    private HashMap<Long, TicketInstance> activeTickets;
+    private HashMap<Long, Ticket> activeTickets;
+    private List<TicketStatus> ticketStatuses;
+    private List<TicketType> ticketTypes;
 
     public static String TICKET_CHANNEL_ID = CommonUtils.settings.getTicketChannelId();
     public static String TICKET_CATEGORY_ID = CommonUtils.settings.getTicketCategoryId();
@@ -33,7 +38,28 @@ public class TicketManager implements IManager {
     @Override
     public void setup() {
         LogUtils.info("Load and start InviteManager");
-        activeTickets = FileUtils.loadActiveTickets();
+        ready = true;
+        // Load data from database
+        DatabaseTicketService.getTicketStatuses(response -> {
+            if(response instanceof Exception){
+                ready = false;
+                LogUtils.fatalError("Error while loading ticket statuses. Error: '" + ((Exception)response).getMessage() + "'");
+                return;
+            }
+            ticketStatuses = (List<TicketStatus>)response;
+            LogUtils.info("Successfully loaded ticket statuses");
+        });
+
+        DatabaseTicketService.getTicketTypes(response -> {
+            if(response instanceof Exception){
+                ready = false;
+                LogUtils.fatalError("Error while loading ticket types. Error: '" + ((Exception)response).getMessage() + "'");
+                return;
+            }
+            ticketTypes = (List<TicketType>)response;
+            LogUtils.info("Successfully loaded ticket types");
+        });
+
         index = 0;
         CommonUtils.bot.addMessageComponentCreateListener(new TicketManagerMessageComponentCreateListener());
         CommonUtils.bot.addMessageCreateListener(new TicketManagerMessageCreateListener());
