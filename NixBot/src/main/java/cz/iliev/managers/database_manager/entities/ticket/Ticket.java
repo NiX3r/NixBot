@@ -1,7 +1,6 @@
 package cz.iliev.managers.database_manager.entities.ticket;
 
 import cz.iliev.managers.database_manager.entities.Member;
-import cz.iliev.managers.ticket_manager.instances.TicketType;
 
 import java.util.List;
 
@@ -9,6 +8,7 @@ public class Ticket {
 
     private long id;
     private int localId;
+    private long author;
     private long createDate;
     private long closeDate;
     private long channelId;
@@ -19,9 +19,10 @@ public class Ticket {
     private List<Member> members;
     private List<String> attachments;
 
-    public Ticket(long id, int localId, long createDate, long closeDate, long channelId, ) {
+    public Ticket(long id, int localId, long author, long createDate, long closeDate, long channelId) {
         this.id = id;
         this.localId = localId;
+        this.author = author;
         this.createDate = createDate;
         this.closeDate = closeDate;
         this.channelId = channelId;
@@ -81,5 +82,9 @@ public class Ticket {
 
     public void setAttachments(List<String> attachments) {
         this.attachments = attachments;
+    }
+
+    public long getAuthor() {
+        return author;
     }
 }

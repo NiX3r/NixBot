@@ -25,8 +25,8 @@ public class TicketManager implements IManager {
     private boolean ready;
     private int index;
     private HashMap<Long, Ticket> activeTickets;
-    private List<TicketStatus> ticketStatuses;
-    private List<TicketType> ticketTypes;
+    private HashMap<Integer, TicketStatus> ticketStatuses;
+    private HashMap<Integer, TicketType> ticketTypes;
 
     public static String TICKET_CHANNEL_ID = CommonUtils.settings.getTicketChannelId();
     public static String TICKET_CATEGORY_ID = CommonUtils.settings.getTicketCategoryId();
@@ -46,7 +46,7 @@ public class TicketManager implements IManager {
                 LogUtils.fatalError("Error while loading ticket statuses. Error: '" + ((Exception)response).getMessage() + "'");
                 return;
             }
-            ticketStatuses = (List<TicketStatus>)response;
+            ticketStatuses = (HashMap<Integer, TicketStatus>) response;
             LogUtils.info("Successfully loaded ticket statuses");
         });
 
@@ -56,7 +56,7 @@ public class TicketManager implements IManager {
                 LogUtils.fatalError("Error while loading ticket types. Error: '" + ((Exception)response).getMessage() + "'");
                 return;
             }
-            ticketTypes = (List<TicketType>)response;
+            ticketTypes = (HashMap<Integer, TicketType>) response;
             LogUtils.info("Successfully loaded ticket types");
         });
 
@@ -70,7 +70,6 @@ public class TicketManager implements IManager {
     @Override
     public void kill() {
         LogUtils.info("Kill InviteManager");
-        FileUtils.saveActiveTickets(activeTickets);
         ready = false;
         LogUtils.info("InviteManager killed");
     }
@@ -146,34 +145,34 @@ public class TicketManager implements IManager {
         return true;
     }
 
-    public void addTicket(TicketInstance ticket){
+    public void addTicket(Ticket ticket){
         if(activeTickets.containsKey(ticket.getChannelId()))
             return;
 
         activeTickets.put(ticket.getChannelId(), ticket);
     }
 
-    public HashMap<Long, TicketInstance> getActiveTickets(){
+    public HashMap<Long, Ticket> getActiveTickets(){
         return this.activeTickets;
     }
 
     public int closeTicket(Server server, TextChannel channel, User user, boolean isResolved){
 
         LogUtils.info("Trying to close a ticket");
-        TicketInstance ticket = activeTickets.get(channel.getId());
+        Ticket ticket = activeTickets.get(channel.getId());
 
         if(ticket == null){
             LogUtils.warning("Ticket not found. Can't find ticket by channel id");
             return -1;
         }
 
-        if(!CommonUtils.isUserAdmin(user) && ticket.getAuthor().getId() != user.getId()){
+        if(!CommonUtils.isUserAdmin(user) && ticket.getAuthor() != user.getId()){
             LogUtils.warning("User has no permission to close ticket");
             return -2;
         }
 
         if(isResolved)
-            ticket.setStatus(TicketStatus.RESOLVED);
+            ticket.setStatus();
         else
             ticket.setStatus(TicketStatus.CLOSED);
 
@@ -190,22 +189,22 @@ public class TicketManager implements IManager {
             )).join();
         });
 
-        LogUtils.info("Ticket '" + (ticket.getId() + "-" + ticket.getAuthor().getName()) + "' closed");
+        LogUtils.info("Ticket '" + (ticket.getId() + "-" + ticket.getAuthor()) + "' closed");
         return 1;
 
     }
 
     private void removeTicketFromCacheByOwnerId(long id){
-        for(TicketInstance ticket : activeTickets.values()){
-            if(ticket.getAuthor().getId() == id){
+        for(Ticket ticket : activeTickets.values()){
+            if(ticket.getAuthor() == id){
                 activeTickets.remove(ticket.getChannelId());
             }
         }
     }
 
-    public TicketInstance getTicketByOwner(long ownerId){
-        for(TicketInstance ticket : activeTickets.values()){
-            if(ticket.getAuthor().getId() == ownerId)
+    public Ticket getTicketByOwner(long ownerId){
+        for(Ticket ticket : activeTickets.values()){
+            if(ticket.getAuthor() == ownerId)
                 return ticket;
         }
         return null;
@@ -217,5 +216,13 @@ public class TicketManager implements IManager {
 
     public int getIndex() {
         return index;
+    }
+
+    public HashMap<Integer, TicketStatus> getTicketStatuses() {
+        return ticketStatuses;
+    }
+
+    public HashMap<Integer, TicketType> getTicketTypes() {
+        return ticketTypes;
     }
 }

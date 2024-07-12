@@ -2,8 +2,7 @@ package cz.iliev.managers.database_manager.services;
 
 import cz.iliev.managers.database_manager.entities.ticket.Ticket;
 import cz.iliev.managers.database_manager.entities.ticket.TicketStatus;
-import cz.iliev.managers.ticket_manager.instances.TicketInstance;
-import cz.iliev.managers.ticket_manager.instances.TicketType;
+import cz.iliev.managers.database_manager.entities.ticket.TicketType;
 import cz.iliev.utils.CommonUtils;
 
 import java.sql.PreparedStatement;
@@ -38,12 +37,20 @@ public class DatabaseTicketService {
             List<Ticket> statuses = new ArrayList<>();
 
             while(reader.next()){
-                statuses.add(new Ticket(
+
+                Ticket ticket = new Ticket(
                         reader.getLong(1),
                         reader.getInt(2),
-                        reader.getLong(2),
-                        reader.getLong(4)
-                ));
+                        reader.getLong(3),
+                        reader.getLong(4),
+                        reader.getLong(5),
+                        reader.getLong(6)
+                );
+
+                ticket.setType(CommonUtils.ticketManager.getTicketTypes().get(reader.getInt(7)));
+                ticket.setStatus(CommonUtils.ticketManager.getTicketStatuses().get(reader.getInt(8)));
+
+                statuses.add(ticket);
             }
             reader.close();
 
@@ -72,14 +79,17 @@ public class DatabaseTicketService {
             PreparedStatement statement = DatabaseCommonService.getConnection().prepareStatement("SELECT * FROM TicketStatus");
             var reader = statement.executeQuery();
 
-            List<TicketStatus> statuses = new ArrayList<>();
+            HashMap<Integer, TicketStatus> statuses = new HashMap<Integer, TicketStatus>();
 
             while(reader.next()){
-                statuses.add(new TicketStatus(
+
+                TicketStatus status = new TicketStatus(
                         reader.getInt(1),
                         reader.getString(2),
                         reader.getString(3)
-                ));
+                );
+
+                statuses.put(status.getId(), status);
             }
             reader.close();
 
@@ -95,15 +105,19 @@ public class DatabaseTicketService {
             PreparedStatement statement = DatabaseCommonService.getConnection().prepareStatement("SELECT * FROM TicketType");
             var reader = statement.executeQuery();
 
-            List<TicketType> types = new ArrayList<>();
+            HashMap<Integer, TicketType> types = new HashMap<Integer, TicketType>();
 
             while(reader.next()){
-                types.add(new TicketType(
+
+                TicketType type = new TicketType(
                         reader.getInt(1),
                         reader.getString(2),
                         reader.getString(3),
                         reader.getString(4)
-                ));
+                );
+
+                types.put(type.getId(), type);
+
             }
             reader.close();
 
