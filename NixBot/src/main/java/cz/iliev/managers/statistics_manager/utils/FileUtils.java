@@ -9,6 +9,7 @@ import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -20,7 +21,7 @@ import java.util.List;
 public class FileUtils {
 
     private static final String PATH = "./data/statistics.json";
-    private static final String ARCHIVE_PATH = "./archive/statistics/";
+    private static final String ARCHIVE_PATH = "./archive/statistics/{year}/{month}/";
 
     public static StatisticsInstance loadStatistics(){
         LogUtils.info("Trying to load statistics");
@@ -86,7 +87,12 @@ public class FileUtils {
         try{
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
-            String path = ARCHIVE_PATH + calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + "-statistics.json";
+            int year = calendar.get(Calendar.YEAR);
+            int month = (calendar.get(Calendar.MONTH) + 1);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            String path = ARCHIVE_PATH.replace("{year}", String.valueOf(year)).replace("{month}", String.valueOf(month));
+            new File(path).mkdirs();
+            path = path + year + "-" + month + "-" + day + "-statistics.json";
             BufferedWriter f_writer
                     = new BufferedWriter(new FileWriter(path));
             f_writer.write(new GsonBuilder().create().toJson(data));
