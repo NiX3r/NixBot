@@ -13,6 +13,8 @@ import cz.iliev.managers.music_manager.commands.*;
 import cz.iliev.managers.music_manager.events.TrackEndEvent;
 import cz.iliev.managers.music_manager.instances.LavaplayerAudioSource;
 import cz.iliev.managers.music_manager.instances.SongInstance;
+import cz.iliev.managers.statistics_manager.behaviors.MusicPlayBehavior;
+import cz.iliev.managers.statistics_manager.behaviors.MusicPlayTimeBehavior;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.audio.AudioConnection;
@@ -122,8 +124,8 @@ public class MusicManager implements IManager {
             CommonUtils.botActivityManager.setBasicActivity();
             return;
         }
-        CommonUtils.statisticsManager.getStatistics().getManagerStatsInstance().incrementMusicPlayed();
-        CommonUtils.statisticsManager.getStatistics().getManagerStatsInstance().incrementMusicTimePlayed(audioList.get(0).getTrack().getDuration());
+        MusicPlayBehavior.behave();
+        MusicPlayTimeBehavior.behave(audioList.get(0).getTrack().getDuration());
         player.stopTrack();
         player.playTrack(audioList.get(0).getTrack());
         CommonUtils.announcementManager.sendCurrentSong(audioList.get(0));

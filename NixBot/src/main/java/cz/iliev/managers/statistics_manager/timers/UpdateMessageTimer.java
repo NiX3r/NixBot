@@ -52,7 +52,7 @@ public class UpdateMessageTimer extends TimerTask {
 
         List<EmbedBuilder> output = new ArrayList<EmbedBuilder>();
 
-        switch (index){
+        /*switch (index){
             case 0:
                 var cmdMonth = CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getCommandStatsInstance().getMostCommandsUsedMonth());
                 var cmdEver = CommonUtils.statisticsManager.getTopFive(CommonUtils.statisticsManager.getStatistics().getCommandStatsInstance().getMostCommandsUsedEver());
@@ -134,7 +134,7 @@ public class UpdateMessageTimer extends TimerTask {
                         .addField("Voice ever", CommonUtils.statisticsManager.formatTime(voiceStats2.getCallTimeEver()), true)
                 );
                 break;
-        }
+        }*/
 
         output.forEach(embed -> {
             embed.setFooter("Index: " + index + " | Version: " + CommonUtils.VERSION);

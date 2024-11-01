@@ -1,5 +1,8 @@
 package cz.iliev.managers.statistics_manager.listeners;
 
+import cz.iliev.managers.statistics_manager.behaviors.CallTimeBehavior;
+import cz.iliev.managers.statistics_manager.behaviors.UserCallTimeBehavior;
+import cz.iliev.managers.statistics_manager.behaviors.VoiceChannelBehavior;
 import cz.iliev.managers.temporary_channel_manager.TemporaryChannelManager;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
@@ -18,14 +21,18 @@ public class StatisticsManagerServerVoiceChannelMemberJoinListener implements Se
             return;
         }
 
-        if(CommonUtils.statisticsManager.getStatistics().getMemberJoinVoiceTime().containsKey(serverVoiceChannelMemberJoinEvent.getUser().getId())){
-            return;
+        long userId = serverVoiceChannelMemberJoinEvent.getUser().getId();
+        if(CommonUtils.statisticsManager.getUserVoiceChannelJoinTime().containsKey(userId)){
+            long increment = System.currentTimeMillis() - CommonUtils.statisticsManager.getUserVoiceChannelJoinTime().get(userId);
+            UserCallTimeBehavior.behave(userId, increment);
+            CallTimeBehavior.behave(increment);
+            CommonUtils.statisticsManager.getUserVoiceChannelJoinTime().put(userId, System.currentTimeMillis());
+        }
+        else{
+            CommonUtils.statisticsManager.getUserVoiceChannelJoinTime().put(userId, System.currentTimeMillis());
         }
 
-        CommonUtils.statisticsManager.getStatistics().getMemberJoinVoiceTime().put(
-                serverVoiceChannelMemberJoinEvent.getUser().getId(),
-                System.currentTimeMillis()
-        );
+        VoiceChannelBehavior.behave(serverVoiceChannelMemberJoinEvent.getChannel().getId());
         LogUtils.info("Member join voice statistics updated");
 
     }

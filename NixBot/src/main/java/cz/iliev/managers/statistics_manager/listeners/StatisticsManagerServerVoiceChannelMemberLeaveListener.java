@@ -1,5 +1,8 @@
 package cz.iliev.managers.statistics_manager.listeners;
 
+import cz.iliev.managers.statistics_manager.behaviors.CallTimeBehavior;
+import cz.iliev.managers.statistics_manager.behaviors.UserCallTimeBehavior;
+import cz.iliev.managers.statistics_manager.behaviors.VoiceChannelBehavior;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.event.channel.server.voice.ServerVoiceChannelMemberLeaveEvent;
@@ -14,17 +17,16 @@ public class StatisticsManagerServerVoiceChannelMemberLeaveListener implements S
 
         long userId = serverVoiceChannelMemberLeaveEvent.getUser().getId();
 
-        if(CommonUtils.statisticsManager.getStatistics().getMemberJoinVoiceTime().containsKey(userId))
+        if(!CommonUtils.statisticsManager.getUserVoiceChannelJoinTime().containsKey(userId))
             return;
 
-        long timestamp = CommonUtils.statisticsManager.getStatistics().getMemberJoinVoiceTime().get(userId);
+        long increment = System.currentTimeMillis() - CommonUtils.statisticsManager.getUserVoiceChannelJoinTime().get(userId);
+        CommonUtils.statisticsManager.getUserVoiceChannelJoinTime().remove(userId);
         long channelId = serverVoiceChannelMemberLeaveEvent.getChannel().getId();
 
-        CommonUtils.statisticsManager.getStatistics().getMemberStatsInstance().incrementCallTime(userId, timestamp);
-        CommonUtils.statisticsManager.getStatistics().getVoiceChannelStatsInstance().incrementVoiceChannel(channelId, timestamp);
-        CommonUtils.statisticsManager.getStatistics().getVoiceChannelStatsInstance().incrementCallTime(timestamp);
-
-        CommonUtils.statisticsManager.getStatistics().getMemberJoinVoiceTime().remove(userId);
+        UserCallTimeBehavior.behave(userId, increment);
+        VoiceChannelBehavior.behave(channelId);
+        CallTimeBehavior.behave(increment);
 
         LogUtils.info("Member leave voice statistics updated");
 

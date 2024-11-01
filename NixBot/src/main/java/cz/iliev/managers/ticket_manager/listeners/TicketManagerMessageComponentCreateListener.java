@@ -1,6 +1,7 @@
 package cz.iliev.managers.ticket_manager.listeners;
 
 import com.vdurmont.emoji.EmojiParser;
+import cz.iliev.managers.statistics_manager.behaviors.TicketBehavior;
 import cz.iliev.managers.ticket_manager.TicketManager;
 import cz.iliev.managers.ticket_manager.enums.TicketStatus;
 import cz.iliev.managers.ticket_manager.instances.TicketInstance;
@@ -103,7 +104,7 @@ public class TicketManagerMessageComponentCreateListener implements MessageCompo
         CommonUtils.ticketManager.addTicket(ticket);
         CommonUtils.ticketManager.incrementIndex();
 
-        CommonUtils.statisticsManager.getStatistics().getManagerStatsInstance().incrementTickets();
+        TicketBehavior.behave();
 
         interaction.createImmediateResponder().setContent("Ticket channel created. You will be moved to there by clicking here " + channel.asServerTextChannel().get().getMentionTag()).setFlags(MessageFlag.EPHEMERAL).respond();
         LogUtils.info("Ticket '" + (ticket.getId() + "-" + ticket.getAuthor().getName()) + "' created");

@@ -35,31 +35,20 @@ public class FileUtils {
             CommonUtils.throwException(ex);
             return new StatisticsInstance(
                     System.currentTimeMillis(),
-                    new CommandStatsInstance(
-                            new HashMap<String, Long>(),
-                            new HashMap<String, Long>()
-                    ),
-                    new ManagerStatsInstance(0,0,0, 0,0,0,0,0, 0),
-                    new MemberStatsInstance(
-                            new HashMap<Long, Long>(),
-                            new HashMap<Long, Long>(),
-                            new HashMap<Long, Long>(),
-                            new HashMap<Long, Long>(),
-                            new HashMap<Long, Long>(),
-                            new HashMap<Long, Long>()
-                    ),
-                    new ServerStatsInstance(0,0,0,0,0,0),
-                    new TextChannelStatsInstance(
-                            new HashMap<Long, Long>(),
-                            new HashMap<Long, Long>(),
-                            0, 0, 0
-                    ),
-                    new VoiceChannelStatsInstance(
-                            new HashMap<Long, Long>(),
-                            new HashMap<Long, Long>(),
-                            0, 0, 0
-                    ),
-                    new HashMap<Long, Long>()
+                    0,0,0,0,0,0,
+                    new HashMap<>(), new HashMap<>(), new HashMap<>(), 0, 0,
+                    0,0,0,0,0,0,0,0,
+                    new HashMap<>(), new HashMap<>(), new HashMap<>(), 0, 0,0,0,0,
+                    new HashMap<>(), new HashMap<>(), 0,0,0,
+                    new HashMap<Long, HashMap<String, Long>>(),new HashMap<Long, HashMap<String, Long>>(),
+                    new HashMap<Long, HashMap<String, Long>>(),new HashMap<Long, HashMap<String, Long>>(),
+                    new HashMap<Long, HashMap<String, Long>>(),new HashMap<Long, HashMap<String, Long>>(),
+                    new HashMap<>(), new HashMap<>(),new HashMap<>(),new HashMap<>(),
+                    new HashMap<Long, HashMap<String, Long>>(),new HashMap<Long, HashMap<String, Long>>(),
+                    new HashMap<Long, HashMap<String, Long>>(),new HashMap<Long, HashMap<String, Long>>(),
+                    new HashMap<Long, HashMap<String, Long>>(),new HashMap<Long, HashMap<String, Long>>(),
+                    new HashMap<>(), new HashMap<>(),new HashMap<>(),
+                    new HashMap<>(), new HashMap<>(),new HashMap<>()
             );
         }
     }
@@ -86,7 +75,7 @@ public class FileUtils {
         LogUtils.info("Trying to archive statistics");
         try{
             Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(System.currentTimeMillis());
+            calendar.setTimeInMillis(data.currentTime);
             int year = calendar.get(Calendar.YEAR);
             int month = (calendar.get(Calendar.MONTH) + 1);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
