@@ -9,8 +9,8 @@ import org.javacord.api.listener.message.reaction.ReactionAddListener;
 public class StatisticsReactionAddListener implements ReactionAddListener {
     @Override
     public void onReactionAdd(ReactionAddEvent reactionAddEvent) {
-        ReactionBehavior.behave(reactionAddEvent.getEmoji().toString());
-        UserReactionBehavior.behave(reactionAddEvent.getUserId(), reactionAddEvent.getEmoji().toString());
+        ReactionBehavior.behave(reactionAddEvent.getEmoji().getMentionTag());
+        UserReactionBehavior.behave(reactionAddEvent.getUserId(), reactionAddEvent.getEmoji().getMentionTag());
         LogUtils.info("Reaction statistics updated");
     }
 }

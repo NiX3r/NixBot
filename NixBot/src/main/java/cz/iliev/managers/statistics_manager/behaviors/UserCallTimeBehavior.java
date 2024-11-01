@@ -10,10 +10,10 @@ public class UserCallTimeBehavior {
         LogUtils.info("Increasing user call time statistics");
 
         var stats = CommonUtils.statisticsManager.getStatistics();
-        stats.userCallTime.put(userId, stats.userCallTime.getOrDefault(userId, 0L) + 1);
-        stats.userCallTimeDay.put(userId, stats.userCallTimeDay.getOrDefault(userId, 0L) + 1);
-        stats.userCallTimeMonth.put(userId, stats.userCallTimeMonth.getOrDefault(userId, 0L) + 1);
-        stats.userCallTimeYear.put(userId, stats.userCallTimeYear.getOrDefault(userId, 0L) + 1);
+        stats.userCallTime.put(userId, stats.userCallTime.getOrDefault(userId, 0L) + increment);
+        stats.userCallTimeDay.put(userId, stats.userCallTimeDay.getOrDefault(userId, 0L) + increment);
+        stats.userCallTimeMonth.put(userId, stats.userCallTimeMonth.getOrDefault(userId, 0L) + increment);
+        stats.userCallTimeYear.put(userId, stats.userCallTimeYear.getOrDefault(userId, 0L) + increment);
 
         LogUtils.info("Increased done");
     }
