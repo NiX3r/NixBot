@@ -19,6 +19,7 @@ import cz.iliev.managers.stay_fit_manager.StayFitManager;
 import cz.iliev.managers.temporary_channel_manager.TemporaryChannelManager;
 import cz.iliev.managers.ticket_manager.TicketManager;
 import cz.iliev.managers.user_verification_manager.UserVerificationManager;
+import cz.iliev.managers.weather_manager.WeatherManager;
 import cz.iliev.threads.ShutdownThread;
 
 import org.javacord.api.DiscordApi;
@@ -30,8 +31,10 @@ import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class CommonUtils {
@@ -39,7 +42,7 @@ public class CommonUtils {
     public static DiscordApi bot;
     public static SettingsInstance settings;
 
-    public static final String VERSION = "3.0.2";
+    public static final String VERSION = "3.1.0";
     public static final long START_TIME = System.currentTimeMillis();
     public static final String NIX_CREW_ID = "611985124023730185";
 
@@ -56,6 +59,7 @@ public class CommonUtils {
     public static TemporaryChannelManager temporaryChannelManager;
     public static TicketManager ticketManager;
     public static UserVerificationManager userVerificationManager;
+    public static WeatherManager weatherManager;
 
     public static void setupBot(){
         LogUtils.info("Load settings from file");
@@ -85,6 +89,7 @@ public class CommonUtils {
         ticketManager = new TicketManager();
         userVerificationManager = new UserVerificationManager();
         mainManager = new MainManager();
+        weatherManager = new WeatherManager();
 
         LogUtils.info("Initializing and starting threads");
         Runtime.getRuntime().addShutdownHook(new ShutdownThread());
@@ -148,6 +153,12 @@ public class CommonUtils {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(time);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(time) % 60;
         return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    public static String formatTimeToDateTime(long time){
+        Date date=new Date(time);
+        SimpleDateFormat format = new SimpleDateFormat("d. M. y H:m");
+        return format.format(date);
     }
 
 }

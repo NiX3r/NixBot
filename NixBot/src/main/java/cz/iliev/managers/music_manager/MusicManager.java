@@ -126,7 +126,8 @@ public class MusicManager implements IManager {
         }
         MusicPlayBehavior.behave();
         MusicPlayTimeBehavior.behave(audioList.get(0).getTrack().getDuration());
-        player.stopTrack();
+        if (player.getPlayingTrack() != null)
+            player.stopTrack();
         player.playTrack(audioList.get(0).getTrack());
         CommonUtils.announcementManager.sendCurrentSong(audioList.get(0));
         CommonUtils.botActivityManager.setActivity(ActivityType.PLAYING, "\uD83C\uDFB5 " + audioList.get(0).getTrack().getInfo().title, 60000);
@@ -204,8 +205,7 @@ public class MusicManager implements IManager {
                     playerManager.loadItem(url, new AudioLoadResultHandler() {
                         @Override
                         public void trackLoaded(AudioTrack track) {
-                            SongInstance song = new SongInstance(System.currentTimeMillis(), user.getDisplayName(server), null);
-                            song.setTrack(track);
+                            SongInstance song = new SongInstance(System.currentTimeMillis(), user.getDisplayName(server), track);
                             audioList.add(song);
                             interaction.createImmediateResponder().setContent("Playing song " + track.getInfo().title).respond();
                             LogUtils.info("Start playing '" + track.getInfo().title + "'");
