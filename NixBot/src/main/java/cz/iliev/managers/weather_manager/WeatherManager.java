@@ -126,7 +126,7 @@ public class WeatherManager implements IManager {
 
             long datetime = o.get("dt").getAsLong();
             // Break if weather data is higher than 30h from now
-            if(System.currentTimeMillis() + 108000000 < datetime){
+            if(System.currentTimeMillis() + 108000000 < datetime * 1000){
                 break;
             }
 
@@ -136,7 +136,7 @@ public class WeatherManager implements IManager {
             minTemp.add(main.get("temp_min").getAsDouble());
             maxTemp.add(main.get("temp_min").getAsDouble());
 
-            dates.add(new Date(datetime));
+            dates.add(new Date(datetime * 1000));
 
         }
 
