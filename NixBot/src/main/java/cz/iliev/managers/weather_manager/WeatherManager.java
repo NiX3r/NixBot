@@ -163,7 +163,7 @@ public class WeatherManager implements IManager {
 
                 MessageBuilder builder = new MessageBuilder();
                 builder.addAttachment(new File("./chart.png"));
-                builder.setContent("# Předpověd počasí " + LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE));
+                builder.setContent("# Předpověd počasí " + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
                 builder.send(channel);
 
             });
