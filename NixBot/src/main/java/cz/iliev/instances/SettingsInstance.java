@@ -4,11 +4,13 @@ public class SettingsInstance {
     private long statsMessageId;
     private long rolesMessageId;
     private String botToken;
+    private String openWeatherApiKey;
 
-    public SettingsInstance(long statsMessageId, long rolesMessageId, String botToken) {
+    public SettingsInstance(long statsMessageId, long rolesMessageId, String botToken, String openWeatherApiKey) {
         this.statsMessageId = statsMessageId;
         this.rolesMessageId = rolesMessageId;
         this.botToken = botToken;
+        this.openWeatherApiKey = openWeatherApiKey;
     }
 
     public long getStatsMessageId() {
@@ -33,5 +35,9 @@ public class SettingsInstance {
 
     public void setBotToken(String botToken) {
         this.botToken = botToken;
+    }
+
+    public String getOpenWeatherApiKey() {
+        return openWeatherApiKey;
     }
 }

@@ -31,12 +31,14 @@ public class WeatherManager implements IManager {
     private JsonObject data;
 
     private final String _WEB_API = "https://api.openweathermap.org/data/2.5/forecast?lat=50.073658&lon=14.418540&appid=f6a225b806907c44559b522ec0175332&units=metric";
+    private String apiKey;
 
     public WeatherManager(){ setup(); }
 
     @Override
     public void setup() {
         LogUtils.info("Load and start WeatherManager");
+        apiKey = CommonUtils.settings.getOpenWeatherApiKey();
         ready = true;
         loadData();
         generateCharts();
@@ -92,23 +94,7 @@ public class WeatherManager implements IManager {
     }
 
     private void loadData(){
-        try {
 
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(_WEB_API))
-                    .GET() // GET is default
-                    .build();
-
-            HttpResponse<String> response = client.send(request,
-                    HttpResponse.BodyHandlers.ofString());
-
-            Gson gson = new Gson();
-            data = gson.fromJson(response.body(), JsonObject.class);
-
-        } catch (IOException | InterruptedException e) {
-            CommonUtils.throwException(e);
-        }
     }
 
     private void generateCharts(){
@@ -124,9 +110,9 @@ public class WeatherManager implements IManager {
 
             var o = item.getAsJsonObject();
 
-            long datetime = o.get("dt").getAsLong();
+            long datetime = o.get("dt").getAsLong() * 1000;
             // Break if weather data is higher than 30h from now
-            if(System.currentTimeMillis() + 108000000 < datetime * 1000){
+            if(System.currentTimeMillis() + 108000000 < datetime){
                 break;
             }
 
@@ -136,7 +122,7 @@ public class WeatherManager implements IManager {
             minTemp.add(main.get("temp_min").getAsDouble());
             maxTemp.add(main.get("temp_min").getAsDouble());
 
-            dates.add(new Date(datetime * 1000));
+            dates.add(new Date(datetime));
 
         }
 
@@ -151,9 +137,9 @@ public class WeatherManager implements IManager {
         chart.getStyler().setYAxisTickLabelsColor(Color.decode("#e0f5fc"));
         chart.getStyler().setChartFontColor(Color.decode("#e0f5fc"));
         chart.getStyler().setDatePattern("dd. MM. yyyy HH:mm");
-        chart.getStyler().setLegendFont(new Font("mono", 0, 20));
-        chart.getStyler().setChartTitleFont(new Font("mono", 0, 35));
-        chart.getStyler().setAxisTitleFont(new Font("mono", 0, 20));
+        chart.getStyler().setLegendFont(new Font("mono", Font.PLAIN, 20));
+        chart.getStyler().setChartTitleFont(new Font("mono", Font.PLAIN, 35));
+        chart.getStyler().setAxisTitleFont(new Font("mono", Font.PLAIN, 20));
         chart.getStyler().setTimezone(TimeZone.getTimeZone("Europe/Prague"));
 
         chart.addSeries("Teplota", dates, temp);
@@ -167,5 +153,9 @@ public class WeatherManager implements IManager {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public String getApiKey() {
+        return apiKey;
     }
 }
