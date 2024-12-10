@@ -29,8 +29,6 @@ public class WeatherManager implements IManager {
 
     private boolean ready;
     private JsonObject data;
-
-    private final String _WEB_API = "https://api.openweathermap.org/data/2.5/forecast?lat=50.073658&lon=14.418540&appid=f6a225b806907c44559b522ec0175332&units=metric";
     private String apiKey;
 
     public WeatherManager(){ setup(); }
