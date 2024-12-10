@@ -16,7 +16,7 @@ public class ApiUtils {
     public static ApiResponse GetFiveDayForecast(String latitude, String longitude, String apiKey){
 
         var response = new ApiResponse();
-        String uriBuilder = "api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={api_key}";
+        String uriBuilder = "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={api_key}&units=metric";
         uriBuilder = uriBuilder.replace("{lat}", latitude);
         uriBuilder = uriBuilder.replace("{lon}", longitude);
         uriBuilder = uriBuilder.replace("{api_key}", apiKey);

@@ -5,8 +5,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import cz.iliev.interfaces.IManager;
 import cz.iliev.managers.stay_fit_manager.instances.MemberFitInstance;
+import cz.iliev.managers.weather_manager.utils.ApiUtils;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
+import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.XYChart;
@@ -15,12 +17,15 @@ import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.theme.Theme;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 import java.util.function.Function;
@@ -28,8 +33,9 @@ import java.util.function.Function;
 public class WeatherManager implements IManager {
 
     private boolean ready;
-    private JsonObject data;
     private String apiKey;
+
+    private final String WEATHER_CHANNEL_ID = "1315993344475791470";
 
     public WeatherManager(){ setup(); }
 
@@ -38,7 +44,6 @@ public class WeatherManager implements IManager {
         LogUtils.info("Load and start WeatherManager");
         apiKey = CommonUtils.settings.getOpenWeatherApiKey();
         ready = true;
-        loadData();
         generateCharts();
         LogUtils.info("WeatherManager loaded and started. Ready to use");
     }
@@ -87,14 +92,6 @@ public class WeatherManager implements IManager {
         return "#04a8c9";
     }
 
-    public JsonObject getData() {
-        return data;
-    }
-
-    private void loadData(){
-
-    }
-
     private void generateCharts(){
 
         var temp = new ArrayList<Double>();
@@ -104,7 +101,12 @@ public class WeatherManager implements IManager {
 
         var dates = new ArrayList<Date>();
 
-        for(var item : data.get("list").getAsJsonArray()){
+        var data = ApiUtils.GetFiveDayForecast("50.073658", "14.418540", apiKey);
+
+        if(data.getStatusCode() >= 300)
+            return;
+
+        for(var item : data.getObject().get("list").getAsJsonArray()){
 
             var o = item.getAsJsonObject();
 
@@ -146,9 +148,25 @@ public class WeatherManager implements IManager {
         chart.addSeries("Maximální", dates, maxTemp);
 
         try {
-            BitmapEncoder.saveBitmap(chart, "./test", BitmapEncoder.BitmapFormat.PNG);
+            BitmapEncoder.saveBitmap(chart, "./chart", BitmapEncoder.BitmapFormat.PNG);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+
+        for(var server : CommonUtils.bot.getServers()){
+            if(!server.getIdAsString().equals(CommonUtils.NIX_CREW_ID)){
+                CommonUtils.politeDisconnect(server);
+                continue;
+            }
+
+            server.getTextChannelById(WEATHER_CHANNEL_ID).ifPresent(channel -> {
+
+                MessageBuilder builder = new MessageBuilder();
+                builder.addAttachment(new File("./chart.png"));
+                builder.setContent("# Předpověd počasí " + LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE));
+                builder.send(channel);
+
+            });
         }
 
     }
