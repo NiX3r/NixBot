@@ -160,6 +160,9 @@ public class MusicManager implements IManager {
         User user = interaction.getUser();
         Server server = interaction.getServer().get();
 
+        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager();
+        var test = youtube.loadTrackWithVideoId("hvi487RBs5g", true);
+
         if(player.getPlayingTrack() != null){
 
             playerManager.loadItem(url, new AudioLoadResultHandler() {
