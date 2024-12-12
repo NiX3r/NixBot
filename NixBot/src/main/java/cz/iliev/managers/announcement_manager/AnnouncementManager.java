@@ -134,8 +134,7 @@ public class AnnouncementManager implements IManager {
     public void sendException(Exception exception, boolean isFatal){
         CommonUtils.bot.getServers().forEach(server -> {
             if(!server.getIdAsString().equals(CommonUtils.NIX_CREW_ID)){
-                LogUtils.warning("Leaving server '" + server.getName() + "'");
-                server.leave().join();
+                CommonUtils.politeDisconnect(server);
             }
             else{
                 server.getTextChannelById(NIXBOT_CHANNEL_ID).ifPresent(channel -> {
