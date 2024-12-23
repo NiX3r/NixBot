@@ -61,6 +61,10 @@ public class CommandManagerSlashCommandCreateListener implements SlashCommandCre
                 CommonUtils.announcementManager.onCommand(interaction);
                 break;
 
+            case "reminder":
+                CommonUtils.reminderManager.onCommand(interaction);
+                break;
+
             case "ban": case "unban": case "kick": case "mute":
                 CommonUtils.banListManager.onCommand(interaction);
                 break;

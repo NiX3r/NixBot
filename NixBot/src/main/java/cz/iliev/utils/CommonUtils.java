@@ -13,6 +13,7 @@ import cz.iliev.managers.command_manager.utils.CommandManagerUtils;
 import cz.iliev.managers.console_command_manager.ConsoleCommandManager;
 import cz.iliev.managers.main_manager.MainManager;
 import cz.iliev.managers.music_manager.MusicManager;
+import cz.iliev.managers.reminder_manager.ReminderManager;
 import cz.iliev.managers.role_manager.RoleManager;
 import cz.iliev.managers.statistics_manager.StatisticsManager;
 import cz.iliev.managers.stay_fit_manager.StayFitManager;
@@ -53,6 +54,7 @@ public class CommonUtils {
     public static ConsoleCommandManager consoleCommandManager;
     public static MainManager mainManager;
     public static MusicManager musicManager;
+    public static ReminderManager reminderManager;
     public static RoleManager roleManager;
     public static StatisticsManager statisticsManager;
     public static StayFitManager stayFitManager;
@@ -82,6 +84,7 @@ public class CommonUtils {
         commandManager = new CommandManager();
         consoleCommandManager = new ConsoleCommandManager();
         musicManager = new MusicManager();
+        reminderManager = new ReminderManager();
         roleManager = new RoleManager();
         statisticsManager = new StatisticsManager();
         stayFitManager = new StayFitManager();
