@@ -88,8 +88,8 @@ public class CommonUtils {
         temporaryChannelManager = new TemporaryChannelManager();
         ticketManager = new TicketManager();
         userVerificationManager = new UserVerificationManager();
-        mainManager = new MainManager();
         weatherManager = new WeatherManager();
+        mainManager = new MainManager();
 
         LogUtils.info("Initializing and starting threads");
         Runtime.getRuntime().addShutdownHook(new ShutdownThread());

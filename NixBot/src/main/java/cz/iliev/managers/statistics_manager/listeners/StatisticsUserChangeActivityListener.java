@@ -9,6 +9,9 @@ public class StatisticsUserChangeActivityListener implements UserChangeActivityL
     @Override
     public void onUserChangeActivity(UserChangeActivityEvent userChangeActivityEvent) {
         userChangeActivityEvent.getNewActivities().forEach(activity -> {
+            // If new activity is in old activities -> skip it
+            if (userChangeActivityEvent.getOldActivities().contains(activity))
+                return;
             UserActivityBehavior.behave(userChangeActivityEvent.getUserId(), activity.getName());
         });
         LogUtils.info("User activity statistics updated");

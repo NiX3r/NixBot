@@ -36,6 +36,7 @@ public class MainManager implements IManager {
         managers.put("temp", CommonUtils.temporaryChannelManager);
         managers.put("ticket", CommonUtils.ticketManager);
         managers.put("verification", CommonUtils.userVerificationManager);
+        managers.put("weather", CommonUtils.weatherManager);
         CommonUtils.bot.addMessageComponentCreateListener(new MainManagerMessageComponentCreateListener());
         ready = true;
         LogUtils.info("MainManager loaded and started. Ready to use");

@@ -5,10 +5,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import cz.iliev.interfaces.IManager;
 import cz.iliev.managers.stay_fit_manager.instances.MemberFitInstance;
+import cz.iliev.managers.weather_manager.instances.ApiResponse;
 import cz.iliev.managers.weather_manager.utils.ApiUtils;
+import cz.iliev.managers.weather_manager.utils.ChartUtils;
+import cz.iliev.managers.weather_manager.utils.ManagerUtils;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.entity.message.MessageBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.XYChart;
@@ -35,8 +39,6 @@ public class WeatherManager implements IManager {
     private boolean ready;
     private String apiKey;
 
-    private final String WEATHER_CHANNEL_ID = "1315993344475791470";
-
     public WeatherManager(){ setup(); }
 
     @Override
@@ -44,7 +46,7 @@ public class WeatherManager implements IManager {
         LogUtils.info("Load and start WeatherManager");
         apiKey = CommonUtils.settings.getOpenWeatherApiKey();
         ready = true;
-        generateCharts();
+        //generateCharts(); TODO - uncomment this line
         LogUtils.info("WeatherManager loaded and started. Ready to use");
     }
 
@@ -96,13 +98,22 @@ public class WeatherManager implements IManager {
 
         var temp = new ArrayList<Double>();
         var feelsLikeTemp = new ArrayList<Double>();
-        var minTemp = new ArrayList<Double>();
-        var maxTemp = new ArrayList<Double>();
 
         var dates = new ArrayList<Date>();
 
         var data = ApiUtils.GetFiveDayForecast("50.073658", "14.418540", apiKey);
+        parseData(data, temp, feelsLikeTemp, dates);
+        ChartUtils.generate30hChart(temp, feelsLikeTemp, dates);
 
+        CommonUtils.announcementManager.sendWeather(
+                color(),
+                ManagerUtils.calculateAverageTemperature(temp),
+                ManagerUtils.calculateAverageTemperature(feelsLikeTemp)
+        );
+
+    }
+
+    private void parseData(ApiResponse data, ArrayList<Double> temp, ArrayList<Double> feelsLikeTemp, ArrayList<Date> dates){
         if(data.getStatusCode() >= 300)
             return;
 
@@ -117,58 +128,14 @@ public class WeatherManager implements IManager {
             }
 
             var main = o.get("main").getAsJsonObject();
-            temp.add(main.get("temp").getAsDouble());
-            feelsLikeTemp.add(main.get("feels_like").getAsDouble());
-            minTemp.add(main.get("temp_min").getAsDouble());
-            maxTemp.add(main.get("temp_min").getAsDouble());
+            var t = main.get("temp").getAsDouble();
+            var f = main.get("feels_like").getAsDouble();
+            temp.add(t);
+            feelsLikeTemp.add(f);
 
             dates.add(new Date(datetime));
 
         }
-
-        final XYChart chart = new XYChartBuilder().width(1920).height(720).title("30h předpověd počasí - Praha").xAxisTitle("Datum").yAxisTitle("Teplota (°C)").build();
-
-        chart.getStyler().setChartBackgroundColor(Color.decode("#313338"));
-        chart.getStyler().setLegendBackgroundColor(Color.decode("#313338"));
-        chart.getStyler().setPlotBackgroundColor(Color.decode("#313338"));
-        chart.getStyler().setAnnotationTextPanelFontColor(Color.decode("#e0f5fc"));
-        chart.getStyler().setAnnotationTextFontColor(Color.decode("#e0f5fc"));
-        chart.getStyler().setXAxisTickLabelsColor(Color.decode("#e0f5fc"));
-        chart.getStyler().setYAxisTickLabelsColor(Color.decode("#e0f5fc"));
-        chart.getStyler().setChartFontColor(Color.decode("#e0f5fc"));
-        chart.getStyler().setDatePattern("dd. MM. yyyy HH:mm");
-        chart.getStyler().setLegendFont(new Font("mono", Font.PLAIN, 20));
-        chart.getStyler().setChartTitleFont(new Font("mono", Font.PLAIN, 35));
-        chart.getStyler().setAxisTitleFont(new Font("mono", Font.PLAIN, 20));
-        chart.getStyler().setTimezone(TimeZone.getTimeZone("Europe/Prague"));
-
-        chart.addSeries("Teplota", dates, temp);
-        chart.addSeries("Pocitová", dates, feelsLikeTemp);
-        chart.addSeries("Minimální", dates, minTemp);
-        chart.addSeries("Maximální", dates, maxTemp);
-
-        try {
-            BitmapEncoder.saveBitmap(chart, "./chart", BitmapEncoder.BitmapFormat.PNG);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        for(var server : CommonUtils.bot.getServers()){
-            if(!server.getIdAsString().equals(CommonUtils.NIX_CREW_ID)){
-                CommonUtils.politeDisconnect(server);
-                continue;
-            }
-
-            server.getTextChannelById(WEATHER_CHANNEL_ID).ifPresent(channel -> {
-
-                MessageBuilder builder = new MessageBuilder();
-                builder.addAttachment(new File("./chart.png"));
-                builder.setContent("# Předpověd počasí " + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
-                builder.send(channel);
-
-            });
-        }
-
     }
 
     public String getApiKey() {

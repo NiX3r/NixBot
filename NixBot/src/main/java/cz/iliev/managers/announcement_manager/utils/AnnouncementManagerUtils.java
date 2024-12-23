@@ -3,6 +3,7 @@ package cz.iliev.managers.announcement_manager.utils;
 import cz.iliev.managers.announcement_manager.instances.MessagesInstance;
 import cz.iliev.managers.music_manager.instances.SongInstance;
 import cz.iliev.managers.role_manager.instances.RoleSetterInstance;
+import cz.iliev.managers.weather_manager.utils.ManagerUtils;
 import cz.iliev.utils.CommonUtils;
 import org.javacord.api.entity.Icon;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
@@ -11,6 +12,8 @@ import org.javacord.api.entity.server.Server;
 import java.awt.*;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Random;
 
@@ -92,12 +95,33 @@ public class AnnouncementManagerUtils {
     }
 
     public static EmbedBuilder createAnnouncementEmbed(String topic, String message, String author){
-        return new EmbedBuilder()
+        var file = new File(".\\announcement-thumbnail.png");
+        if (file == null || !file.exists())
+            return new EmbedBuilder()
                 .setTitle(topic)
                 .setDescription(message.replace("\\n", "\n"))
                 .setColor(Color.decode("#2100FF"))
-                .setThumbnail(new File(".\\announcement-thumbnail.png"))
                 .setFooter("Author: " + author + " | Version: " + CommonUtils.VERSION);
+        else
+            return new EmbedBuilder()
+                    .setTitle(topic)
+                    .setDescription(message.replace("\\n", "\n"))
+                    .setColor(Color.decode("#2100FF"))
+                    .setThumbnail(file)
+                    .setFooter("Author: " + author + " | Version: " + CommonUtils.VERSION);
+    }
+
+    public static EmbedBuilder createWeatherEmbed(String color, String avgTemp, String avgFeels){
+        return new EmbedBuilder()
+                .setTitle("Předpověď počasí " + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .setColor(Color.decode(color))
+                .addField("Průměrná teplota", avgTemp + "°C", true)
+                .addField("Průměrná pocitová", avgFeels + "°C", true)
+                .setDescription("Pokud nechcete dostávat upozornění o počasí, tak si zrušte notifikace [zde](https://discord.com/channels/611985124023730185/1219225196594991124/1246890056027865199)")
+                .setImage(new File("./chart.png"))
+                .setAuthor("Odkaz na OpenWeather", "https://openweathermap.org/", "")
+                .setThumbnail("https://openweathermap.org/themes/openweathermap/assets/img/logo_white_cropped.png")
+                .setFooter("Version: " + CommonUtils.VERSION);
     }
 
 }
