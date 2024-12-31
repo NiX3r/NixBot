@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileUtils {
@@ -21,15 +22,15 @@ public class FileUtils {
     private static final String PATH = "./data/reminders.json";
 
     public static List<ReminderInstace> loadSettings(){
-        LogUtils.info("Trying to load settings");
+        LogUtils.info("Trying to load reminders");
         try {
             String json = new String(Files.readAllBytes(Paths.get(PATH)));
             var output = new Gson().fromJson(json, new TypeToken<List<ReminderInstace>>(){});
-            LogUtils.info("Settings setter loaded");
+            LogUtils.info("Reminders loaded");
             return output;
         }
         catch (Exception ex){
-            return null;
+            return new ArrayList<ReminderInstace>();
         }
     }
 

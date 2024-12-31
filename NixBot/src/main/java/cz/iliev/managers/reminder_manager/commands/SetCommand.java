@@ -3,7 +3,13 @@ package cz.iliev.managers.reminder_manager.commands;
 import cz.iliev.interfaces.ISlashCommand;
 import cz.iliev.utils.CommonUtils;
 import org.javacord.api.entity.message.MessageFlag;
+import org.javacord.api.entity.message.component.ActionRow;
+import org.javacord.api.entity.message.component.TextInput;
+import org.javacord.api.entity.message.component.TextInputStyle;
 import org.javacord.api.interaction.SlashCommandInteraction;
+
+import java.awt.*;
+import java.util.Arrays;
 
 public class SetCommand implements ISlashCommand {
     @Override
@@ -28,6 +34,11 @@ public class SetCommand implements ISlashCommand {
     }
 
     private void add(SlashCommandInteraction interaction, String name){
+
+        interaction.respondWithModal("nix-reminder-" + name, "Create a reminder", Arrays.asList(
+                ActionRow.of(TextInput.create(TextInputStyle.SHORT, "reminder-in-cron", "Reminder Cron (<DAY> <MONTH>)", true)),
+                ActionRow.of(TextInput.create(TextInputStyle.PARAGRAPH, "reminder-in-desc", "Reminder Description", true))
+        ));
 
     }
 

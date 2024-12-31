@@ -5,8 +5,12 @@ import cz.iliev.managers.reminder_manager.commands.ListAllCommand;
 import cz.iliev.managers.reminder_manager.commands.ListCommand;
 import cz.iliev.managers.reminder_manager.commands.SetCommand;
 import cz.iliev.managers.reminder_manager.instances.ReminderInstace;
+import cz.iliev.managers.reminder_manager.listeners.ReminderModalSubmitListener;
+import cz.iliev.managers.reminder_manager.threads.ReminderThread;
 import cz.iliev.managers.reminder_manager.utils.FileUtils;
+import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
+import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
 import java.util.ArrayList;
@@ -24,6 +28,7 @@ public class ReminderManager implements IManager {
     public void setup() {
         LogUtils.info("Load and start WeatherManager");
         reminders = FileUtils.loadSettings();
+        CommonUtils.bot.addModalSubmitListener(new ReminderModalSubmitListener());
         ready = true;
         LogUtils.info("WeatherManager loaded and started. Ready to use");
     }
@@ -45,7 +50,7 @@ public class ReminderManager implements IManager {
 
     @Override
     public void onCommand(SlashCommandInteraction interaction) {
-        switch (interaction.getCommandName()){
+        switch (interaction.getOptions().get(0).getName()){
             case "set":
                 new SetCommand().run(interaction);
                 break;
@@ -53,6 +58,10 @@ public class ReminderManager implements IManager {
                 new ListCommand().run(interaction);
                 break;
             case "listall":
+                if(!CommonUtils.isUserAdmin(interaction.getUser())){
+                    interaction.createImmediateResponder().setContent("Tento příkaz je pouze pro administrátory").setFlags(MessageFlag.EPHEMERAL).respond();
+                    break;
+                }
                 new ListAllCommand().run(interaction);
                 break;
         }
@@ -105,9 +114,15 @@ public class ReminderManager implements IManager {
     }
 
     public void removeUserReminderByName(long userId, String name){
-        for (ReminderInstace reminder : reminders) {
-            if (reminder.getAuthorId() == userId && reminder.getName().equals(name))
-                reminders.remove(reminder);
-        }
+        reminders.removeIf(reminder -> reminder.getAuthorId() == userId && reminder.getName().equals(name));
+    }
+
+    public void addUserReminder(ReminderInstace reminder){
+        reminders.add(reminder);
+    }
+
+    public void checkReminders(){
+        Thread t = new Thread(new ReminderThread());
+        t.start();
     }
 }

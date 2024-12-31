@@ -62,7 +62,8 @@ public class CommandManagerSlashCommandCreateListener implements SlashCommandCre
                 break;
 
             case "reminder":
-                CommonUtils.reminderManager.onCommand(interaction);
+                if (checkIsCmdChannel(interaction))
+                    CommonUtils.reminderManager.onCommand(interaction);
                 break;
 
             case "ban": case "unban": case "kick": case "mute":
@@ -77,6 +78,10 @@ public class CommandManagerSlashCommandCreateListener implements SlashCommandCre
 
         if(interaction.getChannel().isPresent() &&
                 interaction.getChannel().get().getIdAsString().equals(CommandManager.CMD_CHANNEL_ID))
+            return true;
+
+        // If user admin > bypass
+        if(CommonUtils.isUserAdmin(interaction.getUser()))
             return true;
 
         CommonUtils.bot.getServers().forEach(server -> {

@@ -94,6 +94,8 @@ public class CommonUtils {
         weatherManager = new WeatherManager();
         mainManager = new MainManager();
 
+        reminderManager.checkReminders();
+
         LogUtils.info("Initializing and starting threads");
         Runtime.getRuntime().addShutdownHook(new ShutdownThread());
 
@@ -112,12 +114,14 @@ public class CommonUtils {
         consoleCommandManager.kill();
         mainManager.kill();
         musicManager.kill();
+        reminderManager.kill();
         roleManager.kill();
         statisticsManager.kill();
         stayFitManager.kill();
         temporaryChannelManager.kill();
         ticketManager.kill();
         userVerificationManager.kill();
+        weatherManager.kill();
         FileUtils.saveSettings(settings);
     }
 
