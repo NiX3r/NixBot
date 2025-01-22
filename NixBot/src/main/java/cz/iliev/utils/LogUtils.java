@@ -35,8 +35,8 @@ public class LogUtils {
 
     private static void log(LogType type, String message){
 
-        String line = COLOR_PALLETE.get(type) +  "[" + LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.MEDIUM)).replace(",", "").replace("/", ".") + "] " + type.toString() + " >> " + message + RESET_COLOR;
-        System.out.println(line);
+        String line = "[" + LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.MEDIUM)).replace(",", "").replace("/", ".") + "] " + type.toString() + " >> " + message;
+        System.out.println(COLOR_PALLETE.get(type) + line + RESET_COLOR);
 
         if(type == LogType.FATAL || type == LogType.ERROR)
             errorCounter++;
