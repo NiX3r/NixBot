@@ -1,6 +1,7 @@
 package cz.iliev.managers.statistics_manager.listeners;
 
 import cz.iliev.managers.statistics_manager.behaviors.UserActivityBehavior;
+import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.entity.activity.Activity;
 import org.javacord.api.event.user.UserChangeActivityEvent;
@@ -13,19 +14,19 @@ public class StatisticsUserChangeActivityListener implements UserChangeActivityL
     @Override
     public void onUserChangeActivity(UserChangeActivityEvent userChangeActivityEvent) {
 
-        List<String> oldActivitiesNames = new ArrayList<String>();
-        userChangeActivityEvent.getOldActivities().forEach(activity -> {
-            if(!oldActivitiesNames.contains(activity.getName()))
-                oldActivitiesNames.add(activity.getName());
-        });
+        if(userChangeActivityEvent.getNewActivities().isEmpty())
+            return;
 
-        userChangeActivityEvent.getNewActivities().forEach(activity -> {
-            // If new activity is in old activities -> skip it
-            if(oldActivitiesNames.contains(activity.getName()))
-                return;
+        var lastActivity = CommonUtils.statisticsManager.getUserLastActivityByUserId(userChangeActivityEvent.getUserId());
+        var activity = userChangeActivityEvent.getNewActivities().stream().findFirst().get();
 
-            UserActivityBehavior.behave(userChangeActivityEvent.getUserId(), activity.getName());
-        });
+        if(lastActivity != null && activity.getName().equals(lastActivity)){
+            return;
+        }
+
+        CommonUtils.statisticsManager.getUsersLastActivity().put(userChangeActivityEvent.getUserId(), activity.getName());
+        UserActivityBehavior.behave(userChangeActivityEvent.getUserId(), activity.getName());
+
         LogUtils.info("User activity statistics updated");
     }
 }

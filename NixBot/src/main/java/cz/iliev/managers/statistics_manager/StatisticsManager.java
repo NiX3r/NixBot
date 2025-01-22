@@ -18,6 +18,7 @@ public class StatisticsManager implements IManager {
     private boolean ready;
     private StatisticsInstance statistics;
     private HashMap<Long, Long> userVoiceChannelJoinTime;
+    private HashMap<Long, String> usersLastActivity;
 
     public StatisticsManager(){
         setup();
@@ -27,6 +28,7 @@ public class StatisticsManager implements IManager {
     public void setup() {
         LogUtils.info("Load and start StatisticsManager");
         statistics = FileUtils.loadStatistics();
+        usersLastActivity = FileUtils.loadUsersLastActivity();
         CommonUtils.bot.addMessageCreateListener(new StatisticsManagerMessageCreateListener());
         CommonUtils.bot.addServerMemberLeaveListener(new StatisticsManagerServerMemberLeaveListener());
         CommonUtils.bot.addServerVoiceChannelMemberJoinListener(new StatisticsManagerServerVoiceChannelMemberJoinListener());
@@ -48,6 +50,7 @@ public class StatisticsManager implements IManager {
             CallTimeBehavior.behave(increment);
         }
         userVoiceChannelJoinTime.clear();
+        FileUtils.saveUsersLastActivity(usersLastActivity);
         FileUtils.saveStatistics(statistics);
         ready = false;
         LogUtils.info("StatisticsManager killed");
@@ -92,6 +95,12 @@ public class StatisticsManager implements IManager {
 
     public StatisticsInstance getStatistics(){
         return this.statistics;
+    }
+
+    public HashMap<Long, String> getUsersLastActivity() {return this.usersLastActivity; }
+
+    public String getUserLastActivityByUserId(long id){
+        return this.usersLastActivity.getOrDefault(id, null);
     }
 
     public HashMap<Long, Long> getUserVoiceChannelJoinTime(){
