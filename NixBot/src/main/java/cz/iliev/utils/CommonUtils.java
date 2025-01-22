@@ -13,12 +13,14 @@ import cz.iliev.managers.command_manager.utils.CommandManagerUtils;
 import cz.iliev.managers.console_command_manager.ConsoleCommandManager;
 import cz.iliev.managers.main_manager.MainManager;
 import cz.iliev.managers.music_manager.MusicManager;
+import cz.iliev.managers.reminder_manager.ReminderManager;
 import cz.iliev.managers.role_manager.RoleManager;
 import cz.iliev.managers.statistics_manager.StatisticsManager;
 import cz.iliev.managers.stay_fit_manager.StayFitManager;
 import cz.iliev.managers.temporary_channel_manager.TemporaryChannelManager;
 import cz.iliev.managers.ticket_manager.TicketManager;
 import cz.iliev.managers.user_verification_manager.UserVerificationManager;
+import cz.iliev.managers.weather_manager.WeatherManager;
 import cz.iliev.threads.ShutdownThread;
 
 import org.javacord.api.DiscordApi;
@@ -30,8 +32,10 @@ import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class CommonUtils {
@@ -39,7 +43,7 @@ public class CommonUtils {
     public static DiscordApi bot;
     public static SettingsInstance settings;
 
-    public static final String VERSION = "3.0.1";
+    public static final String VERSION = "3.1.0";
     public static final long START_TIME = System.currentTimeMillis();
     public static final String NIX_CREW_ID = "611985124023730185";
 
@@ -50,12 +54,14 @@ public class CommonUtils {
     public static ConsoleCommandManager consoleCommandManager;
     public static MainManager mainManager;
     public static MusicManager musicManager;
+    public static ReminderManager reminderManager;
     public static RoleManager roleManager;
     public static StatisticsManager statisticsManager;
     public static StayFitManager stayFitManager;
     public static TemporaryChannelManager temporaryChannelManager;
     public static TicketManager ticketManager;
     public static UserVerificationManager userVerificationManager;
+    public static WeatherManager weatherManager;
 
     public static void setupBot(){
         LogUtils.info("Load settings from file");
@@ -78,13 +84,17 @@ public class CommonUtils {
         commandManager = new CommandManager();
         consoleCommandManager = new ConsoleCommandManager();
         musicManager = new MusicManager();
+        reminderManager = new ReminderManager();
         roleManager = new RoleManager();
         statisticsManager = new StatisticsManager();
         stayFitManager = new StayFitManager();
         temporaryChannelManager = new TemporaryChannelManager();
         ticketManager = new TicketManager();
         userVerificationManager = new UserVerificationManager();
+        weatherManager = new WeatherManager();
         mainManager = new MainManager();
+
+        reminderManager.checkReminders();
 
         LogUtils.info("Initializing and starting threads");
         Runtime.getRuntime().addShutdownHook(new ShutdownThread());
@@ -104,12 +114,14 @@ public class CommonUtils {
         consoleCommandManager.kill();
         mainManager.kill();
         musicManager.kill();
+        reminderManager.kill();
         roleManager.kill();
         statisticsManager.kill();
         stayFitManager.kill();
         temporaryChannelManager.kill();
         ticketManager.kill();
         userVerificationManager.kill();
+        weatherManager.kill();
         FileUtils.saveSettings(settings);
     }
 
@@ -148,6 +160,12 @@ public class CommonUtils {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(time);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(time) % 60;
         return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    public static String formatTimeToDateTime(long time){
+        Date date=new Date(time);
+        SimpleDateFormat format = new SimpleDateFormat("d. M. y H:m");
+        return format.format(date);
     }
 
 }

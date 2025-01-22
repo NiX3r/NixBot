@@ -1,5 +1,8 @@
 package cz.iliev.managers.statistics_manager.listeners;
 
+import cz.iliev.managers.statistics_manager.behaviors.TextBehavior;
+import cz.iliev.managers.statistics_manager.behaviors.TextChannelBehavior;
+import cz.iliev.managers.statistics_manager.behaviors.UserTextBehavior;
 import cz.iliev.managers.ticket_manager.TicketManager;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
@@ -28,9 +31,9 @@ public class StatisticsManagerMessageCreateListener implements MessageCreateList
             messageCreateEvent.getServerTextChannel().get().getCategory().get().getIdAsString().equals(TicketManager.TICKET_CATEGORY_ID))
             return;
 
-        CommonUtils.statisticsManager.getStatistics().getTextChannelStatsInstance().incrementTextCounter();
-        CommonUtils.statisticsManager.getStatistics().getTextChannelStatsInstance().incrementUsedTextChannelId(messageCreateEvent.getChannel().getId());
-        CommonUtils.statisticsManager.getStatistics().getMemberStatsInstance().incrementTextCounter(messageCreateEvent.getMessageAuthor().getId());
+        TextChannelBehavior.behave(messageCreateEvent.getChannel().getId());
+        TextBehavior.behave();
+        UserTextBehavior.behave(messageCreateEvent.getMessageAuthor().getId());
 
         LogUtils.info("Message statistics updated");
 

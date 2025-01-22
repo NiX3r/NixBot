@@ -1,12 +1,10 @@
 package cz.iliev.managers.statistics_manager;
 
 import cz.iliev.interfaces.IManager;
+import cz.iliev.managers.statistics_manager.behaviors.CallTimeBehavior;
+import cz.iliev.managers.statistics_manager.behaviors.UserCallTimeBehavior;
 import cz.iliev.managers.statistics_manager.instances.StatisticsInstance;
-import cz.iliev.managers.statistics_manager.listeners.StatisticsManagerMessageCreateListener;
-import cz.iliev.managers.statistics_manager.listeners.StatisticsManagerServerMemberLeaveListener;
-import cz.iliev.managers.statistics_manager.listeners.StatisticsManagerServerVoiceChannelMemberJoinListener;
-import cz.iliev.managers.statistics_manager.listeners.StatisticsManagerServerVoiceChannelMemberLeaveListener;
-import cz.iliev.managers.statistics_manager.timers.UpdateMessageTimer;
+import cz.iliev.managers.statistics_manager.listeners.*;
 import cz.iliev.managers.statistics_manager.utils.FileUtils;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
@@ -19,7 +17,7 @@ public class StatisticsManager implements IManager {
 
     private boolean ready;
     private StatisticsInstance statistics;
-    private UpdateMessageTimer timer;
+    private HashMap<Long, Long> userVoiceChannelJoinTime;
 
     public StatisticsManager(){
         setup();
@@ -33,7 +31,10 @@ public class StatisticsManager implements IManager {
         CommonUtils.bot.addServerMemberLeaveListener(new StatisticsManagerServerMemberLeaveListener());
         CommonUtils.bot.addServerVoiceChannelMemberJoinListener(new StatisticsManagerServerVoiceChannelMemberJoinListener());
         CommonUtils.bot.addServerVoiceChannelMemberLeaveListener(new StatisticsManagerServerVoiceChannelMemberLeaveListener());
-        timer = new UpdateMessageTimer();
+        CommonUtils.bot.addReactionAddListener(new StatisticsReactionAddListener());
+        CommonUtils.bot.addServerChangeBoostCountListener(new StatisticsServerChangeBoostCountListener());
+        CommonUtils.bot.addUserChangeActivityListener(new StatisticsUserChangeActivityListener());
+        userVoiceChannelJoinTime = new HashMap<>();
         ready = true;
         LogUtils.info("StatisticsManager loaded and started. Ready to use");
     }
@@ -41,9 +42,13 @@ public class StatisticsManager implements IManager {
     @Override
     public void kill() {
         LogUtils.info("Kill StatisticsManager");
+        for(long userId : userVoiceChannelJoinTime.keySet()){
+            long increment = System.currentTimeMillis() - userVoiceChannelJoinTime.get(userId);
+            UserCallTimeBehavior.behave(userId, increment);
+            CallTimeBehavior.behave(increment);
+        }
+        userVoiceChannelJoinTime.clear();
         FileUtils.saveStatistics(statistics);
-        timer.cancel();
-        timer = null;
         ready = false;
         LogUtils.info("StatisticsManager killed");
     }
@@ -89,11 +94,19 @@ public class StatisticsManager implements IManager {
         return this.statistics;
     }
 
+    public HashMap<Long, Long> getUserVoiceChannelJoinTime(){
+        return userVoiceChannelJoinTime;
+    }
+
     public void checkCurrentDatetime(){
         Calendar now = Calendar.getInstance();
         now.setTimeInMillis(System.currentTimeMillis());
         Calendar statsTime = Calendar.getInstance();
-        statsTime.setTimeInMillis(statistics.getCurrentTime());
+        statsTime.setTimeInMillis(statistics.currentTime);
+        if(now.get(Calendar.YEAR) != statsTime.get(Calendar.YEAR)){
+            FileUtils.archiveStatistics(statistics);
+            resetYear();
+        }
         if(now.get(Calendar.MONTH) != statsTime.get(Calendar.MONTH)){
             FileUtils.archiveStatistics(statistics);
             resetMonth();
@@ -104,22 +117,51 @@ public class StatisticsManager implements IManager {
         }
     }
 
+    private void resetYear(){
+        statistics.boostYear = 0;
+        statistics.commandUseYear.clear();
+        statistics.memberJoinYear = 0;
+        statistics.memberLeaveYear = 0;
+        statistics.userActivityYear.clear();
+        statistics.userCallTimeYear.clear();
+        statistics.userCommandUseYear.clear();
+        statistics.userReactionYear.clear();
+        statistics.userTextYear.clear();
+        statistics.voiceChannelYear.clear();
+        resetMonth();
+    }
+
     private void resetMonth(){
-        statistics.getCommandStatsInstance().resetMonth();
-        statistics.getManagerStatsInstance().resetMonth();
-        statistics.getMemberStatsInstance().resetMonth();
-        statistics.getServerStatsInstance().resetMonth();
-        statistics.getTextChannelStatsInstance().resetMonth();
-        statistics.getVoiceChannelStatsInstance().resetMonth();
+        statistics.boostMonth = 0;
+        statistics.callTimeMonth = 0;
+        statistics.commandUseMonth.clear();
+        statistics.memberJoinMonth = 0;
+        statistics.memberLeaveMonth = 0;
+        statistics.musicPlayMonth = 0;
+        statistics.musicPlayTimeMonth = 0;
+        statistics.reactionMonth.clear();
+        statistics.temporaryChannelMonth = 0;
+        statistics.textMonth = 0;
+        statistics.textChannelMonth.clear();
+        statistics.ticketMonth = 0;
+        statistics.userActivityMonth.clear();
+        statistics.userCallTimeMonth.clear();
+        statistics.userCommandUseMonth.clear();
+        statistics.userReactionMonth.clear();
+        statistics.userTextMonth.clear();
+        statistics.voiceChannelMonth.clear();
         resetDay();
     }
 
     private void resetDay(){
-        statistics.getManagerStatsInstance().resetDay();
-        statistics.getServerStatsInstance().resetDay();
-        statistics.getTextChannelStatsInstance().resetDay();
-        statistics.getVoiceChannelStatsInstance().resetDay();
-        statistics.setCurrentTime(System.currentTimeMillis());
+        statistics.callTimeDay = 0;
+        statistics.musicPlayTimeDay = 0;
+        statistics.reactionDay.clear();
+        statistics.textDay = 0;
+        statistics.ticketDay = 0;
+        statistics.userActivityTimeDay.clear();
+        statistics.userCallTimeDay.clear();
+        statistics.currentTime = System.currentTimeMillis();
     }
 
     // Get top five used text channel || voice channels || members

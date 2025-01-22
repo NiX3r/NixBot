@@ -1,5 +1,6 @@
 package cz.iliev.managers.temporary_channel_manager.listeners;
 
+import cz.iliev.managers.statistics_manager.behaviors.TemporaryChannelBehavior;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.entity.channel.ServerVoiceChannel;
@@ -39,7 +40,7 @@ public class TemporaryChannelServerVoiceChannelMemberJoinListener implements Ser
             CommonUtils.temporaryChannelManager.getTempVoiceChannelMap().put(creator.getId(), voiceChannel.getId());
             creator.move(voiceChannel).join();
 
-            CommonUtils.statisticsManager.getStatistics().getManagerStatsInstance().incrementTemporaryChannels();
+            TemporaryChannelBehavior.behave();
 
             LogUtils.info("Temp channel for user '" + creator.getName() + "' created. User moved");
         }, new Runnable() {

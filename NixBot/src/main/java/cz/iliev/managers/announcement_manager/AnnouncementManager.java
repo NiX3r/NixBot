@@ -35,6 +35,7 @@ public class AnnouncementManager implements IManager {
     private MessagesInstance messages;
 
     private final String WELCOME_CHANNEL_ID = "611985124057284621";
+    private final String WEATHER_CHANNEL_ID = "1315993344475791470";
     public static final String NEWS_CHANNEL_ID = "1219218631632748655";
     public static final String NIXBOT_CHANNEL_ID = "1058017127988211822";
 
@@ -134,8 +135,7 @@ public class AnnouncementManager implements IManager {
     public void sendException(Exception exception, boolean isFatal){
         CommonUtils.bot.getServers().forEach(server -> {
             if(!server.getIdAsString().equals(CommonUtils.NIX_CREW_ID)){
-                LogUtils.warning("Leaving server '" + server.getName() + "'");
-                server.leave().join();
+                CommonUtils.politeDisconnect(server);
             }
             else{
                 server.getTextChannelById(NIXBOT_CHANNEL_ID).ifPresent(channel -> {
@@ -229,6 +229,19 @@ public class AnnouncementManager implements IManager {
             }
             var embed = AnnouncementManagerUtils.createRestartAnnouncementEmbed(minutes);
             server.getTextChannelById(NEWS_CHANNEL_ID).ifPresent(channel -> {
+                channel.sendMessage(embed);
+            });
+        });
+    }
+
+    public void sendWeather(String color, String avgTemp, String avgFeels){
+        CommonUtils.bot.getServers().forEach(server -> {
+            if(!server.getIdAsString().equals(CommonUtils.NIX_CREW_ID)){
+                CommonUtils.politeDisconnect(server);
+                return;
+            }
+            var embed = AnnouncementManagerUtils.createWeatherEmbed(color, avgTemp, avgFeels);
+            server.getTextChannelById(WEATHER_CHANNEL_ID).ifPresent(channel -> {
                 channel.sendMessage(embed);
             });
         });

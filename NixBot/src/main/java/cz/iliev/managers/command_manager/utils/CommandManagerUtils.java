@@ -118,6 +118,15 @@ public class CommandManagerUtils {
         )).createGlobal(CommonUtils.bot).join();
         LogUtils.info("Created mute command");
 
+        SlashCommand.with("reminder", "command to reminder manager", Arrays.asList(
+                SlashCommandOption.createWithOptions(SlashCommandOptionType.SUB_COMMAND, "list", "list of own reminders"),
+                SlashCommandOption.createWithOptions(SlashCommandOptionType.SUB_COMMAND, "listall", "list of all reminders"),
+                SlashCommandOption.createWithOptions(SlashCommandOptionType.SUB_COMMAND, "set", "add or delete reminder", Arrays.asList(
+                        SlashCommandOption.create(SlashCommandOptionType.STRING, "name", "name of reminder", true)
+                ))
+        )).createGlobal(CommonUtils.bot).join();
+        LogUtils.info("Created role command");
+
     }
 
     public static void deleteCommands(){

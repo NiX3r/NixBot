@@ -9,6 +9,7 @@ import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -20,7 +21,7 @@ import java.util.List;
 public class FileUtils {
 
     private static final String PATH = "./data/statistics.json";
-    private static final String ARCHIVE_PATH = "./archive/statistics/";
+    private static final String ARCHIVE_PATH = "./archive/statistics/{year}/{month}/";
 
     public static StatisticsInstance loadStatistics(){
         LogUtils.info("Trying to load statistics");
@@ -34,31 +35,20 @@ public class FileUtils {
             CommonUtils.throwException(ex);
             return new StatisticsInstance(
                     System.currentTimeMillis(),
-                    new CommandStatsInstance(
-                            new HashMap<String, Long>(),
-                            new HashMap<String, Long>()
-                    ),
-                    new ManagerStatsInstance(0,0,0, 0,0,0,0,0, 0),
-                    new MemberStatsInstance(
-                            new HashMap<Long, Long>(),
-                            new HashMap<Long, Long>(),
-                            new HashMap<Long, Long>(),
-                            new HashMap<Long, Long>(),
-                            new HashMap<Long, Long>(),
-                            new HashMap<Long, Long>()
-                    ),
-                    new ServerStatsInstance(0,0,0,0,0,0),
-                    new TextChannelStatsInstance(
-                            new HashMap<Long, Long>(),
-                            new HashMap<Long, Long>(),
-                            0, 0, 0
-                    ),
-                    new VoiceChannelStatsInstance(
-                            new HashMap<Long, Long>(),
-                            new HashMap<Long, Long>(),
-                            0, 0, 0
-                    ),
-                    new HashMap<Long, Long>()
+                    0,0,0,0,0,0,
+                    new HashMap<>(), new HashMap<>(), new HashMap<>(), 0, 0,
+                    0,0,0,0,0,0,0,0,
+                    new HashMap<>(), new HashMap<>(), new HashMap<>(), 0, 0,0,0,0,
+                    new HashMap<>(), new HashMap<>(), 0,0,0,
+                    new HashMap<Long, HashMap<String, Long>>(),new HashMap<Long, HashMap<String, Long>>(),
+                    new HashMap<Long, HashMap<String, Long>>(),new HashMap<Long, HashMap<String, Long>>(),
+                    new HashMap<Long, HashMap<String, Long>>(),new HashMap<Long, HashMap<String, Long>>(),
+                    new HashMap<>(), new HashMap<>(),new HashMap<>(),new HashMap<>(),
+                    new HashMap<Long, HashMap<String, Long>>(),new HashMap<Long, HashMap<String, Long>>(),
+                    new HashMap<Long, HashMap<String, Long>>(),new HashMap<Long, HashMap<String, Long>>(),
+                    new HashMap<Long, HashMap<String, Long>>(),new HashMap<Long, HashMap<String, Long>>(),
+                    new HashMap<>(), new HashMap<>(),new HashMap<>(),
+                    new HashMap<>(), new HashMap<>(),new HashMap<>()
             );
         }
     }
@@ -85,8 +75,13 @@ public class FileUtils {
         LogUtils.info("Trying to archive statistics");
         try{
             Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(System.currentTimeMillis());
-            String path = ARCHIVE_PATH + calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + "-statistics.json";
+            calendar.setTimeInMillis(data.currentTime);
+            int year = calendar.get(Calendar.YEAR);
+            int month = (calendar.get(Calendar.MONTH) + 1);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            String path = ARCHIVE_PATH.replace("{year}", String.valueOf(year)).replace("{month}", String.valueOf(month));
+            new File(path).mkdirs();
+            path = path + year + "-" + month + "-" + day + "-statistics.json";
             BufferedWriter f_writer
                     = new BufferedWriter(new FileWriter(path));
             f_writer.write(new GsonBuilder().create().toJson(data));

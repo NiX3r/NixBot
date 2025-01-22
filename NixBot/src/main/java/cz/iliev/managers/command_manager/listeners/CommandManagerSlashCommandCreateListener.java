@@ -1,6 +1,8 @@
 package cz.iliev.managers.command_manager.listeners;
 
 import cz.iliev.managers.command_manager.CommandManager;
+import cz.iliev.managers.statistics_manager.behaviors.CommandUseBehavior;
+import cz.iliev.managers.statistics_manager.behaviors.UserCommandBehavior;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.entity.message.MessageFlag;
@@ -22,9 +24,9 @@ public class CommandManagerSlashCommandCreateListener implements SlashCommandCre
         LogUtils.info("Command '" + interaction.getCommandName() + "' by '" + interaction.getUser().getName() + "' caught");
 
         // Increment command stats
-        CommonUtils.statisticsManager.getStatistics().getCommandStatsInstance().incrementUsedCommand(interaction.getCommandName());
+        CommandUseBehavior.behave(interaction.getCommandName());
         // Increment user command stats
-        CommonUtils.statisticsManager.getStatistics().getMemberStatsInstance().incrementUsedCommands(interaction.getUser().getId());
+        UserCommandBehavior.behave(interaction.getUser().getId(), interaction.getCommandName());
 
         switch (interaction.getCommandName()){
 
@@ -59,6 +61,11 @@ public class CommandManagerSlashCommandCreateListener implements SlashCommandCre
                 CommonUtils.announcementManager.onCommand(interaction);
                 break;
 
+            case "reminder":
+                if (checkIsCmdChannel(interaction))
+                    CommonUtils.reminderManager.onCommand(interaction);
+                break;
+
             case "ban": case "unban": case "kick": case "mute":
                 CommonUtils.banListManager.onCommand(interaction);
                 break;
@@ -71,6 +78,10 @@ public class CommandManagerSlashCommandCreateListener implements SlashCommandCre
 
         if(interaction.getChannel().isPresent() &&
                 interaction.getChannel().get().getIdAsString().equals(CommandManager.CMD_CHANNEL_ID))
+            return true;
+
+        // If user admin > bypass
+        if(CommonUtils.isUserAdmin(interaction.getUser()))
             return true;
 
         CommonUtils.bot.getServers().forEach(server -> {

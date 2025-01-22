@@ -13,6 +13,8 @@ import cz.iliev.managers.music_manager.commands.*;
 import cz.iliev.managers.music_manager.events.TrackEndEvent;
 import cz.iliev.managers.music_manager.instances.LavaplayerAudioSource;
 import cz.iliev.managers.music_manager.instances.SongInstance;
+import cz.iliev.managers.statistics_manager.behaviors.MusicPlayBehavior;
+import cz.iliev.managers.statistics_manager.behaviors.MusicPlayTimeBehavior;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.audio.AudioConnection;
@@ -122,9 +124,10 @@ public class MusicManager implements IManager {
             CommonUtils.botActivityManager.setBasicActivity();
             return;
         }
-        CommonUtils.statisticsManager.getStatistics().getManagerStatsInstance().incrementMusicPlayed();
-        CommonUtils.statisticsManager.getStatistics().getManagerStatsInstance().incrementMusicTimePlayed(audioList.get(0).getTrack().getDuration());
-        player.stopTrack();
+        MusicPlayBehavior.behave();
+        MusicPlayTimeBehavior.behave(audioList.get(0).getTrack().getDuration());
+        if (player.getPlayingTrack() != null)
+            player.stopTrack();
         player.playTrack(audioList.get(0).getTrack());
         CommonUtils.announcementManager.sendCurrentSong(audioList.get(0));
         CommonUtils.botActivityManager.setActivity(ActivityType.PLAYING, "\uD83C\uDFB5 " + audioList.get(0).getTrack().getInfo().title, 60000);
@@ -156,6 +159,9 @@ public class MusicManager implements IManager {
 
         User user = interaction.getUser();
         Server server = interaction.getServer().get();
+
+        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager();
+        var test = youtube.loadTrackWithVideoId("hvi487RBs5g", true);
 
         if(player.getPlayingTrack() != null){
 
@@ -202,8 +208,7 @@ public class MusicManager implements IManager {
                     playerManager.loadItem(url, new AudioLoadResultHandler() {
                         @Override
                         public void trackLoaded(AudioTrack track) {
-                            SongInstance song = new SongInstance(System.currentTimeMillis(), user.getDisplayName(server), null);
-                            song.setTrack(track);
+                            SongInstance song = new SongInstance(System.currentTimeMillis(), user.getDisplayName(server), track);
                             audioList.add(song);
                             interaction.createImmediateResponder().setContent("Playing song " + track.getInfo().title).respond();
                             LogUtils.info("Start playing '" + track.getInfo().title + "'");
