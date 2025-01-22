@@ -96,18 +96,18 @@ public class AnnouncementManagerUtils {
 
     public static EmbedBuilder createAnnouncementEmbed(String topic, String message, String author){
         var file = new File(".\\announcement-thumbnail.png");
-        if (file == null || !file.exists())
-            return new EmbedBuilder()
-                .setTitle(topic)
-                .setDescription(message.replace("\\n", "\n"))
-                .setColor(Color.decode("#2100FF"))
-                .setFooter("Author: " + author + " | Version: " + CommonUtils.VERSION);
-        else
+        if (file.exists())
             return new EmbedBuilder()
                     .setTitle(topic)
                     .setDescription(message.replace("\\n", "\n"))
                     .setColor(Color.decode("#2100FF"))
                     .setThumbnail(file)
+                    .setFooter("Author: " + author + " | Version: " + CommonUtils.VERSION);
+        else
+            return new EmbedBuilder()
+                    .setTitle(topic)
+                    .setDescription(message.replace("\\n", "\n"))
+                    .setColor(Color.decode("#2100FF"))
                     .setFooter("Author: " + author + " | Version: " + CommonUtils.VERSION);
     }
 

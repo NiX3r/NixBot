@@ -6,7 +6,6 @@ import cz.iliev.utils.CommonUtils;
 import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.interaction.SlashCommandInteraction;
-import org.javacord.core.entity.user.Member;
 
 import java.awt.*;
 import java.util.HashMap;
