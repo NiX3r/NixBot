@@ -1,6 +1,7 @@
 package cz.iliev.managers.command_manager.commands;
 
 import cz.iliev.interfaces.ISlashCommand;
+import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.permission.Permissions;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
@@ -46,6 +47,8 @@ public class ProjectCommand implements ISlashCommand {
                                         .replace("%EMOJI%", emoji))
                                 .setAuditLogReason("Created by NixBot via /project command")
                                 .create();
+
+                        interaction.createImmediateResponder().setContent("Project category created!").setFlags(MessageFlag.EPHEMERAL).respond();
 
                     });
 
