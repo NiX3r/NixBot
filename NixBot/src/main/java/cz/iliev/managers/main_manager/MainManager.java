@@ -74,14 +74,8 @@ public class MainManager implements IManager {
         String command = (String)data;
         switch (command.split(" ")[1]){
             case "status": case "s":
-                CommonUtils.bot.getServers().forEach(server -> {
-                    if(!server.getIdAsString().equals(CommonUtils.NIX_CREW_ID)){
-                        CommonUtils.politeDisconnect(server);
-                        return;
-                    }
-                    server.getTextChannelById(AnnouncementManager.NIXBOT_CHANNEL_ID).ifPresent(channel -> {
-                        StatusCommand.getStatusMessageBuilder().send(channel).join();
-                    });
+                CommonUtils.getNixCrew().getTextChannelById(AnnouncementManager.NIXBOT_CHANNEL_ID).ifPresent(channel -> {
+                    StatusCommand.getStatusMessageBuilder().send(channel).join();
                 });
                 break;
             case "restart": case "r":

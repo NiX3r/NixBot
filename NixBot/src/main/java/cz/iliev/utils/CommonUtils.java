@@ -157,14 +157,7 @@ public class CommonUtils {
     }
 
     public static boolean isUserAdmin(User user){
-        for(Server server : bot.getServers()){
-            if(!server.getIdAsString().equals(NIX_CREW_ID)){
-                politeDisconnect(server);
-                continue;
-            }
-            return server.hasPermission(user, PermissionType.ADMINISTRATOR);
-        }
-        return false;
+        return getNixCrew().hasPermission(user, PermissionType.ADMINISTRATOR);
     }
 
     public static String formatTimeToMinutes(long time){

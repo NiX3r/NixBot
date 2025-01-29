@@ -76,7 +76,7 @@ public class BotActivityManager implements IManager {
     }
 
     public void setBasicActivity(){
-        int membersCount = CommonUtils.bot.getServers().stream().findFirst().get().getMemberCount();
+        int membersCount = CommonUtils.getNixCrew().getMemberCount();
         CommonUtils.bot.updateActivity(ActivityType.WATCHING, " for " + membersCount + " users here");
     }
 
