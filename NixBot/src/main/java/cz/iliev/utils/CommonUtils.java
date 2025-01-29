@@ -136,6 +136,17 @@ public class CommonUtils {
 
     }
 
+    public static Server getNixCrew(){
+        Server output = null;
+        for (Server server : bot.getServers()) {
+            if(server.getIdAsString().equals(NIX_CREW_ID))
+                output = server;
+            else
+                politeDisconnect(server);
+        }
+        return output;
+    }
+
     public static void politeDisconnect(Server server){
         server.getMembers().forEach(member -> {
             if(server.hasPermission(member, PermissionType.ADMINISTRATOR)){

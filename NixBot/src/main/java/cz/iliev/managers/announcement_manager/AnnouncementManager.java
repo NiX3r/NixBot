@@ -35,7 +35,7 @@ public class AnnouncementManager implements IManager {
     private MessagesInstance messages;
 
     private final String WELCOME_CHANNEL_ID = "611985124057284621";
-    private final String WEATHER_CHANNEL_ID = "1315993344475791470";
+    public static final String WEATHER_CHANNEL_ID = "1315993344475791470";
     public static final String NEWS_CHANNEL_ID = "1219218631632748655";
     public static final String NIXBOT_CHANNEL_ID = "1058017127988211822";
 

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import cz.iliev.interfaces.IManager;
+import cz.iliev.managers.announcement_manager.AnnouncementManager;
 import cz.iliev.managers.stay_fit_manager.instances.MemberFitInstance;
 import cz.iliev.managers.weather_manager.instances.ApiResponse;
 import cz.iliev.managers.weather_manager.utils.ApiUtils;
@@ -30,6 +31,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalField;
 import java.util.*;
 import java.util.List;
 import java.util.function.Function;
@@ -46,7 +48,19 @@ public class WeatherManager implements IManager {
         LogUtils.info("Load and start WeatherManager");
         apiKey = CommonUtils.settings.getOpenWeatherApiKey();
         ready = true;
-        //generateCharts(); // TODO - enable it
+
+        CommonUtils.getNixCrew().getTextChannelById(AnnouncementManager.WEATHER_CHANNEL_ID).ifPresent(channel -> {
+            var message = channel.getMessages(1).join();
+            message.getNewestMessage().ifPresent(msg -> {
+                var days = System.currentTimeMillis() / 86400000;
+                var time = msg.getCreationTimestamp().toEpochMilli() - (days * 86400000);
+
+                if(time > 0)
+                    return;
+
+                generateCharts();
+            });
+        });
         LogUtils.info("WeatherManager loaded and started. Ready to use");
     }
 
