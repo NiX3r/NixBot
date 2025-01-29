@@ -43,7 +43,7 @@ public class CommonUtils {
     public static DiscordApi bot;
     public static SettingsInstance settings;
 
-    public static final String VERSION = "3.1.0";
+    public static final String VERSION = "3.2.0";
     public static final long START_TIME = System.currentTimeMillis();
     public static final String NIX_CREW_ID = "611985124023730185";
 

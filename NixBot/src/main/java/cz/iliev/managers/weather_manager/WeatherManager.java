@@ -46,7 +46,7 @@ public class WeatherManager implements IManager {
         LogUtils.info("Load and start WeatherManager");
         apiKey = CommonUtils.settings.getOpenWeatherApiKey();
         ready = true;
-        generateCharts();
+        //generateCharts(); // TODO - enable it
         LogUtils.info("WeatherManager loaded and started. Ready to use");
     }
 

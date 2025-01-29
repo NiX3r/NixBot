@@ -125,7 +125,14 @@ public class CommandManagerUtils {
                         SlashCommandOption.create(SlashCommandOptionType.STRING, "name", "name of reminder", true)
                 ))
         )).createGlobal(CommonUtils.bot).join();
-        LogUtils.info("Created role command");
+        LogUtils.info("Created reminder command");
+
+        SlashCommand.with("project", "command to create project category", Arrays.asList(
+                SlashCommandOption.create(SlashCommandOptionType.STRING, "name", "name of project", true),
+                SlashCommandOption.create(SlashCommandOptionType.STRING, "shortcut", "shortcut of project", true),
+                SlashCommandOption.create(SlashCommandOptionType.STRING, "emoji", "emoji of project", true)
+        )).setDefaultEnabledForPermissions(PermissionType.ADMINISTRATOR).createGlobal(CommonUtils.bot).join();
+        LogUtils.info("Created project command");
 
     }
 
