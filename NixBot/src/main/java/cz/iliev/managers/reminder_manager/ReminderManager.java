@@ -59,7 +59,7 @@ public class ReminderManager implements IManager {
                 break;
             case "listall":
                 if(!CommonUtils.isUserAdmin(interaction.getUser())){
-                    interaction.createImmediateResponder().setContent("Tento příkaz je pouze pro administrátory").setFlags(MessageFlag.EPHEMERAL).respond();
+                    interaction.createImmediateResponder().setContent("This command is for administrators only").setFlags(MessageFlag.EPHEMERAL).respond();
                     break;
                 }
                 new ListAllCommand().run(interaction);

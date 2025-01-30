@@ -45,7 +45,7 @@ public class SetCommand implements ISlashCommand {
     private void remove(SlashCommandInteraction interaction, String name){
 
         CommonUtils.reminderManager.removeUserReminderByName(interaction.getUser().getId(), name);
-        interaction.createImmediateResponder().setContent("Reminder odebrán").setFlags(MessageFlag.EPHEMERAL).respond();
+        interaction.createImmediateResponder().setContent("Reminder removed").setFlags(MessageFlag.EPHEMERAL).respond();
 
     }
 }

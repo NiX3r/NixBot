@@ -14,7 +14,7 @@ public class ChartUtils {
 
     public static void generate30hChart(ArrayList<Double> temp, ArrayList<Double> feelsLikeTemp, ArrayList<Date> dates){
 
-        final XYChart chart = new XYChartBuilder().width(1920).height(720).title("30h předpověd počasí - Praha").xAxisTitle("Datum").yAxisTitle("Teplota (°C)").build();
+        final XYChart chart = new XYChartBuilder().width(1920).height(720).title("30h weather forecast - Prague").xAxisTitle("Date").yAxisTitle("Temperature (°C)").build();
 
         chart.getStyler().setChartBackgroundColor(Color.decode("#313338"));
         chart.getStyler().setLegendBackgroundColor(Color.decode("#313338"));
@@ -30,8 +30,8 @@ public class ChartUtils {
         chart.getStyler().setAxisTitleFont(new Font("mono", Font.PLAIN, 20));
         chart.getStyler().setTimezone(TimeZone.getTimeZone("Europe/Prague"));
 
-        chart.addSeries("Teplota", dates, temp);
-        chart.addSeries("Pocitová", dates, feelsLikeTemp);
+        chart.addSeries("Temperature", dates, temp);
+        chart.addSeries("Feels like", dates, feelsLikeTemp);
 
         try {
             BitmapEncoder.saveBitmap(chart, "./chart", BitmapEncoder.BitmapFormat.PNG);
