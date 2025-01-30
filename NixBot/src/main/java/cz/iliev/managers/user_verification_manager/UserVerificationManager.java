@@ -35,19 +35,13 @@ public class UserVerificationManager implements IManager {
         LogUtils.info("Load and start UserVerificationManager");
         usersCodes = FileUtils.loadVerification();
         invites = new ArrayList<InviteInstance>();
-        CommonUtils.bot.getServers().forEach(server -> {
-            if(!server.getIdAsString().equals(CommonUtils.NIX_CREW_ID)){
-                CommonUtils.politeDisconnect(server);
-                return;
-            }
-            server.getInvites().thenAccept(richInvites -> {
-                invites.forEach(invite ->{
-                    invites.add(new InviteInstance(
-                            invite.getCode(),
-                            invite.getCreator_id(),
-                            invite.getUses()
-                    ));
-                });
+        CommonUtils.getNixCrew().getInvites().thenAccept(richInvites -> {
+            invites.forEach(invite ->{
+                invites.add(new InviteInstance(
+                        invite.getCode(),
+                        invite.getCreator_id(),
+                        invite.getUses()
+                ));
             });
         });
         CommonUtils.bot.addMessageCreateListener(new UserVerificationManagerMessageCreateListener());

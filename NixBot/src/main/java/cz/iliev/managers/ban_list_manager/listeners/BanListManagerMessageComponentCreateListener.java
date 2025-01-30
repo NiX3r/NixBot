@@ -46,56 +46,50 @@ public class BanListManagerMessageComponentCreateListener implements MessageComp
     private void confirm(long memberId, MessageComponentInteraction messageComponentInteraction){
         if(CommonUtils.banListManager.getBanCache().containsKey(memberId)){
             var punishment = CommonUtils.banListManager.getBanCache().get(memberId);
-            CommonUtils.bot.getServers().forEach(server -> {
-                if(!server.getIdAsString().equals(CommonUtils.NIX_CREW_ID)){
-                    CommonUtils.politeDisconnect(server);
-                    return;
-                }
+            var server = CommonUtils.getNixCrew();
+            if(!server.getMemberById(punishment.getMember().getMemberId()).isPresent()){
+                messageComponentInteraction.createImmediateResponder().setContent("Unfortunately this member is not on Nix Crew server").setFlags(MessageFlag.EPHEMERAL).respond();
+                return;
+            }
 
-                if(!server.getMemberById(punishment.getMember().getMemberId()).isPresent()){
-                    messageComponentInteraction.createImmediateResponder().setContent("Unfortunately this member is not on Nix Crew server").setFlags(MessageFlag.EPHEMERAL).respond();
-                    return;
+            server.getMemberById(punishment.getMember().getMemberId()).ifPresent(member -> {
+                FileUtils.savePunishment(punishment);
+                String actionName = "NONE";
+                switch (punishment.getType()){
+                    case BAN:
+                        // Update in active ban list
+                        CommonUtils.banListManager.getBans().put(punishment.getMember().getMemberId(), punishment);
+                        // Do the magic
+                        actionName = "banned";
+                        if(punishment.getDuration() == 0){
+                            server.banUser(member.getId(), Duration.ofSeconds(250), punishment.getDescription()).join();
+                        }
+                        else {
+                            server.banUser(member, Duration.ofSeconds(punishment.getDuration()), punishment.getDescription());
+                        }
+                        break;
+                    case UNBAN:
+                        // Update in active ban list
+                        CommonUtils.banListManager.getBans().remove(punishment.getMember().getMemberId());
+                        actionName = "unbanned";
+                        // Do the magic
+                        server.unbanUser(punishment.getMember().getMemberId(), punishment.getDescription());
+                        break;
+                    case KICK:
+                        actionName = "kicked";
+                        // Do the magic
+                        server.kickUser(member, punishment.getDescription());
+                        break;
+                    case TIMEOUT:
+                        actionName = "timeouted";
+                        // Do the magic
+                        Duration duration = Duration.ofMillis(punishment.getDuration());
+                        server.timeoutUser(member, duration, punishment.getDescription());
+                        break;
                 }
-
-                server.getMemberById(punishment.getMember().getMemberId()).ifPresent(member -> {
-                    FileUtils.savePunishment(punishment);
-                    String actionName = "NONE";
-                    switch (punishment.getType()){
-                        case BAN:
-                            // Update in active ban list
-                            CommonUtils.banListManager.getBans().put(punishment.getMember().getMemberId(), punishment);
-                            // Do the magic
-                            actionName = "banned";
-                            if(punishment.getDuration() == 0){
-                                server.banUser(member.getId(), Duration.ofSeconds(250), punishment.getDescription()).join();
-                            }
-                            else {
-                                server.banUser(member, Duration.ofSeconds(punishment.getDuration()), punishment.getDescription());
-                            }
-                            break;
-                        case UNBAN:
-                            // Update in active ban list
-                            CommonUtils.banListManager.getBans().remove(punishment.getMember().getMemberId());
-                            actionName = "unbanned";
-                            // Do the magic
-                            server.unbanUser(punishment.getMember().getMemberId(), punishment.getDescription());
-                            break;
-                        case KICK:
-                            actionName = "kicked";
-                            // Do the magic
-                            server.kickUser(member, punishment.getDescription());
-                            break;
-                        case TIMEOUT:
-                            actionName = "timeouted";
-                            // Do the magic
-                            Duration duration = Duration.ofMillis(punishment.getDuration());
-                            server.timeoutUser(member, duration, punishment.getDescription());
-                            break;
-                    }
-                    CommonUtils.botActivityManager.setActivity(ActivityType.WATCHING, " new " + actionName + " member '" + punishment.getMember().getMemberName() + "'", 60000);
-                    messageComponentInteraction.createImmediateResponder().setContent("Successfully " + actionName + " member '" + punishment.getMember().getMemberName() + "'").setFlags(MessageFlag.EPHEMERAL).respond();
-                    messageComponentInteraction.getMessage().delete();
-                });
+                CommonUtils.botActivityManager.setActivity(ActivityType.WATCHING, " new " + actionName + " member '" + punishment.getMember().getMemberName() + "'", 60000);
+                messageComponentInteraction.createImmediateResponder().setContent("Successfully " + actionName + " member '" + punishment.getMember().getMemberName() + "'").setFlags(MessageFlag.EPHEMERAL).respond();
+                messageComponentInteraction.getMessage().delete();
             });
         }
         else {

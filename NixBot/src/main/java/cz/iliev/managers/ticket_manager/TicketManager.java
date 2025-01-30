@@ -11,10 +11,12 @@ import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.MessageFlag;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
+import java.awt.*;
 import java.util.HashMap;
 
 public class TicketManager implements IManager {
@@ -154,14 +156,23 @@ public class TicketManager implements IManager {
         FileUtils.archiveTicket(ticket);
         removeTicketFromCacheByOwnerId(ticket.getAuthor().getId());
 
-        server.getChannelById(channel.getId()).get().delete().join();
+        server.getChannelById(channel.getId()).ifPresent(c -> c.delete().join());
 
         server.getMemberById(ticket.getAuthor().getId()).ifPresent(serverUser -> {
-            serverUser.sendMessage("Your ticket was closed by " + (
-                    user.getName().equals(ticket.getAuthor().getName()) ?
-                            "you" :
-                            ("'" + user.getName() + "'")
-            )).join();
+
+            EmbedBuilder builder = new EmbedBuilder()
+                    .setTitle("Your ticket was closed")
+                    .setColor(Color.decode(CommonUtils.ticketManager.color()))
+                    .addField(isResolved ? "Solved by" : "Closed by", ( user.getName().equals(ticket.getAuthor().getName()) ? "you" : ("`" + user.getName() + "`")), true)
+                    .addField("Create date", CommonUtils.formatTimeToDateTime(ticket.getCreateDate()), true)
+                    .addField("Close date", CommonUtils.formatTimeToDateTime(System.currentTimeMillis()), true)
+                    .addField("Topic", ticket.getTopic(), true)
+                    .addField("Total messages", ticket.getMessages().size() + "", true)
+                    .addField("Total members", ticket.getMembers().size() + "", true)
+                    .setFooter("Version: " + CommonUtils.VERSION);
+
+            serverUser.sendMessage(builder).join();
+
         });
 
         LogUtils.info("Ticket '" + (ticket.getId() + "-" + ticket.getAuthor().getName()) + "' closed");

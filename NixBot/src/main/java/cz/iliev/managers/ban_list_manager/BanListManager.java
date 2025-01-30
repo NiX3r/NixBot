@@ -45,18 +45,13 @@ public class BanListManager implements IManager {
         banCache = new HashMap<Long, PunishmentInstance>();
         CommonUtils.bot.addMessageComponentCreateListener(new BanListManagerMessageComponentCreateListener());
         LogUtils.info("Check real bans with load active bans");
-        CommonUtils.bot.getServers().forEach(server -> {
-            if(!server.getIdAsString().equals(CommonUtils.NIX_CREW_ID)){
-                CommonUtils.politeDisconnect(server);
-                return;
+        var server = CommonUtils.getNixCrew();
+        server.getBans().join().forEach(ban -> {
+            LogUtils.debug("Check ban of '" + ban.getUser().getName() + "'");
+            if(!bans.containsKey(ban.getUser().getId())){
+                LogUtils.info("Member '" + ban.getUser().getName() + "' was unbanned");
+                server.unbanUser(ban.getUser().getId());
             }
-            server.getBans().join().forEach(ban -> {
-                LogUtils.debug("Check ban of '" + ban.getUser().getName() + "'");
-                if(!bans.containsKey(ban.getUser().getId())){
-                    LogUtils.info("Member '" + ban.getUser().getName() + "' was unbanned");
-                    server.unbanUser(ban.getUser().getId());
-                }
-            });
         });
 
         ready = true;
@@ -132,41 +127,35 @@ public class BanListManager implements IManager {
 
 
     public boolean addCachePunishment(User toBan, User admin, String reason, long duration, BanType type){
-        for (Server server : CommonUtils.bot.getServers()) {
-            if(!server.getIdAsString().equals(CommonUtils.NIX_CREW_ID)){
-                CommonUtils.politeDisconnect(server);
-                return false;
-            }
+        var server = CommonUtils.getNixCrew();
 
-            var toBanRoles = new ArrayList<String>();
-            toBan.getRoles(server).forEach(role -> toBanRoles.add(role.getName()));
+        var toBanRoles = new ArrayList<String>();
+        toBan.getRoles(server).forEach(role -> toBanRoles.add(role.getName()));
 
-            var adminRoles = new ArrayList<String>();
-            toBan.getRoles(server).forEach(role -> adminRoles.add(role.getName()));
+        var adminRoles = new ArrayList<String>();
+        toBan.getRoles(server).forEach(role -> adminRoles.add(role.getName()));
 
-            var ban = new PunishmentInstance(
-                    type,
-                    new MemberInstance(
-                            toBan.getId(),
-                            toBan.getName(),
-                            toBanRoles
-                    ),
-                    new MemberInstance(
-                            admin.getId(),
-                            admin.getName(),
-                            adminRoles
-                    ),
-                    System.currentTimeMillis(),
-                    duration,
-                    reason
-            );
+        var ban = new PunishmentInstance(
+                type,
+                new MemberInstance(
+                        toBan.getId(),
+                        toBan.getName(),
+                        toBanRoles
+                ),
+                new MemberInstance(
+                        admin.getId(),
+                        admin.getName(),
+                        adminRoles
+                ),
+                System.currentTimeMillis(),
+                duration,
+                reason
+        );
 
-            if(CommonUtils.banListManager.getBanCache().containsKey(ban.getMember().getMemberId())){
-                return false;
-            }
-            CommonUtils.banListManager.getBanCache().put(ban.getMember().getMemberId(), ban);
-            return true;
+        if(CommonUtils.banListManager.getBanCache().containsKey(ban.getMember().getMemberId())){
+            return false;
         }
-        return false;
+        CommonUtils.banListManager.getBanCache().put(ban.getMember().getMemberId(), ban);
+        return true;
     }
 }

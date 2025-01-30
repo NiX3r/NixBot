@@ -20,6 +20,9 @@ public class StatisticsUserChangeActivityListener implements UserChangeActivityL
         var lastActivity = CommonUtils.statisticsManager.getUserLastActivityByUserId(userChangeActivityEvent.getUserId());
         var activity = userChangeActivityEvent.getNewActivities().stream().findFirst().get();
 
+        if(activity.equals("Custom Status"))
+            return;
+
         if(lastActivity != null && activity.getName().equals(lastActivity)){
             return;
         }

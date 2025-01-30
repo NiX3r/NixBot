@@ -194,11 +194,10 @@ public class StatisticsManager implements IManager {
         }
         for(long[] item : topEntries){
             String[] s = new String[2];
-            CommonUtils.bot.getServers().forEach(server -> {
-                server.getTextChannelById(item[0]).ifPresent(serverTextChannel -> { s[0] = serverTextChannel.getName(); });
-                server.getVoiceChannelById(item[0]).ifPresent(serverVoiceChannel -> { s[0] = serverVoiceChannel.getName(); });
-                server.getMemberById(item[0]).ifPresent(member -> { s[0] = member.getName(); });
-            });
+            var server = CommonUtils.getNixCrew();
+            server.getTextChannelById(item[0]).ifPresent(serverTextChannel -> { s[0] = serverTextChannel.getName(); });
+            server.getVoiceChannelById(item[0]).ifPresent(serverVoiceChannel -> { s[0] = serverVoiceChannel.getName(); });
+            server.getMemberById(item[0]).ifPresent(member -> { s[0] = member.getName(); });
             if(plainValue)
                 s[1] = item[1] + "";
             else

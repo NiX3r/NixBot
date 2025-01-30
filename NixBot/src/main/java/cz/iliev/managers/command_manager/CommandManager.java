@@ -5,6 +5,7 @@ import cz.iliev.interfaces.ISlashCommand;
 import cz.iliev.managers.command_manager.commands.AnonymousCommand;
 import cz.iliev.managers.command_manager.commands.DiceCommand;
 import cz.iliev.managers.command_manager.commands.PhoneticCommand;
+import cz.iliev.managers.command_manager.commands.ProjectCommand;
 import cz.iliev.managers.command_manager.listeners.CommandManagerSlashCommandCreateListener;
 import cz.iliev.managers.command_manager.utils.FileUtils;
 import cz.iliev.utils.CommonUtils;
@@ -34,6 +35,7 @@ public class CommandManager implements IManager {
         noManagerCommands.put("dice", new DiceCommand());
         noManagerCommands.put("anonymous", new AnonymousCommand());
         noManagerCommands.put("phonetic", new PhoneticCommand());
+        noManagerCommands.put("project", new ProjectCommand());
         CommonUtils.bot.addSlashCommandCreateListener(new CommandManagerSlashCommandCreateListener());
         ready = true;
         LogUtils.info("CommandManager loaded and started. Ready to use");

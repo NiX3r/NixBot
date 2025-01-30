@@ -35,7 +35,7 @@ public class AnnouncementManager implements IManager {
     private MessagesInstance messages;
 
     private final String WELCOME_CHANNEL_ID = "611985124057284621";
-    private final String WEATHER_CHANNEL_ID = "1315993344475791470";
+    public static final String WEATHER_CHANNEL_ID = "1315993344475791470";
     public static final String NEWS_CHANNEL_ID = "1219218631632748655";
     public static final String NIXBOT_CHANNEL_ID = "1058017127988211822";
 
@@ -115,135 +115,101 @@ public class AnnouncementManager implements IManager {
             return;
         }
 
-        CommonUtils.bot.getServers().forEach(server -> {
-            server.getTextChannelById(NEWS_CHANNEL_ID).ifPresent(textChannel -> {
+        CommonUtils.getNixCrew().getTextChannelById(NEWS_CHANNEL_ID).ifPresent(textChannel -> {
 
-                EmbedBuilder builder = new EmbedBuilder()
-                        .setTitle("Restart bota")
-                        .setDescription("Dojde k automatickému restartu bota.")
-                        .addField("Restart za", command[2] + " minut")
-                        .setColor(Color.GREEN)
-                        .setThumbnail("https://pluspng.com/img-png/restart-png-restart-icon-1600.png")
-                        .setFooter("Console | Version: " + CommonUtils.VERSION);
+            EmbedBuilder builder = new EmbedBuilder()
+                    .setTitle("Restart bota")
+                    .setDescription("Dojde k automatickému restartu bota.")
+                    .addField("Restart za", command[2] + " minut")
+                    .setColor(Color.GREEN)
+                    .setThumbnail("https://pluspng.com/img-png/restart-png-restart-icon-1600.png")
+                    .setFooter("Console | Version: " + CommonUtils.VERSION);
 
-                textChannel.sendMessage(builder);
+            textChannel.sendMessage(builder);
 
-            });
         });
     }
     
     public void sendException(Exception exception, boolean isFatal){
-        CommonUtils.bot.getServers().forEach(server -> {
-            if(!server.getIdAsString().equals(CommonUtils.NIX_CREW_ID)){
-                CommonUtils.politeDisconnect(server);
-            }
-            else{
-                server.getTextChannelById(NIXBOT_CHANNEL_ID).ifPresent(channel -> {
-                    channel.sendMessage(AnnouncementManagerUtils.createExceptionEmbed(exception, isFatal));
-                });
-            }
+        CommonUtils.getNixCrew().getTextChannelById(NIXBOT_CHANNEL_ID).ifPresent(channel -> {
+            channel.sendMessage(AnnouncementManagerUtils.createExceptionEmbed(exception, isFatal));
         });
     }
 
     public void sendCurrentSong(SongInstance song){
-        CommonUtils.bot.getServers().forEach(server -> {
-            server.getTextChannelById(CommandManager.CMD_CHANNEL_ID).ifPresent(channel -> {
-                channel.sendMessage(AnnouncementManagerUtils.createCurrentSongEmbed(song));
-            });
+        CommonUtils.getNixCrew().getTextChannelById(CommandManager.CMD_CHANNEL_ID).ifPresent(channel -> {
+            channel.sendMessage(AnnouncementManagerUtils.createCurrentSongEmbed(song));
         });
     }
 
     public void sendRoleSetter(List<RoleSetterInstance> roleSetter){
-        CommonUtils.bot.getServers().forEach(server -> {
-            server.getTextChannelById(RoleManager.ROLES_CHANNEL_ID).ifPresent(channel -> {
-                Message msg = null;
-                try{
-                    msg = channel.getMessageById(CommonUtils.settings.getRolesMessageId()).get();
-                }
-                catch (Exception ex){
-                    LogUtils.warning("Role message does not exists. Creating a new one");
-                }
-                if(msg == null){
-                    MessageBuilder builder = new MessageBuilder()
-                            .setEmbed(AnnouncementManagerUtils.createRoleSetterEmbed(roleSetter.size()));
-                    roleSetter.forEach(setter -> {
-                        builder.addComponents(
-                                ActionRow.of(Button.secondary("nix-role-" + setter.getRoleId(), setter.getComponentLabel(), EmojiParser.parseToUnicode(setter.getEmoji())))
-                        );
-                    });
-                    msg = builder.send(channel).join();
-                    CommonUtils.settings.setRolesMessageId(msg.getId());
-                    LogUtils.info("Role message crated and sent. Message ID saved");
-                }
-                else{
-                    MessageUpdater updater = msg.createUpdater();
-                    updater.removeAllComponents().removeAllEmbeds()
-                            .addEmbed(AnnouncementManagerUtils.createRoleSetterEmbed(roleSetter.size()));
+        CommonUtils.getNixCrew().getTextChannelById(RoleManager.ROLES_CHANNEL_ID).ifPresent(channel -> {
+            Message msg = null;
+            try{
+                msg = channel.getMessageById(CommonUtils.settings.getRolesMessageId()).get();
+            }
+            catch (Exception ex){
+                LogUtils.warning("Role message does not exists. Creating a new one");
+            }
+            if(msg == null){
+                MessageBuilder builder = new MessageBuilder()
+                        .setEmbed(AnnouncementManagerUtils.createRoleSetterEmbed(roleSetter.size()));
+                roleSetter.forEach(setter -> {
+                    builder.addComponents(
+                            ActionRow.of(Button.secondary("nix-role-" + setter.getRoleId(), setter.getComponentLabel(), EmojiParser.parseToUnicode(setter.getEmoji())))
+                    );
+                });
+                msg = builder.send(channel).join();
+                CommonUtils.settings.setRolesMessageId(msg.getId());
+                LogUtils.info("Role message crated and sent. Message ID saved");
+            }
+            else{
+                MessageUpdater updater = msg.createUpdater();
+                updater.removeAllComponents().removeAllEmbeds()
+                        .addEmbed(AnnouncementManagerUtils.createRoleSetterEmbed(roleSetter.size()));
 
-                    roleSetter.forEach(setter -> {
-                        updater.addComponents(
-                                ActionRow.of(Button.secondary("nix-role-" + setter.getRoleId(), setter.getComponentLabel(), EmojiParser.parseToUnicode(setter.getEmoji())))
-                        );
-                    });
+                roleSetter.forEach(setter -> {
+                    updater.addComponents(
+                            ActionRow.of(Button.secondary("nix-role-" + setter.getRoleId(), setter.getComponentLabel(), EmojiParser.parseToUnicode(setter.getEmoji())))
+                    );
+                });
 
-                    updater.applyChanges().join();
-                    LogUtils.info("Role message updated");
-                }
-            });
+                updater.applyChanges().join();
+                LogUtils.info("Role message updated");
+            }
         });
     }
 
     public void sendWelcome(String user, Icon avatar, String inviter){
-
-        CommonUtils.bot.getServers().forEach(server -> {
-            if(!server.getIdAsString().equals(CommonUtils.NIX_CREW_ID)){
-                CommonUtils.politeDisconnect(server);
-                return;
-            }
-            var embed = AnnouncementManagerUtils.createJoinEmbed(user, inviter, avatar, server);
-            server.getTextChannelById(WELCOME_CHANNEL_ID).ifPresent(channel -> {
-                channel.sendMessage(embed);
-            });
+        var server = CommonUtils.getNixCrew();
+        var embed = AnnouncementManagerUtils.createJoinEmbed(user, inviter, avatar, server);
+        server.getTextChannelById(WELCOME_CHANNEL_ID).ifPresent(channel -> {
+            channel.sendMessage(embed);
         });
     }
 
     public void sendLeave(String user, Icon avatar, boolean isBan){
 
-        CommonUtils.bot.getServers().forEach(server -> {
-            if(!server.getIdAsString().equals(CommonUtils.NIX_CREW_ID)){
-                CommonUtils.politeDisconnect(server);
-                return;
-            }
-            var embed = AnnouncementManagerUtils.createLeaveEmbed(user, avatar, isBan, server);
-            server.getTextChannelById(WELCOME_CHANNEL_ID).ifPresent(channel -> {
-                channel.sendMessage(embed).join();
-            });
+        var server = CommonUtils.getNixCrew();
+        var embed = AnnouncementManagerUtils.createLeaveEmbed(user, avatar, isBan, server);
+        server.getTextChannelById(WELCOME_CHANNEL_ID).ifPresent(channel -> {
+            channel.sendMessage(embed).join();
         });
     }
 
     public void sendRestart(String minutes){
-        CommonUtils.bot.getServers().forEach(server -> {
-            if(!server.getIdAsString().equals(CommonUtils.NIX_CREW_ID)){
-                CommonUtils.politeDisconnect(server);
-                return;
-            }
-            var embed = AnnouncementManagerUtils.createRestartAnnouncementEmbed(minutes);
-            server.getTextChannelById(NEWS_CHANNEL_ID).ifPresent(channel -> {
-                channel.sendMessage(embed);
-            });
+        var server = CommonUtils.getNixCrew();
+        var embed = AnnouncementManagerUtils.createRestartAnnouncementEmbed(minutes);
+        server.getTextChannelById(NEWS_CHANNEL_ID).ifPresent(channel -> {
+            channel.sendMessage(embed);
         });
     }
 
     public void sendWeather(String color, String avgTemp, String avgFeels){
-        CommonUtils.bot.getServers().forEach(server -> {
-            if(!server.getIdAsString().equals(CommonUtils.NIX_CREW_ID)){
-                CommonUtils.politeDisconnect(server);
-                return;
-            }
-            var embed = AnnouncementManagerUtils.createWeatherEmbed(color, avgTemp, avgFeels);
-            server.getTextChannelById(WEATHER_CHANNEL_ID).ifPresent(channel -> {
-                channel.sendMessage(embed);
-            });
+        var server = CommonUtils.getNixCrew();
+        var embed = AnnouncementManagerUtils.createWeatherEmbed(color, avgTemp, avgFeels);
+        server.getTextChannelById(WEATHER_CHANNEL_ID).ifPresent(channel -> {
+            channel.sendMessage(embed);
         });
     }
 

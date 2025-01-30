@@ -43,7 +43,7 @@ public class CommonUtils {
     public static DiscordApi bot;
     public static SettingsInstance settings;
 
-    public static final String VERSION = "3.1.0";
+    public static final String VERSION = "3.2.0";
     public static final long START_TIME = System.currentTimeMillis();
     public static final String NIX_CREW_ID = "611985124023730185";
 
@@ -136,6 +136,17 @@ public class CommonUtils {
 
     }
 
+    public static Server getNixCrew(){
+        Server output = null;
+        for (Server server : bot.getServers()) {
+            if(server.getIdAsString().equals(NIX_CREW_ID))
+                output = server;
+            else
+                politeDisconnect(server);
+        }
+        return output;
+    }
+
     public static void politeDisconnect(Server server){
         server.getMembers().forEach(member -> {
             if(server.hasPermission(member, PermissionType.ADMINISTRATOR)){
@@ -146,14 +157,7 @@ public class CommonUtils {
     }
 
     public static boolean isUserAdmin(User user){
-        for(Server server : bot.getServers()){
-            if(!server.getIdAsString().equals(NIX_CREW_ID)){
-                politeDisconnect(server);
-                continue;
-            }
-            return server.hasPermission(user, PermissionType.ADMINISTRATOR);
-        }
-        return false;
+        return getNixCrew().hasPermission(user, PermissionType.ADMINISTRATOR);
     }
 
     public static String formatTimeToMinutes(long time){

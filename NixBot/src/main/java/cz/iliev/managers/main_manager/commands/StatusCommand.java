@@ -39,7 +39,7 @@ public class StatusCommand implements ISlashCommand {
                 .addField("Time since start", formatTime(System.currentTimeMillis() - CommonUtils.START_TIME), true)
                 .addField("Since start", LogUtils.getErrorCounter() + " errors", true)
                 .addField("Generating timestamp", System.currentTimeMillis() - start + " ms", false)
-                .setThumbnail(((Server) CommonUtils.bot.getServers().toArray()[0]).getIcon().get())
+                .setThumbnail(CommonUtils.getNixCrew().getIcon().get())
                 .setFooter("Version: " + CommonUtils.VERSION);
 
         MessageBuilder message = new MessageBuilder()

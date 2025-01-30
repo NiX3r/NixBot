@@ -44,7 +44,7 @@ public class CommandManagerSlashCommandCreateListener implements SlashCommandCre
                     CommonUtils.musicManager.onCommand(interaction);
                 break;
 
-            case "dice": case "anonymous": case "phonetic":
+            case "dice": case "anonymous": case "phonetic": case "project":
                 if(checkIsCmdChannel(interaction))
                     CommonUtils.commandManager.getCommandByName(interaction.getCommandName()).run(interaction);
                 break;
@@ -84,12 +84,9 @@ public class CommandManagerSlashCommandCreateListener implements SlashCommandCre
         if(CommonUtils.isUserAdmin(interaction.getUser()))
             return true;
 
-        CommonUtils.bot.getServers().forEach(server -> {
-            server.getTextChannelById(CommandManager.CMD_CHANNEL_ID).ifPresent(channel -> {
-                interaction.createImmediateResponder().setContent("Please type your command in " + channel.getMentionTag()).setFlags(MessageFlag.EPHEMERAL).respond().join();
-            });
+        CommonUtils.getNixCrew().getTextChannelById(CommandManager.CMD_CHANNEL_ID).ifPresent(channel -> {
+            interaction.createImmediateResponder().setContent("Please type your command in " + channel.getMentionTag()).setFlags(MessageFlag.EPHEMERAL).respond().join();
         });
-
         return false;
 
     }

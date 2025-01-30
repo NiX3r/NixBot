@@ -27,20 +27,18 @@ public class UpdateMessageTimer extends TimerTask {
 
     @Override
     public void run() {
-        CommonUtils.bot.getServers().forEach(server -> {
-            server.getTextChannelById(STATS_CHANNEL_ID).ifPresent(textChannel -> {
-                Message msg = null;
-                try {
-                    msg = textChannel.getMessageById(CommonUtils.settings.getStatsMessageId()).get();
-                } catch (Exception e) {}
-                if(msg == null){
-                    Message newMsg = textChannel.sendMessage(getEmbeds()).join();
-                    CommonUtils.settings.setStatsMessageId(newMsg.getId());
-                }
-                else {
-                    msg.createUpdater().removeAllEmbeds().addEmbeds(getEmbeds()).applyChanges();
-                }
-            });
+        CommonUtils.getNixCrew().getTextChannelById(STATS_CHANNEL_ID).ifPresent(textChannel -> {
+            Message msg = null;
+            try {
+                msg = textChannel.getMessageById(CommonUtils.settings.getStatsMessageId()).get();
+            } catch (Exception e) {}
+            if(msg == null){
+                Message newMsg = textChannel.sendMessage(getEmbeds()).join();
+                CommonUtils.settings.setStatsMessageId(newMsg.getId());
+            }
+            else {
+                msg.createUpdater().removeAllEmbeds().addEmbeds(getEmbeds()).applyChanges();
+            }
         });
     }
 
