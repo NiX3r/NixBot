@@ -4,7 +4,6 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -17,6 +16,7 @@ import cz.iliev.managers.statistics_manager.behaviors.MusicPlayBehavior;
 import cz.iliev.managers.statistics_manager.behaviors.MusicPlayTimeBehavior;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
+import dev.lavalink.youtube.YoutubeAudioSourceManager;
 import org.javacord.api.audio.AudioConnection;
 import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.channel.ServerVoiceChannel;
@@ -128,7 +128,7 @@ public class MusicManager implements IManager {
         MusicPlayTimeBehavior.behave(audioList.get(0).getTrack().getDuration());
         if (player.getPlayingTrack() != null)
             player.stopTrack();
-        player.playTrack(audioList.get(0).getTrack());
+        player.playTrack(audioList.get(0).getTrack().makeClone());
         CommonUtils.announcementManager.sendCurrentSong(audioList.get(0));
         CommonUtils.botActivityManager.setActivity(ActivityType.PLAYING, "\uD83C\uDFB5 " + audioList.get(0).getTrack().getInfo().title, 60000);
         audioList.remove(0);
@@ -159,9 +159,6 @@ public class MusicManager implements IManager {
 
         User user = interaction.getUser();
         Server server = interaction.getServer().get();
-
-        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager();
-        var test = youtube.loadTrackWithVideoId("hvi487RBs5g", true);
 
         if(player.getPlayingTrack() != null){
 
