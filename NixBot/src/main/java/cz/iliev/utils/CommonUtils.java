@@ -1,22 +1,16 @@
 package cz.iliev.utils;
 
-import com.vdurmont.emoji.EmojiParser;
 import cz.iliev.instances.SettingsInstance;
 import cz.iliev.managers.announcement_manager.AnnouncementManager;
 import cz.iliev.managers.ban_list_manager.BanListManager;
-import cz.iliev.managers.ban_list_manager.enums.BanType;
-import cz.iliev.managers.ban_list_manager.instances.MemberInstance;
-import cz.iliev.managers.ban_list_manager.instances.PunishmentInstance;
 import cz.iliev.managers.bot_activity_manager.BotActivityManager;
 import cz.iliev.managers.command_manager.CommandManager;
-import cz.iliev.managers.command_manager.utils.CommandManagerUtils;
 import cz.iliev.managers.console_command_manager.ConsoleCommandManager;
 import cz.iliev.managers.main_manager.MainManager;
 import cz.iliev.managers.music_manager.MusicManager;
 import cz.iliev.managers.reminder_manager.ReminderManager;
 import cz.iliev.managers.role_manager.RoleManager;
 import cz.iliev.managers.statistics_manager.StatisticsManager;
-import cz.iliev.managers.stay_fit_manager.StayFitManager;
 import cz.iliev.managers.temporary_channel_manager.TemporaryChannelManager;
 import cz.iliev.managers.ticket_manager.TicketManager;
 import cz.iliev.managers.user_verification_manager.UserVerificationManager;
@@ -25,16 +19,11 @@ import cz.iliev.threads.ShutdownThread;
 
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
-import org.javacord.api.entity.message.MessageFlag;
-import org.javacord.api.entity.message.component.ActionRow;
-import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -57,7 +46,6 @@ public class CommonUtils {
     public static ReminderManager reminderManager;
     public static RoleManager roleManager;
     public static StatisticsManager statisticsManager;
-    public static StayFitManager stayFitManager;
     public static TemporaryChannelManager temporaryChannelManager;
     public static TicketManager ticketManager;
     public static UserVerificationManager userVerificationManager;
@@ -87,7 +75,6 @@ public class CommonUtils {
         reminderManager = new ReminderManager();
         roleManager = new RoleManager();
         statisticsManager = new StatisticsManager();
-        stayFitManager = new StayFitManager();
         temporaryChannelManager = new TemporaryChannelManager();
         ticketManager = new TicketManager();
         userVerificationManager = new UserVerificationManager();
@@ -117,7 +104,6 @@ public class CommonUtils {
         reminderManager.kill();
         roleManager.kill();
         statisticsManager.kill();
-        stayFitManager.kill();
         temporaryChannelManager.kill();
         ticketManager.kill();
         userVerificationManager.kill();
