@@ -5,6 +5,7 @@ import cz.iliev.managers.announcement_manager.AnnouncementManager;
 import cz.iliev.managers.ban_list_manager.BanListManager;
 import cz.iliev.managers.bot_activity_manager.BotActivityManager;
 import cz.iliev.managers.command_manager.CommandManager;
+import cz.iliev.managers.command_manager.utils.CommandManagerUtils;
 import cz.iliev.managers.console_command_manager.ConsoleCommandManager;
 import cz.iliev.managers.main_manager.MainManager;
 import cz.iliev.managers.music_manager.MusicManager;
@@ -109,6 +110,7 @@ public class CommonUtils {
         userVerificationManager.kill();
         weatherManager.kill();
         FileUtils.saveSettings(settings);
+        FileUtils.deleteTempFiles();
     }
 
     public static void throwException(Exception exception){throwException(exception, false, false);}

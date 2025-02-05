@@ -205,12 +205,17 @@ public class AnnouncementManager implements IManager {
         });
     }
 
-    public void sendWeather(String color, String avgTemp, String avgFeels){
+    public void sendWeather(String color, String avgTemp, String avgFeels, long userId, byte[] graph){
         var server = CommonUtils.getNixCrew();
-        var embed = AnnouncementManagerUtils.createWeatherEmbed(color, avgTemp, avgFeels);
+        var embed = AnnouncementManagerUtils.createWeatherEmbed(color, avgTemp, avgFeels, userId, graph);
         server.getTextChannelById(WEATHER_CHANNEL_ID).ifPresent(channel -> {
             channel.sendMessage(embed);
         });
+    }
+
+    public EmbedBuilder getWeather(String color, String avgTemp, String avgFeels, long userId, byte[] graph){
+        var server = CommonUtils.getNixCrew();
+        return AnnouncementManagerUtils.createWeatherEmbed(color, avgTemp, avgFeels, userId, graph);
     }
 
     public MessagesInstance getMessages() {

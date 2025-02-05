@@ -70,6 +70,11 @@ public class CommandManagerSlashCommandCreateListener implements SlashCommandCre
                 CommonUtils.banListManager.onCommand(interaction);
                 break;
 
+            case "weather":
+                if(checkIsCmdChannel(interaction))
+                    CommonUtils.weatherManager.onCommand(interaction);
+                break;
+
         }
 
     }
