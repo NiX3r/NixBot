@@ -44,7 +44,7 @@ public class CommandManagerSlashCommandCreateListener implements SlashCommandCre
                     CommonUtils.musicManager.onCommand(interaction);
                 break;
 
-            case "dice": case "anonymous": case "phonetic": case "project":
+            case "dice": case "anonymous": case "phonetic": case "project": case "summon":
                 if(checkIsCmdChannel(interaction))
                     CommonUtils.commandManager.getCommandByName(interaction.getCommandName()).run(interaction);
                 break;

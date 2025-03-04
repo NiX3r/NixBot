@@ -144,6 +144,11 @@ public class CommandManagerUtils {
         )).setDefaultEnabledForPermissions(PermissionType.ADMINISTRATOR).createGlobal(CommonUtils.bot).join();
         LogUtils.info("Created weather command");
 
+        SlashCommand.with("summon", "command to summon member", Arrays.asList(
+                SlashCommandOption.create(SlashCommandOptionType.USER, "member", "member to be summoned", true)
+        )).createGlobal(CommonUtils.bot).join();
+        LogUtils.info("Created summon command");
+
     }
 
     public static void deleteCommands(){
