@@ -44,7 +44,7 @@ public class CommandManagerSlashCommandCreateListener implements SlashCommandCre
                     CommonUtils.musicManager.onCommand(interaction);
                 break;
 
-            case "dice": case "anonymous": case "phonetic": case "project":
+            case "dice": case "anonymous": case "phonetic": case "project": case "summon":
                 if(checkIsCmdChannel(interaction))
                     CommonUtils.commandManager.getCommandByName(interaction.getCommandName()).run(interaction);
                 break;
@@ -68,6 +68,11 @@ public class CommandManagerSlashCommandCreateListener implements SlashCommandCre
 
             case "ban": case "unban": case "kick": case "mute":
                 CommonUtils.banListManager.onCommand(interaction);
+                break;
+
+            case "weather":
+                if(checkIsCmdChannel(interaction))
+                    CommonUtils.weatherManager.onCommand(interaction);
                 break;
 
         }

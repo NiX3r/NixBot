@@ -111,15 +111,15 @@ public class AnnouncementManagerUtils {
                     .setFooter("Author: " + author + " | Version: " + CommonUtils.VERSION);
     }
 
-    public static EmbedBuilder createWeatherEmbed(String color, String avgTemp, String avgFeels){
+    public static EmbedBuilder createWeatherEmbed(String color, String avgTemp, String avgFeels, long userId, byte[] graph){
         return new EmbedBuilder()
-                .setTitle("Předpověď počasí " + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .setTitle("Weather forecast " + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .setColor(Color.decode(color))
-                .addField("Průměrná teplota", avgTemp + "°C", true)
-                .addField("Průměrná pocitová", avgFeels + "°C", true)
-                .setDescription("Pokud nechcete dostávat upozornění o počasí, tak si zrušte notifikace [zde](https://discord.com/channels/611985124023730185/1219225196594991124/1246890056027865199)")
-                .setImage(new File("./chart.png"))
-                .setAuthor("Odkaz na OpenWeather", "https://openweathermap.org/", "")
+                .addField("Sum temperature", avgTemp + "°C", true)
+                .addField("Feels like", avgFeels + "°C", true)
+                .setDescription("If you wish to stop receiving notifications, unsubscribe [here](https://discord.com/channels/611985124023730185/1219225196594991124/1246890056027865199)")
+                .setImage(graph)
+                .setAuthor("Link to OpenWeather", "https://openweathermap.org/", "")
                 .setThumbnail("https://openweathermap.org/themes/openweathermap/assets/img/logo_white_cropped.png")
                 .setFooter("Version: " + CommonUtils.VERSION);
     }

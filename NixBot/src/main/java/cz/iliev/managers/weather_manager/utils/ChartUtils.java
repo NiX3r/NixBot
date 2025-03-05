@@ -1,5 +1,6 @@
 package cz.iliev.managers.weather_manager.utils;
 
+import cz.iliev.utils.LogUtils;
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
@@ -9,12 +10,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.function.Consumer;
 
 public class ChartUtils {
 
-    public static void generate30hChart(ArrayList<Double> temp, ArrayList<Double> feelsLikeTemp, ArrayList<Date> dates){
+    public static void generate30hChart(ArrayList<Double> temp, ArrayList<Double> feelsLikeTemp, ArrayList<Date> dates, long userId, String lat, String lon, Consumer<byte[]> callback){
 
-        final XYChart chart = new XYChartBuilder().width(1920).height(720).title("30h předpověd počasí - Praha").xAxisTitle("Datum").yAxisTitle("Teplota (°C)").build();
+        final XYChart chart = new XYChartBuilder().width(1920).height(720).title("30h weather forecast - " + (userId == 0 ? "Prague" : ("Lat: " + lat + ", Lon: " + lon))).xAxisTitle("Date").yAxisTitle("Temperature (°C)").build();
 
         chart.getStyler().setChartBackgroundColor(Color.decode("#313338"));
         chart.getStyler().setLegendBackgroundColor(Color.decode("#313338"));
@@ -30,14 +32,17 @@ public class ChartUtils {
         chart.getStyler().setAxisTitleFont(new Font("mono", Font.PLAIN, 20));
         chart.getStyler().setTimezone(TimeZone.getTimeZone("Europe/Prague"));
 
-        chart.addSeries("Teplota", dates, temp);
-        chart.addSeries("Pocitová", dates, feelsLikeTemp);
+        chart.addSeries("Temperature", dates, temp);
+        chart.addSeries("Feels like", dates, feelsLikeTemp);
 
         try {
-            BitmapEncoder.saveBitmap(chart, "./chart", BitmapEncoder.BitmapFormat.PNG);
+            var bitmap = BitmapEncoder.getBitmapBytes(chart, BitmapEncoder.BitmapFormat.PNG);
+            callback.accept(bitmap);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            LogUtils.error(e.getMessage());
         }
+
+        callback.accept(null);
 
     }
 

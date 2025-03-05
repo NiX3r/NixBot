@@ -36,7 +36,7 @@ public class UserVerificationManager implements IManager {
         usersCodes = FileUtils.loadVerification();
         invites = new ArrayList<InviteInstance>();
         CommonUtils.getNixCrew().getInvites().thenAccept(richInvites -> {
-            invites.forEach(invite ->{
+            invites.forEach(invite -> {
                 invites.add(new InviteInstance(
                         invite.getCode(),
                         invite.getCreator_id(),

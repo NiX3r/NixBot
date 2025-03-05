@@ -23,7 +23,20 @@ public class FileUtils {
         new File("./archive/statistics").mkdirs();
         new File("./archive/tickets").mkdirs();
         new File("./logs").mkdirs();
+        new File("./temp").mkdirs();
+
         LogUtils.info("Default folders created (or already existed)");
+    }
+
+    public static void deleteTempFiles(){
+        LogUtils.info("Trying to delete temp files");
+        for(var file : new File("./temp").listFiles()) {
+            if (!file.isDirectory()){
+                LogUtils.warning("Deleting '" + file.getName() + "' temp file");
+                file.delete();
+            }
+        }
+        LogUtils.info("Temp file deleted");
     }
 
     public static SettingsInstance loadSettings(){

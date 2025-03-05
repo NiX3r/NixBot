@@ -1,45 +1,24 @@
 package cz.iliev.managers.weather_manager;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import cz.iliev.interfaces.IManager;
 import cz.iliev.managers.announcement_manager.AnnouncementManager;
-import cz.iliev.managers.stay_fit_manager.instances.MemberFitInstance;
+import cz.iliev.managers.weather_manager.commands.WeatherCommand;
 import cz.iliev.managers.weather_manager.instances.ApiResponse;
 import cz.iliev.managers.weather_manager.utils.ApiUtils;
 import cz.iliev.managers.weather_manager.utils.ChartUtils;
+import cz.iliev.managers.weather_manager.utils.FileUtils;
 import cz.iliev.managers.weather_manager.utils.ManagerUtils;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
-import org.javacord.api.entity.message.MessageBuilder;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.interaction.SlashCommandInteraction;
-import org.knowm.xchart.BitmapEncoder;
-import org.knowm.xchart.XYChart;
-import org.knowm.xchart.XYChartBuilder;
-import org.knowm.xchart.style.Styler;
-import org.knowm.xchart.style.theme.Theme;
-
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalField;
 import java.util.*;
-import java.util.List;
-import java.util.function.Function;
 
 public class WeatherManager implements IManager {
 
     private boolean ready;
     private String apiKey;
+
+    private HashMap<Long, String> weatherSubscribers;
 
     public WeatherManager(){ setup(); }
 
@@ -47,6 +26,9 @@ public class WeatherManager implements IManager {
     public void setup() {
         LogUtils.info("Load and start WeatherManager");
         apiKey = CommonUtils.settings.getOpenWeatherApiKey();
+
+        weatherSubscribers = FileUtils.loadSubscribers();
+
         ready = true;
 
         CommonUtils.getNixCrew().getTextChannelById(AnnouncementManager.WEATHER_CHANNEL_ID).ifPresent(channel -> {
@@ -58,7 +40,13 @@ public class WeatherManager implements IManager {
                 if(time > 0)
                     return;
 
-                generateCharts();
+                generateChart();
+
+                for (var key : weatherSubscribers.keySet()){
+                    String[] splitter = weatherSubscribers.get(key).split(":");
+                    generateChart(splitter[0], splitter[1], key);
+                }
+
             });
         });
         LogUtils.info("WeatherManager loaded and started. Ready to use");
@@ -67,6 +55,7 @@ public class WeatherManager implements IManager {
     @Override
     public void kill() {
         LogUtils.info("Kill WeatherManager");
+        FileUtils.saveSubscribers(weatherSubscribers);
         ready = false;
         LogUtils.info("WeatherManager killed");
     }
@@ -80,7 +69,11 @@ public class WeatherManager implements IManager {
 
     @Override
     public void onCommand(SlashCommandInteraction interaction) {
-
+        switch (interaction.getCommandName()){
+            case "weather":
+                new WeatherCommand().run(interaction);
+                break;
+        }
     }
 
     @Override
@@ -108,22 +101,47 @@ public class WeatherManager implements IManager {
         return "#04a8c9";
     }
 
-    private void generateCharts(){
+    private void generateChart(){ generateChart("50.073658", "14.418540", 0); }
+    private void generateChart(String latitude, String longitude, long userId){
 
         var temp = new ArrayList<Double>();
         var feelsLikeTemp = new ArrayList<Double>();
 
         var dates = new ArrayList<Date>();
 
-        var data = ApiUtils.GetFiveDayForecast("50.073658", "14.418540", apiKey);
+        var data = ApiUtils.GetFiveDayForecast(latitude, longitude, apiKey);
         parseData(data, temp, feelsLikeTemp, dates);
-        ChartUtils.generate30hChart(temp, feelsLikeTemp, dates);
+        ChartUtils.generate30hChart(temp, feelsLikeTemp, dates, userId, latitude, longitude, callback -> {
+            if(callback != null)
+                sendChart(userId, temp, feelsLikeTemp, callback);
+        });
 
-        CommonUtils.announcementManager.sendWeather(
-                color(),
-                ManagerUtils.calculateAverageTemperature(temp),
-                ManagerUtils.calculateAverageTemperature(feelsLikeTemp)
-        );
+    }
+
+    private void sendChart(long userId, ArrayList<Double> temp, ArrayList<Double> feelsLikeTemp, byte[] graph){
+
+        if(userId == 0){
+            CommonUtils.announcementManager.sendWeather(
+                    color(),
+                    ManagerUtils.calculateAverageTemperature(temp),
+                    ManagerUtils.calculateAverageTemperature(feelsLikeTemp),
+                    0,
+                    graph
+            );
+        }
+        else{
+            CommonUtils.getNixCrew().getMemberById(userId).ifPresent(user -> {
+                user.sendMessage(
+                        CommonUtils.announcementManager.getWeather(
+                                color(),
+                                ManagerUtils.calculateAverageTemperature(temp),
+                                ManagerUtils.calculateAverageTemperature(feelsLikeTemp),
+                                userId,
+                                graph
+                        )
+                ).join();
+            });
+        }
 
     }
 
@@ -154,5 +172,9 @@ public class WeatherManager implements IManager {
 
     public String getApiKey() {
         return apiKey;
+    }
+
+    public HashMap<Long, String> getWeatherSubscribers() {
+        return weatherSubscribers;
     }
 }

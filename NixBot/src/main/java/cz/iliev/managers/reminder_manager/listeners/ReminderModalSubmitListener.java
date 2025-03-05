@@ -25,7 +25,7 @@ public class ReminderModalSubmitListener implements ModalSubmitListener {
         String descriptionValue = description.getValue();
 
         if(!CronUtils.checkFullCronFormat(cronValue)){
-            interaction.createImmediateResponder().setContent("Špatný formát cron. Formát musí obsahovat den a měsíc odděleny mezerou. Můžete zapsat tři typy dní/měsíců a to:\n- Číslo dne/měsíce;\n- Všechno děleno číslem (*/2 - každý druhý den/měsíc);\n- Každý den/měsíc znakem `*`.\nPříklad správného cron formátu `*/2 *` což je každý druhý den, každého měsíce.").setFlags(MessageFlag.EPHEMERAL).respond();
+            interaction.createImmediateResponder().setContent("Bad cron format. Format must contain day and month split byt space. You can write down 3 types of day/month value:\n- Specific number of day/month\n- Any by number (`*/2` - means even day of month)\n- Every day/month (`*`)\n\n### Examples\n- `*/2 *` which is every even day of every month\n- `25 *` which is 25th of every month").setFlags(MessageFlag.EPHEMERAL).respond();
             return;
         }
 
@@ -39,7 +39,7 @@ public class ReminderModalSubmitListener implements ModalSubmitListener {
         );
 
         CommonUtils.reminderManager.addUserReminder(reminder);
-        interaction.createImmediateResponder().setContent("Reminder `" + name + "` vytvořen").setFlags(MessageFlag.EPHEMERAL).respond();
+        interaction.createImmediateResponder().setContent("Reminder `" + name + "` created").setFlags(MessageFlag.EPHEMERAL).respond();
 
     }
 }

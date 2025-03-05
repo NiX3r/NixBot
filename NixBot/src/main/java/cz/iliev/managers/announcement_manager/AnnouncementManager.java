@@ -118,9 +118,9 @@ public class AnnouncementManager implements IManager {
         CommonUtils.getNixCrew().getTextChannelById(NEWS_CHANNEL_ID).ifPresent(textChannel -> {
 
             EmbedBuilder builder = new EmbedBuilder()
-                    .setTitle("Restart bota")
-                    .setDescription("Dojde k automatickému restartu bota.")
-                    .addField("Restart za", command[2] + " minut")
+                    .setTitle("Bot restarting")
+                    .setDescription("Bot will be automatically restarted")
+                    .addField("In", command[2] + " minutes")
                     .setColor(Color.GREEN)
                     .setThumbnail("https://pluspng.com/img-png/restart-png-restart-icon-1600.png")
                     .setFooter("Console | Version: " + CommonUtils.VERSION);
@@ -205,12 +205,17 @@ public class AnnouncementManager implements IManager {
         });
     }
 
-    public void sendWeather(String color, String avgTemp, String avgFeels){
+    public void sendWeather(String color, String avgTemp, String avgFeels, long userId, byte[] graph){
         var server = CommonUtils.getNixCrew();
-        var embed = AnnouncementManagerUtils.createWeatherEmbed(color, avgTemp, avgFeels);
+        var embed = AnnouncementManagerUtils.createWeatherEmbed(color, avgTemp, avgFeels, userId, graph);
         server.getTextChannelById(WEATHER_CHANNEL_ID).ifPresent(channel -> {
             channel.sendMessage(embed);
         });
+    }
+
+    public EmbedBuilder getWeather(String color, String avgTemp, String avgFeels, long userId, byte[] graph){
+        var server = CommonUtils.getNixCrew();
+        return AnnouncementManagerUtils.createWeatherEmbed(color, avgTemp, avgFeels, userId, graph);
     }
 
     public MessagesInstance getMessages() {

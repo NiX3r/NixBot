@@ -33,7 +33,6 @@ public class MainManager implements IManager {
         managers.put("reminder", CommonUtils.reminderManager);
         managers.put("role", CommonUtils.roleManager);
         managers.put("stats", CommonUtils.statisticsManager);
-        managers.put("stay-fit", CommonUtils.stayFitManager);
         managers.put("temp", CommonUtils.temporaryChannelManager);
         managers.put("ticket", CommonUtils.ticketManager);
         managers.put("verification", CommonUtils.userVerificationManager);

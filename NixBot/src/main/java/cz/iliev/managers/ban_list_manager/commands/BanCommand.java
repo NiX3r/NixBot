@@ -38,7 +38,7 @@ public class BanCommand implements ISlashCommand {
                     .setFlags(MessageFlag.EPHEMERAL).respond();
         }
         else {
-            interaction.createImmediateResponder().setContent("There is already modal for this user. Please firstly the old one").setFlags(MessageFlag.EPHEMERAL).respond();
+            interaction.createImmediateResponder().setContent("There is already modal for this user. Please firstly finish the old one").setFlags(MessageFlag.EPHEMERAL).respond();
         }
 
     }

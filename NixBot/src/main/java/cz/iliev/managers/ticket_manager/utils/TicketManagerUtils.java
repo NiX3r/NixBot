@@ -68,14 +68,14 @@ public class TicketManagerUtils {
                             textChannel.asServerTextChannel().get().createUpdater().addPermissionOverwrite(user, Permissions.fromBitmask(1024)).update();
                         }
 
-                        interaction.createImmediateResponder().setContent("Uživatel '" + userNick + "¨ přidán").respond();
+                        interaction.createImmediateResponder().setContent("Member `" + userNick + "` added").respond();
                         LogUtils.info("Added '" + userNick + "' to ticket '" + (ticket.getId() + "-" + ticket.getAuthor().getName()) + "'");
                     }
                     else {
                         if(textChannel.asServerTextChannel().isPresent()){
                             textChannel.asServerTextChannel().get().createUpdater().removePermissionOverwrite(user).update();
                         }
-                        interaction.createImmediateResponder().setContent("Uživatel '" + userNick + "¨ odebrán").respond();
+                        interaction.createImmediateResponder().setContent("Member `" + userNick + "` removed").respond();
                         LogUtils.info("Removed '" + userNick + "' to ticket '" + (ticket.getId() + "-" + ticket.getAuthor().getName()) + "'");
                     }
 

@@ -134,6 +134,21 @@ public class CommandManagerUtils {
         )).setDefaultEnabledForPermissions(PermissionType.ADMINISTRATOR).createGlobal(CommonUtils.bot).join();
         LogUtils.info("Created project command");
 
+        SlashCommand.with("weather", "command to subscribe/unsubscribe weather forecast", Arrays.asList(
+                SlashCommandOption.createWithOptions(SlashCommandOptionType.SUB_COMMAND, "subscribe", "subscribe to weather forecast", Arrays.asList(
+                        SlashCommandOption.create(SlashCommandOptionType.STRING, "latitude", "latitude of prefer destination", true),
+                        SlashCommandOption.create(SlashCommandOptionType.STRING, "longitude", "longitude of prefer destination", true)
+                )),
+                SlashCommandOption.createWithOptions(SlashCommandOptionType.SUB_COMMAND, "unsubscribe", "unsubscribe from weather forecast")
+
+        )).setDefaultEnabledForPermissions(PermissionType.ADMINISTRATOR).createGlobal(CommonUtils.bot).join();
+        LogUtils.info("Created weather command");
+
+        SlashCommand.with("summon", "command to summon member", Arrays.asList(
+                SlashCommandOption.create(SlashCommandOptionType.USER, "member", "member to be summoned", true)
+        )).createGlobal(CommonUtils.bot).join();
+        LogUtils.info("Created summon command");
+
     }
 
     public static void deleteCommands(){
