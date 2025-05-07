@@ -26,7 +26,7 @@ public class StatisticsManager implements IManager {
 
     @Override
     public void setup() {
-        LogUtils.info("Load and start StatisticsManager");
+        LogUtils.info("Load and start " + managerName());
         statistics = FileUtils.loadStatistics();
         usersLastActivity = FileUtils.loadUsersLastActivity();
         CommonUtils.bot.addMessageCreateListener(new StatisticsManagerMessageCreateListener());
@@ -38,12 +38,12 @@ public class StatisticsManager implements IManager {
         CommonUtils.bot.addUserChangeActivityListener(new StatisticsUserChangeActivityListener());
         userVoiceChannelJoinTime = new HashMap<>();
         ready = true;
-        LogUtils.info("StatisticsManager loaded and started. Ready to use");
+        LogUtils.info(managerName() + " loaded and started. Ready to use");
     }
 
     @Override
     public void kill() {
-        LogUtils.info("Kill StatisticsManager");
+        LogUtils.info("Kill " + managerName());
         for(long userId : userVoiceChannelJoinTime.keySet()){
             long increment = System.currentTimeMillis() - userVoiceChannelJoinTime.get(userId);
             UserCallTimeBehavior.behave(userId, increment);
@@ -53,7 +53,7 @@ public class StatisticsManager implements IManager {
         FileUtils.saveUsersLastActivity(usersLastActivity);
         FileUtils.saveStatistics(statistics);
         ready = false;
-        LogUtils.info("StatisticsManager killed");
+        LogUtils.info(managerName() + " killed");
     }
 
     @Override

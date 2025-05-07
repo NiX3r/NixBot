@@ -22,7 +22,7 @@ public class MainManager implements IManager {
 
     @Override
     public void setup() {
-        LogUtils.info("Load and start MainManager");
+        LogUtils.info("Load and start " + managerName());
         managers = new HashMap<String, IManager>();
         managers.put("announcement", CommonUtils.announcementManager);
         managers.put("ban-list", CommonUtils.banListManager);
@@ -32,6 +32,7 @@ public class MainManager implements IManager {
         managers.put("music", CommonUtils.musicManager);
         managers.put("reminder", CommonUtils.reminderManager);
         managers.put("role", CommonUtils.roleManager);
+        managers.put("security", CommonUtils.securityManager);
         managers.put("stats", CommonUtils.statisticsManager);
         managers.put("temp", CommonUtils.temporaryChannelManager);
         managers.put("ticket", CommonUtils.ticketManager);
@@ -39,14 +40,14 @@ public class MainManager implements IManager {
         managers.put("weather", CommonUtils.weatherManager);
         CommonUtils.bot.addMessageComponentCreateListener(new MainManagerMessageComponentCreateListener());
         ready = true;
-        LogUtils.info("MainManager loaded and started. Ready to use");
+        LogUtils.info(managerName() + " loaded and started. Ready to use");
     }
 
     @Override
     public void kill() {
-        LogUtils.info("Kill MainManager");
+        LogUtils.info("Kill " + managerName());
         ready = false;
-        LogUtils.info("MainManager killed");
+        LogUtils.info(managerName() + " killed");
     }
 
     @Override

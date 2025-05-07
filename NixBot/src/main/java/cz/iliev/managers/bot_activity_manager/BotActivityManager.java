@@ -23,19 +23,19 @@ public class BotActivityManager implements IManager {
 
     @Override
     public void setup() {
-        LogUtils.info("Load and start BotActivityManager");
+        LogUtils.info("Load and start " + managerName());
         setBasicActivity();
         timerRunning = false;
         activities = new ArrayList<BotActivityInstance>();
         ready = true;
-        LogUtils.info("BotActivityManager loaded and started. Ready to use");
+        LogUtils.info(managerName() + " loaded and started. Ready to use");
     }
 
     @Override
     public void kill() {
-        LogUtils.info("Kill BotActivityManager");
+        LogUtils.info("Kill " + managerName());
         ready = false;
-        LogUtils.info("BotActivityManager killed");
+        LogUtils.info(managerName() + " killed");
     }
 
     @Override

@@ -40,15 +40,15 @@ public class TicketManager implements IManager {
         CommonUtils.bot.addMessageComponentCreateListener(new TicketManagerMessageComponentCreateListener());
         CommonUtils.bot.addMessageCreateListener(new TicketManagerMessageCreateListener());
         ready = true;
-        LogUtils.info("InviteManager loaded and started. Ready to use");
+        LogUtils.info(managerName() + " loaded and started. Ready to use");
     }
 
     @Override
     public void kill() {
-        LogUtils.info("Kill InviteManager");
+        LogUtils.info("Kill " + managerName());
         FileUtils.saveActiveTickets(activeTickets);
         ready = false;
-        LogUtils.info("InviteManager killed");
+        LogUtils.info(managerName() + " killed");
     }
 
     @Override

@@ -47,15 +47,15 @@ public class UserVerificationManager implements IManager {
         CommonUtils.bot.addMessageCreateListener(new UserVerificationManagerMessageCreateListener());
         CommonUtils.bot.addServerMemberJoinListener(new UserVerificationManagerServerMemberJoinListener());
         ready = true;
-        LogUtils.info("UserVerificationManager loaded and started. Ready to use");
+        LogUtils.info(managerName() + " loaded and started. Ready to use");
     }
 
     @Override
     public void kill() {
-        LogUtils.info("Kill UserVerificationManager");
+        LogUtils.info("Kill " + managerName());
         FileUtils.saveVerification(usersCodes);
         ready = false;
-        LogUtils.info("UserVerificationManager killed");
+        LogUtils.info(managerName() + " killed");
     }
 
     @Override

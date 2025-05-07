@@ -43,7 +43,7 @@ public class MusicManager implements IManager {
 
     @Override
     public void setup() {
-        LogUtils.info("Load and start MusicManager");
+        LogUtils.info("Load and start " + managerName());
         playerManager = new DefaultAudioPlayerManager();
         playerManager.registerSourceManager(new YoutubeAudioSourceManager());
         player = playerManager.createPlayer();
@@ -51,14 +51,14 @@ public class MusicManager implements IManager {
         audioList = new ArrayList<>();
         player.addListener(new TrackEndEvent());
         ready = true;
-        LogUtils.info("MusicManager loaded and started. Ready to use");
+        LogUtils.info(managerName() + " loaded and started. Ready to use");
     }
 
     @Override
     public void kill() {
-        LogUtils.info("Kill MusicManager");
+        LogUtils.info("Kill " + managerName());
         ready = false;
-        LogUtils.info("MusicManager killed");
+        LogUtils.info(managerName() + " killed");
     }
 
     @Override

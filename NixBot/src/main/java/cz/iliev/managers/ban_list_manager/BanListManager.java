@@ -40,7 +40,7 @@ public class BanListManager implements IManager {
 
     @Override
     public void setup() {
-        LogUtils.info("Load and start AnnouncementManager");
+        LogUtils.info("Load and start " + managerName());
         bans = FileUtils.loadActiveBans();
         banCache = new HashMap<Long, PunishmentInstance>();
         CommonUtils.bot.addMessageComponentCreateListener(new BanListManagerMessageComponentCreateListener());
@@ -55,12 +55,14 @@ public class BanListManager implements IManager {
         });
 
         ready = true;
-        LogUtils.info("AnnouncementManager loaded and started. Ready to use");
+        LogUtils.info(managerName() + " loaded and started. Ready to use");
     }
 
     @Override
     public void kill() {
+        LogUtils.info("Kill " + managerName());
         ready = false;
+        LogUtils.info(managerName() + " killed");
     }
 
     @Override

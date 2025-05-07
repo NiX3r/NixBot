@@ -45,20 +45,20 @@ public class AnnouncementManager implements IManager {
 
     @Override
     public void setup() {
-        LogUtils.info("Load and start AnnouncementManager");
+        LogUtils.info("Load and start " + managerName());
         messages = FileUtils.loadMessages();
         CommonUtils.bot.addServerMemberBanListener(new AnnouncementServerMemberBanListener());
         CommonUtils.bot.addServerMemberLeaveListener(new AnnouncementServerMemberLeaveListener());
         ready = true;
-        LogUtils.info("AnnouncementManager loaded and started. Ready to use");
+        LogUtils.info(managerName() + " loaded and started. Ready to use");
     }
 
     @Override
     public void kill() {
-        LogUtils.info("kill AnnouncementManager");
+        LogUtils.info("Kill " + managerName());
         FileUtils.saveMessages(messages);
         ready = false;
-        LogUtils.info("AnnouncementManager killed");
+        LogUtils.info(managerName() + " killed");
     }
 
     @Override

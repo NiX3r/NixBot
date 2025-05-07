@@ -26,7 +26,7 @@ public class CommandManager implements IManager {
 
     @Override
     public void setup() {
-        LogUtils.info("Load and start CommandManager");
+        LogUtils.info("Load and start " + managerName());
         diceMessages = FileUtils.loadDiceMessages();
         noManagerCommands = new HashMap<String, ISlashCommand>();
         noManagerCommands.put("dice", new DiceCommand());
@@ -36,14 +36,14 @@ public class CommandManager implements IManager {
         noManagerCommands.put("summon", new SummonCommand());
         CommonUtils.bot.addSlashCommandCreateListener(new CommandManagerSlashCommandCreateListener());
         ready = true;
-        LogUtils.info("CommandManager loaded and started. Ready to use");
+        LogUtils.info(managerName() + " loaded and started. Ready to use");
     }
 
     @Override
     public void kill() {
-        LogUtils.info("Kill CommandManager");
+        LogUtils.info("Kill " + managerName());
         ready = false;
-        LogUtils.info("CommandManager killed");
+        LogUtils.info(managerName() + " killed");
     }
 
     @Override
