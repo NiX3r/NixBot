@@ -23,16 +23,22 @@ public class MarkdownLinkScam implements IScam {
             if(realDomain.contains("/"))
                 realDomain = realDomain.substring(0, realLink.indexOf("/"));
 
-            if(!replacement.contains("http") && !replacement.contains(".")){
+            if(!replacement.contains("."))
+                continue;
 
+            if(replacement.contains(realDomain))
+                continue;
+
+            if(replacement.contains("http://") ||
+                replacement.contains("https://") ||
+                replacement.contains("http:\\\\") ||
+                replacement.contains("https:\\\\")){
+                return true;
             }
 
-            if(replacement.contains(" ")){
+            if(replacement.split("\\.").length >= 2)
+                return true;
 
-            }
-            else{
-
-            }
         }
 
         return false;
