@@ -76,7 +76,7 @@ public class TemporaryChannelManager implements IManager {
 
     @Override
     public String color() {
-        return "e0dd2a";
+        return "#ccb90b";
     }
 
     public HashMap<Long, Long> getTempVoiceChannelMap(){

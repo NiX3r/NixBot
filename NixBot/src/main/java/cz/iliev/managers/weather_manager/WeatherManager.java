@@ -98,7 +98,7 @@ public class WeatherManager implements IManager {
 
     @Override
     public String color() {
-        return "#04a8c9";
+        return "#04738a";
     }
 
     private void generateChart(){ generateChart("50.073658", "14.418540", 0); }
