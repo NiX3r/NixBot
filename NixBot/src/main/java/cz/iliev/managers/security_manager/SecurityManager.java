@@ -28,6 +28,8 @@ public class SecurityManager implements IManager {
     public void setup() {
         LogUtils.info("Load and start " + managerName());
         FileUtils.loadUsersElo().forEach(elo -> usersELO.put(elo.getUserId(), elo));
+        if(usersELO == null || usersELO.isEmpty())
+            usersELO = new HashMap<Long, UserElo>();
         ready = true;
         LogUtils.info(managerName() + " loaded and started. Ready to use");
     }

@@ -74,12 +74,6 @@ public class BanListManager implements IManager {
 
     @Override
     public void onCommand(SlashCommandInteraction interaction) {
-
-        if(!CommonUtils.isUserAdmin(interaction.getUser())){
-            interaction.createImmediateResponder().setContent("This command is only for admin").setFlags(MessageFlag.EPHEMERAL).respond();
-            return;
-        }
-
         switch (interaction.getCommandName()){
             case "ban":
                 new BanCommand().run(interaction);

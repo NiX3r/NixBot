@@ -75,6 +75,10 @@ public class CommandManagerSlashCommandCreateListener implements SlashCommandCre
                     CommonUtils.weatherManager.onCommand(interaction);
                 break;
 
+            case "wordle":
+                CommonUtils.wordleManager.onCommand(interaction);
+                break;
+
         }
 
     }

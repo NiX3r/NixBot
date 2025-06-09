@@ -2,8 +2,8 @@ package cz.iliev.managers.wordle_manager.instances;
 
 public class WordleWordInstance {
 
-    public int score;
-    public String word;
+    private int score;
+    private String word;
 
     public WordleWordInstance(int score, String word){
         this.score = score;

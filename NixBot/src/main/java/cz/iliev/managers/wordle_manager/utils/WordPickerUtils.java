@@ -1,5 +1,7 @@
 package cz.iliev.managers.wordle_manager.utils;
 
+import cz.iliev.managers.wordle_manager.instances.WordleWordInstance;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -10,11 +12,11 @@ import java.util.Random;
 
 public class WordPickerUtils {
 
-    private static final String PATH = "./data/{lang}.csv";
+    private static final String PATH = "./data/wordle/{lang}.csv";
 
-    public static String GetWord(int score, String lang){ return GetWord(score, score, lang); }
+    public static WordleWordInstance GetWord(int score, String lang){ return GetWord(score, score, lang); }
 
-    public static String GetWord(int fromScore, int toScore, String lang) {
+    public static WordleWordInstance GetWord(int fromScore, int toScore, String lang) {
 
         BufferedReader reader;
         List<String> words = new ArrayList<>();
@@ -31,22 +33,24 @@ public class WordPickerUtils {
                     break;
                 if(score < fromScore)
                     continue;
-                words.add(splitter[1]);
+                words.add(line);
                 line = reader.readLine();
             }
             reader.close();
 
             if(words.isEmpty())
-                return "-1";
+                return null;
         } catch (FileNotFoundException e) {
-            return "-2";
+            return null;
         } catch (IOException e) {
-            return "-3";
+            return null;
         }
 
         Random r = new Random();
         r.nextInt(words.size());
-        return words.get(r.nextInt(words.size()));
+        var word = words.get(r.nextInt(words.size()));
+        String[] splitter = word.split(";");
+        return new WordleWordInstance(Integer.parseInt(splitter[0]), splitter[1]);
     }
 
 }
