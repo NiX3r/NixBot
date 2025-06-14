@@ -16,8 +16,8 @@ public class ImpersonationScam implements IScam {
 
         for (User member : CommonUtils.getNixCrew().getMembers()) {
             if(CommonUtils.isUserAdmin(member)) {
-                if(nickname.contains(member.getDisplayName(CommonUtils.getNixCrew())) ||
-                            nickname.contains(member.getName())){
+                if(nickname.contains(member.getDisplayName(CommonUtils.getNixCrew()).toLowerCase()) ||
+                            nickname.contains(member.getName().toLowerCase())){
                     punish(user);
                     return true;
                 }

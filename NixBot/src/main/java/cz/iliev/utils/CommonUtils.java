@@ -17,7 +17,6 @@ import cz.iliev.managers.temporary_channel_manager.TemporaryChannelManager;
 import cz.iliev.managers.ticket_manager.TicketManager;
 import cz.iliev.managers.user_verification_manager.UserVerificationManager;
 import cz.iliev.managers.weather_manager.WeatherManager;
-import cz.iliev.managers.wordle_manager.WordleManager;
 import cz.iliev.threads.ShutdownThread;
 
 import org.javacord.api.DiscordApi;
@@ -54,7 +53,6 @@ public class CommonUtils {
     public static TicketManager ticketManager;
     public static UserVerificationManager userVerificationManager;
     public static WeatherManager weatherManager;
-    public static WordleManager wordleManager;
 
     public static void setupBot(){
         LogUtils.info("Load settings from file");
@@ -85,7 +83,6 @@ public class CommonUtils {
         ticketManager = new TicketManager();
         userVerificationManager = new UserVerificationManager();
         weatherManager = new WeatherManager();
-        wordleManager = new WordleManager();
         mainManager = new MainManager();
 
         reminderManager.checkReminders();
@@ -116,7 +113,6 @@ public class CommonUtils {
         ticketManager.kill();
         userVerificationManager.kill();
         weatherManager.kill();
-        wordleManager.kill();
         FileUtils.saveSettings(settings);
         FileUtils.deleteTempFiles();
     }
