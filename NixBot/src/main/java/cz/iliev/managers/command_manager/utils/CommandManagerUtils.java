@@ -159,8 +159,8 @@ public class CommandManagerUtils {
         try {
             LogUtils.info("Deleting commands ...");
             for(SlashCommand cmd : CommonUtils.bot.getGlobalSlashCommands().get()){
-                /*if(!cmd.getName().equals("wordle"))
-                    continue;*/
+                if(!cmd.getName().equals("wordle"))
+                    continue;
                 cmd.delete().join();
                 LogUtils.info("Deleted " + cmd.getName() + " command");
             }
