@@ -8,8 +8,6 @@ public interface IScam {
 
     public void removeElo(long userId);
 
-    public void punish(User user);
-
     public int punishElo();
     public String scamName();
     public String scamDescription();

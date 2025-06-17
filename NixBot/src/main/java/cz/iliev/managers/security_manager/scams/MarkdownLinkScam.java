@@ -50,11 +50,6 @@ public class MarkdownLinkScam implements IScam {
     }
 
     @Override
-    public void punish(User user) {
-
-    }
-
-    @Override
     public int punishElo() {
         return -5;
     }

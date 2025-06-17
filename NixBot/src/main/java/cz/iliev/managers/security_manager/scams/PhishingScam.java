@@ -40,11 +40,6 @@ public class PhishingScam implements IScam {
     }
 
     @Override
-    public void punish(User user) {
-
-    }
-
-    @Override
     public int punishElo() {
         return -50;
     }

@@ -18,7 +18,6 @@ public class ImpersonationScam implements IScam {
             if(CommonUtils.isUserAdmin(member)) {
                 if(nickname.contains(member.getDisplayName(CommonUtils.getNixCrew()).toLowerCase()) ||
                             nickname.contains(member.getName().toLowerCase())){
-                    punish(user);
                     return true;
                 }
             }
@@ -30,13 +29,6 @@ public class ImpersonationScam implements IScam {
     @Override
     public void removeElo(long userId) {
         CommonUtils.securityManager.addElo(userId, punishElo());
-    }
-
-    @Override
-    public void punish(User user) {
-
-
-
     }
 
     @Override
