@@ -37,6 +37,9 @@ public class StatisticsManager implements IManager {
         CommonUtils.bot.addServerChangeBoostCountListener(new StatisticsServerChangeBoostCountListener());
         CommonUtils.bot.addUserChangeActivityListener(new StatisticsUserChangeActivityListener());
         userVoiceChannelJoinTime = new HashMap<>();
+
+        
+
         ready = true;
         LogUtils.info(managerName() + " loaded and started. Ready to use");
     }

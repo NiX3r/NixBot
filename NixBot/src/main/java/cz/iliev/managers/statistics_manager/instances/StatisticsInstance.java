@@ -176,4 +176,35 @@ public class StatisticsInstance {
         this.voiceChannelMonth = voiceChannelMonth;
         this.voiceChannelYear = voiceChannelYear;
     }
+
+    public String[] getTopThreeMonthMessagers(){
+        var output = new String[3];
+        var users = new long[3];
+        users[0] = 0;
+        users[1] = 0;
+        users[2] = 0;
+        for (long userId : userTextMonth.keySet()) {
+            if(users[0] == 0){
+                users[0] = users[1] = users[2] = userId;
+                continue;
+            }
+
+            if (userTextMonth.get(userId) > userTextMonth.get(users[2])){
+                users[2] = userId;
+            }
+            if (userTextMonth.get(userId) > userTextMonth.get(users[1])){
+                users[2] = users[1];
+                users[1] = userId;
+            }
+            if (userTextMonth.get(userId) > userTextMonth.get(users[0])){
+                users[1] = users[0];
+                users[0] = userId;
+            }
+        }
+        output[0] = users[0] + "-" + userTextMonth.get(users[0]);
+        output[1] = users[1] + "-" + userTextMonth.get(users[1]);
+        output[2] = users[2] + "-" + userTextMonth.get(users[2]);
+        return output;
+    }
+
 }
