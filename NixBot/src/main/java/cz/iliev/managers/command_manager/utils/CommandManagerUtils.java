@@ -85,37 +85,37 @@ public class CommandManagerUtils {
         SlashCommand.with("announcement", "command to send announcement", Arrays.asList(
                 SlashCommandOption.create(SlashCommandOptionType.STRING, "topic", "topic of announcement", true),
                 SlashCommandOption.create(SlashCommandOptionType.STRING, "message", "message of announcement", true)
-        )).createGlobal(CommonUtils.bot).join();
+        )).setDefaultEnabledForPermissions(PermissionType.ADMINISTRATOR).createGlobal(CommonUtils.bot).join();
         LogUtils.info("Created phonetic command");
 
         SlashCommand.with("manager", "command to view and administrate managers", Arrays.asList(
                 SlashCommandOption.create(SlashCommandOptionType.STRING, "name", "manager name", true)
-        )).createGlobal(CommonUtils.bot).join();
+        )).setDefaultEnabledForPermissions(PermissionType.ADMINISTRATOR).createGlobal(CommonUtils.bot).join();
         LogUtils.info("Created manager command");
 
         SlashCommand.with("ban", "command to ban member", Arrays.asList(
                 SlashCommandOption.create(SlashCommandOptionType.USER, "member", "member to be ban", true),
                 SlashCommandOption.create(SlashCommandOptionType.STRING, "reason", "reason of ban", true),
                 SlashCommandOption.create(SlashCommandOptionType.LONG, "duration", "ban duration in millis", false)
-        )).createGlobal(CommonUtils.bot).join();
+        )).setDefaultEnabledForPermissions(PermissionType.ADMINISTRATOR).createGlobal(CommonUtils.bot).join();
         LogUtils.info("Created ban command");
 
         SlashCommand.with("unban", "command to unban member", Arrays.asList(
                 SlashCommandOption.create(SlashCommandOptionType.STRING, "member", "member's nick to be unban", true)
-        )).createGlobal(CommonUtils.bot).join();
+        )).setDefaultEnabledForPermissions(PermissionType.ADMINISTRATOR).createGlobal(CommonUtils.bot).join();
         LogUtils.info("Created unban command");
 
         SlashCommand.with("kick", "command to kick member", Arrays.asList(
                 SlashCommandOption.create(SlashCommandOptionType.USER, "member", "member to be kick", true),
                 SlashCommandOption.create(SlashCommandOptionType.STRING, "reason", "reason of kick", true)
-        )).createGlobal(CommonUtils.bot).join();
+        )).setDefaultEnabledForPermissions(PermissionType.ADMINISTRATOR).createGlobal(CommonUtils.bot).join();
         LogUtils.info("Created kick command");
 
         SlashCommand.with("mute", "command to mute member", Arrays.asList(
                 SlashCommandOption.create(SlashCommandOptionType.USER, "member", "member to be mute", true),
                 SlashCommandOption.create(SlashCommandOptionType.STRING, "reason", "reason of mute", true),
                 SlashCommandOption.create(SlashCommandOptionType.LONG, "duration", "ban of mute in seconds", false)
-        )).createGlobal(CommonUtils.bot).join();
+        )).setDefaultEnabledForPermissions(PermissionType.ADMINISTRATOR).createGlobal(CommonUtils.bot).join();
         LogUtils.info("Created mute command");
 
         SlashCommand.with("reminder", "command to reminder manager", Arrays.asList(
@@ -149,6 +149,9 @@ public class CommandManagerUtils {
         )).createGlobal(CommonUtils.bot).join();
         LogUtils.info("Created summon command");
 
+        SlashCommand.with("wordle", "command to play Wordle mini game").createGlobal(CommonUtils.bot).join();
+        LogUtils.info("Created wordle command");
+
     }
 
     public static void deleteCommands(){
@@ -156,6 +159,8 @@ public class CommandManagerUtils {
         try {
             LogUtils.info("Deleting commands ...");
             for(SlashCommand cmd : CommonUtils.bot.getGlobalSlashCommands().get()){
+                if(!cmd.getName().equals("wordle"))
+                    continue;
                 cmd.delete().join();
                 LogUtils.info("Deleted " + cmd.getName() + " command");
             }

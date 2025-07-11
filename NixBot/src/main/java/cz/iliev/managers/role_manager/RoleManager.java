@@ -29,15 +29,15 @@ public class RoleManager implements IManager {
         roleSetter = FileUtils.loadRoleSetter();
         CommonUtils.bot.addMessageComponentCreateListener(new RoleSetterMessageComponentCreateListener());
         ready = true;
-        LogUtils.info("RoleManager loaded and started. Ready to use");
+        LogUtils.info(managerName() + " loaded and started. Ready to use");
     }
 
     @Override
     public void kill() {
-        LogUtils.info("Kill RoleManager");
+        LogUtils.info("Kill " + managerName());
         FileUtils.saveRoleSetter(roleSetter);
         ready = false;
-        LogUtils.info("RoleManager killed");
+        LogUtils.info(managerName() + " killed");
     }
 
     @Override

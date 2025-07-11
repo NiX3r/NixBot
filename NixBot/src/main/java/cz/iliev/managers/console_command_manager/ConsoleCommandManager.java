@@ -16,18 +16,18 @@ public class ConsoleCommandManager implements IManager {
 
     @Override
     public void setup() {
-        LogUtils.info("Load and start ConsoleCommandManager");
+        LogUtils.info("Load and start " + managerName());
         thread = new ConsoleCommandManagerThread();
         thread.start();
         ready = true;
-        LogUtils.info("ConsoleCommandManager loaded and started. Ready to use");
+        LogUtils.info(managerName() + " loaded and started. Ready to use");
     }
 
     @Override
     public void kill() {
-        LogUtils.info("Kill ConsoleCommandManager");
+        LogUtils.info("Kill " + managerName());
         ready = false;
-        LogUtils.info("ConsoleCommandManager killed");
+        LogUtils.info(managerName() + " killed");
     }
 
     @Override

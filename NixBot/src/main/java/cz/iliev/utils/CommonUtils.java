@@ -11,6 +11,7 @@ import cz.iliev.managers.main_manager.MainManager;
 import cz.iliev.managers.music_manager.MusicManager;
 import cz.iliev.managers.reminder_manager.ReminderManager;
 import cz.iliev.managers.role_manager.RoleManager;
+import cz.iliev.managers.security_manager.SecurityManager;
 import cz.iliev.managers.statistics_manager.StatisticsManager;
 import cz.iliev.managers.temporary_channel_manager.TemporaryChannelManager;
 import cz.iliev.managers.ticket_manager.TicketManager;
@@ -33,7 +34,7 @@ public class CommonUtils {
     public static DiscordApi bot;
     public static SettingsInstance settings;
 
-    public static final String VERSION = "3.2.1";
+    public static final String VERSION = "3.3.0";
     public static final long START_TIME = System.currentTimeMillis();
     public static final String NIX_CREW_ID = "611985124023730185";
 
@@ -46,6 +47,7 @@ public class CommonUtils {
     public static MusicManager musicManager;
     public static ReminderManager reminderManager;
     public static RoleManager roleManager;
+    public static SecurityManager securityManager;
     public static StatisticsManager statisticsManager;
     public static TemporaryChannelManager temporaryChannelManager;
     public static TicketManager ticketManager;
@@ -75,6 +77,7 @@ public class CommonUtils {
         musicManager = new MusicManager();
         reminderManager = new ReminderManager();
         roleManager = new RoleManager();
+        securityManager = new SecurityManager();
         statisticsManager = new StatisticsManager();
         temporaryChannelManager = new TemporaryChannelManager();
         ticketManager = new TicketManager();
@@ -104,6 +107,7 @@ public class CommonUtils {
         musicManager.kill();
         reminderManager.kill();
         roleManager.kill();
+        securityManager.kill();
         statisticsManager.kill();
         temporaryChannelManager.kill();
         ticketManager.kill();

@@ -24,7 +24,7 @@ public class WeatherManager implements IManager {
 
     @Override
     public void setup() {
-        LogUtils.info("Load and start WeatherManager");
+        LogUtils.info("Load and start " + managerName());
         apiKey = CommonUtils.settings.getOpenWeatherApiKey();
 
         weatherSubscribers = FileUtils.loadSubscribers();
@@ -49,15 +49,15 @@ public class WeatherManager implements IManager {
 
             });
         });
-        LogUtils.info("WeatherManager loaded and started. Ready to use");
+        LogUtils.info(managerName() + " loaded and started. Ready to use");
     }
 
     @Override
     public void kill() {
-        LogUtils.info("Kill WeatherManager");
+        LogUtils.info("Kill " + managerName());
         FileUtils.saveSubscribers(weatherSubscribers);
         ready = false;
-        LogUtils.info("WeatherManager killed");
+        LogUtils.info(managerName() + " killed");
     }
 
     @Override
@@ -98,7 +98,7 @@ public class WeatherManager implements IManager {
 
     @Override
     public String color() {
-        return "#04a8c9";
+        return "#04738a";
     }
 
     private void generateChart(){ generateChart("50.073658", "14.418540", 0); }

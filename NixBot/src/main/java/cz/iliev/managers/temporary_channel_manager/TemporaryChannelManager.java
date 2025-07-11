@@ -31,13 +31,15 @@ public class TemporaryChannelManager implements IManager {
         CommonUtils.bot.addServerVoiceChannelMemberJoinListener(new TemporaryChannelServerVoiceChannelMemberJoinListener());
         CommonUtils.bot.addServerVoiceChannelMemberLeaveListener(new TemporaryChannelServerVoiceChannelMemberLeaveListener());
         ready = true;
-        LogUtils.info("TemporaryManager loaded and started. Ready to use");
+        LogUtils.info(managerName() + " loaded and started. Ready to use");
     }
 
     @Override
     public void kill() {
+        LogUtils.info("Kill " + managerName());
         FileUtils.saveTemporaryChannelCache(tempVoiceChannelMap);
         ready = false;
+        LogUtils.info(managerName() + " killed");
     }
 
     @Override
@@ -74,7 +76,7 @@ public class TemporaryChannelManager implements IManager {
 
     @Override
     public String color() {
-        return "e0dd2a";
+        return "#ccb90b";
     }
 
     public HashMap<Long, Long> getTempVoiceChannelMap(){

@@ -26,19 +26,19 @@ public class ReminderManager implements IManager {
 
     @Override
     public void setup() {
-        LogUtils.info("Load and start WeatherManager");
+        LogUtils.info("Load and start " + managerName());
         reminders = FileUtils.loadSettings();
         CommonUtils.bot.addModalSubmitListener(new ReminderModalSubmitListener());
         ready = true;
-        LogUtils.info("WeatherManager loaded and started. Ready to use");
+        LogUtils.info(managerName() + " loaded and started. Ready to use");
     }
 
     @Override
     public void kill() {
-        LogUtils.info("Kill WeatherManager");
+        LogUtils.info("Kill " + managerName());
         FileUtils.saveSettings(reminders);
         ready = false;
-        LogUtils.info("WeatherManager killed");
+        LogUtils.info(managerName() + " killed");
     }
 
     @Override
