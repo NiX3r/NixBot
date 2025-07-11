@@ -9,9 +9,11 @@ import cz.iliev.managers.security_manager.utils.FileUtils;
 import cz.iliev.managers.security_manager.utils.SecurityManagerUtils;
 import cz.iliev.utils.CommonUtils;
 import cz.iliev.utils.LogUtils;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
+import java.awt.*;
 import java.util.Dictionary;
 import java.util.HashMap;
 
@@ -27,9 +29,12 @@ public class SecurityManager implements IManager {
     @Override
     public void setup() {
         LogUtils.info("Load and start " + managerName());
+        usersELO = new HashMap<Long, UserElo>();
         FileUtils.loadUsersElo().forEach(elo -> usersELO.put(elo.getUserId(), elo));
         if(usersELO == null || usersELO.isEmpty())
             usersELO = new HashMap<Long, UserElo>();
+        CommonUtils.bot.addUserChangeNameListener(new SecurityManagerUserChangeNameListener());
+        CommonUtils.bot.addUserChangeNicknameListener(new SecurityManagerUserChangeNicknameListener());
         ready = true;
         LogUtils.info(managerName() + " loaded and started. Ready to use");
     }
@@ -85,7 +90,12 @@ public class SecurityManager implements IManager {
     }
 
     public void addElo(long userId, int elo){
-        usersELO.get(userId).addElo(elo);
+        if(usersELO.containsKey(userId)){
+            usersELO.get(userId).addElo(elo);
+        }
+        else{
+            usersELO.put(userId, new UserElo(userId, 1000 + elo));
+        }
     }
 
     public void sendAnnouncement(IScam scam, User user){

@@ -142,6 +142,12 @@ public class AnnouncementManager implements IManager {
         });
     }
 
+    public void sendLogMessage(EmbedBuilder embed){
+        CommonUtils.getNixCrew().getTextChannelById(NIXBOT_CHANNEL_ID).ifPresent(channel -> {
+            channel.sendMessage(embed);
+        });
+    }
+
     public void sendRoleSetter(List<RoleSetterInstance> roleSetter){
         CommonUtils.getNixCrew().getTextChannelById(RoleManager.ROLES_CHANNEL_ID).ifPresent(channel -> {
             Message msg = null;
@@ -221,4 +227,5 @@ public class AnnouncementManager implements IManager {
     public MessagesInstance getMessages() {
         return messages;
     }
+
 }

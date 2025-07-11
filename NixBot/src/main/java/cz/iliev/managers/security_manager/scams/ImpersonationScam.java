@@ -2,7 +2,11 @@ package cz.iliev.managers.security_manager.scams;
 
 import cz.iliev.managers.security_manager.interfaces.IScam;
 import cz.iliev.utils.CommonUtils;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
+
+import java.awt.*;
+import java.util.HashMap;
 
 public class ImpersonationScam implements IScam {
 
